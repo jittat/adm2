@@ -171,3 +171,9 @@ LOGGING = {
 ADMISSION_YEAR = 2555
 LOGIN_ENABLED = True
 UPLOADED_DOC_PATH = os.path.join(PROJECT_DIR,'data/upload')
+
+# used in redirect_to_index
+INDEX_PAGE = 'start-page'
+
+MAX_PASSWORD_REQUST_PER_DAY = 10
+MAX_DOC_UPLOAD_PER_DAY = 100
