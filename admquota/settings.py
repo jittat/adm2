@@ -1,9 +1,13 @@
 # Django settings for admquota project.
 
+import os.path
+PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__),'..'))
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
+    ('Jittat Fakcharoenphol', 'jittat@gmail.com'),
     # ('Your Name', 'your_email@example.com'),
 )
 
@@ -11,10 +15,10 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'admquota',                      # Or path to database file if using sqlite3.
+        'USER': 'admquota',                      # Not used with sqlite3.
+        'PASSWORD': 'TbmQFy7j9FBVfN3N',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -44,7 +48,7 @@ USE_I18N = True
 USE_L10N = True
 
 # If you set this to False, Django will not use timezone-aware datetimes.
-USE_TZ = True
+USE_TZ = False
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
@@ -70,6 +74,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(PROJECT_DIR,'media'),
 )
 
 # List of finder classes that know how to find static files in
@@ -109,6 +114,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(PROJECT_DIR,'templates'),
 )
 
 INSTALLED_APPS = (
@@ -118,10 +124,16 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Uncomment the next line to enable the admin:
-    # 'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
+    'django.contrib.admin',
+    'django.contrib.admindocs',
+
+    'south',
+    'commons',
+    'application',
+    'result',
+    'review',
+    'confirmation',
+    'feature_switch',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -152,3 +164,8 @@ LOGGING = {
         },
     }
 }
+
+##########################################################
+
+ADMISSION_YEAR = 2555
+LOGIN_ENABLED = True
