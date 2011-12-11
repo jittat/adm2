@@ -125,14 +125,7 @@ class Applicant(models.Model):
         return "%s %s %s" % (self.title, self.first_name, self.last_name)
 
     def get_email(self):
-        if not self.is_offline:
-            return self.email
-        else:
-            idx = self.email.find('-')
-            if idx!=-1:
-                return self.email[(idx+1):]
-            else:
-                return self.email
+        return self.email
 
     def has_personal_info(self):
         result = self.check_related_model('personal_info')
@@ -640,6 +633,8 @@ class MajorPreference(models.Model):
 
 class Registration(models.Model):
     applicant = models.ForeignKey(Applicant,related_name="registrations")
+    national_id = models.CharField(max_length=20,
+                                   verbose_name="เลขประจำตัวประชาชน")
     registered_at = models.DateTimeField(auto_now_add=True)
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=300)

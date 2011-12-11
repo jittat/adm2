@@ -11,9 +11,12 @@ class IntegerListField(models.Field):
     >>> g.to_python('1,2,-10,3,4,-100,7')
     [1,2,-10,3,4,-100,7]
     """
+
+    description = "A list of integers"
+
     __metaclass__ = models.SubfieldBase
 
-    def db_type(self):
+    def db_type(self,connection):
         return 'text'
 
     def to_python(self, value):
@@ -29,7 +32,7 @@ class IntegerListField(models.Field):
                 value = value[:-1]
             return [ int(r) for r in value.split(',') ]
 
-    def get_db_prep_value(self, value):
+    def get_prep_value(self, value):
         return ','.join([str(r) for r in value])
 
 

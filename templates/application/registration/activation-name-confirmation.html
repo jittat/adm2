@@ -9,6 +9,10 @@
 	  method="post">
       <table class="header-left">
 	<tr>
+	  <th>เลขประจำตัวประชาชน:</th>
+	  <td>{{ national_id }}</td>
+	</tr>
+	<tr>
 	  <th>ชื่อ:</th>
 	  <td>{{ form.title }} {{ form.first_name }}</td>
 	  <td>{{ form.title.errors }}{{ form.first_name.errors }}</td>

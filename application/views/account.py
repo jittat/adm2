@@ -4,8 +4,10 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django import forms
+from django.template import RequestContext
+from django.views.decorators.csrf import csrf_protect
 
-from MySQLdb import IntegrityError
+from django.db import IntegrityError
 
 from commons.utils import redirect_to_index, submission_deadline_passed
 from application.views import redirect_to_first_form
@@ -89,13 +91,14 @@ def logout(request):
         return redirect_to_index(request)
 
 
-def duplicate_email_error(applicant, email, first_name, last_name):
+def duplicate_email_error(applicant, email, first_name, last_name, national_id):
     # query set is lazy, so we have to force it, using list().
     old_registrations = list(applicant.registrations.all())  
 
     new_registration = Registration(applicant=applicant,
                                     first_name=first_name,
-                                    last_name=last_name)
+                                    last_name=last_name,
+                                    national_id=national_id)
     new_registration.random_and_save()
     send_activation_by_email(applicant, new_registration.activation_key)
     applicant.activation_required = True
@@ -126,7 +129,8 @@ def registration_error(error_field,
         return duplicate_email_error(applicant,
                                      email,
                                      first_name,
-                                     last_name)
+                                     last_name,
+                                     national_id)
     else:
         return render_to_response(
             'application/registration/duplicate-nat-id-error.html',
@@ -135,6 +139,7 @@ def registration_error(error_field,
 
 
 @within_submission_deadline
+@csrf_protect
 def register(request):
     if request.method == 'POST':
         if 'cancel' in request.POST:
@@ -205,7 +210,8 @@ u"""%(dup_obj)sนี้ถูกลงทะเบียนและถูก�
     else:
         form = RegistrationForm()
     return render_to_response('application/registration/register.html',
-                              { 'form': form })
+                              { 'form': form },
+                              context_instance=RequestContext(request))
 
 
 @within_submission_deadline
@@ -240,15 +246,25 @@ def activate(request, activation_key):
         name_form = ActivationNameForm(request.POST)
         if name_form.is_valid():
             applicant.activation_required = False
+            applicant.national_id = registration.national_id
             applicant.title = name_form.cleaned_data['title']
             applicant.first_name = name_form.cleaned_data['first_name']
             applicant.last_name = name_form.cleaned_data['last_name']
             passwd = applicant.random_password()
-            applicant.save()
+            try: 
+                applicant.save()
+            except IntegrityError:
+                return registration_error('national_id',
+                                          applicant,
+                                          applicant.email,
+                                          registration.national_id,
+                                          applicant.first_name,
+                                          applicant.last_name)
             registration = Registration(
                 applicant=applicant,
                 first_name=applicant.first_name,
-                last_name=applicant.last_name)
+                last_name=applicant.last_name,
+                national_id=registration.national_id)
             registration.random_and_save()
             send_password_by_email(applicant, passwd)           
             return render_to_response(
@@ -258,6 +274,7 @@ def activate(request, activation_key):
     return render_to_response(
         'application/registration/activation-name-confirmation.html',
         {'applicant': applicant,
+         'national_id': registration.national_id,
          'form': name_form,
          'activation_key': activation_key,
          'no_first_page_link': True,
@@ -277,7 +294,8 @@ def forget_password(request):
                     return duplicate_email_error(applicant,
                                                  email,
                                                  applicant.first_name,
-                                                 applicant.last_name)
+                                                 applicant.last_name,
+                                                 applicant.national_id)
 
                 new_pwd = applicant.random_password()
                 applicant.save()
@@ -295,6 +313,6 @@ def forget_password(request):
     else:
         form = ForgetPasswordForm()
 
-    return render_to_response('application/forget.html', 
+    return render_to_response('application/registration/forget.html', 
                               { 'form': form })
     

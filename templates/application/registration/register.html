@@ -16,7 +16,7 @@
       {% endfor %}
     </ul>
   {% endif %}
-  <form action="{% url apply-register %}" method="post">
+  <form action="{% url apply-register %}" method="post">{% csrf_token %}
     <table class="header-left">
       <tr>
 	<th>ชื่อ:</th>

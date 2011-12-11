@@ -98,7 +98,7 @@ TEMPLATE_LOADERS = (
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
@@ -177,3 +177,14 @@ INDEX_PAGE = 'start-page'
 
 MAX_PASSWORD_REQUST_PER_DAY = 10
 MAX_DOC_UPLOAD_PER_DAY = 100
+
+FAKE_SENDING_EMAIL = True
+
+HTTP_BASE_PATH = 'http://localhost:8000'
+
+EMAIL_BACKEND = 'commons.backends.smtp'
+
+EMAIL_HOST = 'nontri.ku.ac.th'
+EMAIL_HOST_USER = 'jtf'
+EMAIL_HOST_PASSWORD = 'xxxxxxxx'
+EMAIL_SENDER = 'KU Eng Admission Team <jtf@ku.ac.th>'
