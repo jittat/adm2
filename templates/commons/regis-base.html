@@ -2,8 +2,8 @@
 
 {% block extra-head %}
 {{ block.super }}
-<link rel="stylesheet" type="text/css" href="{% load adm_media %}{% media_url %}/css/review.css" />
-<link rel="stylesheet" type="text/css" href="{% media_url %}/css/manual.css" />
+<link rel="stylesheet" type="text/css" href="{% load adm_media %}{% static_url %}/css/review.css" />
+<link rel="stylesheet" type="text/css" href="{% static_url %}/css/manual.css" />
 {% endblock %}
 
 {% block title %}หน่วยทะเบียน{% endblock %}

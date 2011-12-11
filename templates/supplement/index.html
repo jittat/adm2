@@ -4,8 +4,8 @@
 
 {% block extra-head %}
 {{ block.super }}
-<link href="{% load adm_media %}{% media_url %}/facebox/facebox.css" media="screen" rel="stylesheet" type="text/css"/>
-<script src="{% media_url %}/facebox/facebox.js" type="text/javascript"></script>
+<link href="{% load adm_media %}{% static_url %}/facebox/facebox.css" media="screen" rel="stylesheet" type="text/css"/>
+<script src="{% static_url %}/facebox/facebox.js" type="text/javascript"></script>
 {% endblock %}
 
 {% block body %}
@@ -84,8 +84,8 @@
         $("#upload-detail-box").slideToggle("fast");
       });
 
-      $.facebox.settings.loadingImage = "{% media_url %}/facebox/loading.gif";
-      $.facebox.settings.closeImage = "{% media_url %}/facebox/closelabel.gif";
+      $.facebox.settings.loadingImage = "{% static_url %}/facebox/loading.gif";
+      $.facebox.settings.closeImage = "{% static_url %}/facebox/closelabel.gif";
       $('a[rel*=facebox]').facebox()
     });
   </script>

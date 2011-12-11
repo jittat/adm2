@@ -130,6 +130,7 @@ INSTALLED_APPS = (
     'south',
     'commons',
     'application',
+    'upload',
     'result',
     'review',
     'confirmation',
@@ -169,3 +170,4 @@ LOGGING = {
 
 ADMISSION_YEAR = 2555
 LOGIN_ENABLED = True
+UPLOADED_DOC_PATH = os.path.join(PROJECT_DIR,'data/upload')

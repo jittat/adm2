@@ -54,7 +54,7 @@
 {% if submission_info.has_been_reviewed %}
   {% if not submission_info.doc_reviewed_complete %}
     <div class="normal-msg" style="width: 510px">
-      <img src="{% media_url %}/image/Info.png"/>
+      <img src="{% static_url %}/image/Info.png"/>
       {% if submission_info.is_resubmitted %}
         {% if not submission_info.is_reviewed_after_resubmitted %}
           คณะได้รับการยื่นหลักฐานเพิ่มเติมของคุณแล้ว และจะรีบตรวจสอบต่อไป<br/>
