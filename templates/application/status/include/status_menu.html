@@ -1,0 +1,9 @@
+<div class="status-menu-bar">
+  <a id="logout-link" href="{% url apply-logout %}">
+    <div class="menu-item">
+      ออกจากระบบ
+    </div>
+  </a>
+  {% include "application/status/include/status_menu_items.html" %}
+  <b>ขั้นตอน</b> {% if step_title %}{{ step_title }}{% else %}ตรวจสอบสถานะการสมัคร{% endif %}
+</div>

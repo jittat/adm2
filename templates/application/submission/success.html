@@ -1,0 +1,37 @@
+{% extends "application/formbase.html" %}
+{% load adm_media %}
+
+{% block extra-head %}
+<link rel="stylesheet" type="text/css" href="{% load adm_media %}{% media_url %}/css/front.css" />
+{% endblock %}
+
+{% block title %}Submission Ticket{% endblock %}
+
+{% block form-body %}
+  {% load adm_steps %}{% step_bar "การป้อนข้อมูลเพื่อสมัครออนไลน์เรียบร้อย" %}
+  <br/>
+  <div class="normal-msg">
+    คุณได้ส่งข้อมูลพื้นฐานในการสมัครให้กับทางคณะ
+    และคณะได้ส่งจดหมายอิเล็กทรอนิกส์เพื่อยืนยันไปให้คุณแล้ว<br/>
+    ในขั้นตอนต่อไปคุณจะต้องพิมพ์ใบชำระเงินเพื่อนำไปชำระค่าสมัคร จำนวน 350 บาท
+    ที่ธนาคารไทยพาณิชย์ เมื่อทางคณะได้รับข้อมูลการชำระเงินแล้ว
+    การสมัครของคุณจึงจะสมบูรณ์
+  </div>
+  <br/>
+
+  <div class="login-box" style="text-align: center">
+    <a class="in-button" href="{% url apply-ticket %}" target="_blank">
+      <div id="reg-button" class="button big">
+	พิมพ์ใบชำระเงินค่าสมัครสำหรับธนาคาร
+	<img src="{% media_url %}/image/Next.png"/>
+      </div>
+    </a>
+  </div>
+
+  {% include "application/include/ticket_printing.html" %}
+
+  <br/>
+  <p>
+    <a href="{% url apply-logout %}?url=admission.eng.ku.ac.th">ออกจากระบบและกลับไปเว็บรับสมัคร</a>
+  </p>
+{% endblock %}

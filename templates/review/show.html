@@ -1,0 +1,224 @@
+{% extends "review/base.html" %}
+
+{% load adm_media %}
+
+{% block extra-head %}
+  {{ block.super }}
+  <script type="text/javascript" src="{% load adm_media %}{% media_url %}/js/review.js"></script>
+  <link href="{% media_url %}/facebox/facebox.css" media="screen" rel="stylesheet" type="text/css"/>
+  <script src="{% media_url %}/facebox/facebox.js" type="text/javascript"></script> 
+{% endblock %}
+
+{% block extra-title-bar %}ตรวจสอบเอกสาร | {% endblock %}
+
+{% block regis-body %}
+  <b>ผู้สมัคร:</b> {{ applicant.full_name }} | 
+  <b>หมายเลขประจำตัว:</b> {{ applicant.ticket_number }} | 
+  <b>ยื่นเมื่อ:</b> {{ submission_info.submitted_at|date }} |
+  <small>
+    {% include "review/include/doc_received_status.html" %} | 
+    [<a id="doc-major_pref-link" href="#">ดูอันดับการเลือก</a>]
+    {% if applicant.admission_result and applicant.admission_result.is_admitted %}
+      | [<a href="{% url confirmation-info applicant.id %}" target="_blank">ข้อมูลสัมภาษณ์</a>]
+    {% endif %}
+    {% if applicant.admission_result and not applicant.admission_result.is_admitted and applicant.admission_result.is_final_admitted %}
+      | [<a href="{% url confirmation-second-admin applicant.id %}" target="_blank">พิมพ์ใบยืนยัน</a>]
+    {% endif %}
+    {% if can_request_password %}
+      | [<a id="generate-password-link" href="{% url review-gen-password applicant.id %}" target="_blank">ขอรหัสผ่าน</a>]
+    {% endif %}
+  </small>
+  <br/>
+
+  {% if applicant.has_supplements %}
+    {% include "review/include/supplements.html" %}
+  {% endif %}
+
+  {% comment %}
+  <!--***** Admission result ***** -->
+  <div class="light-frame">
+    <b>ผลการคัดเลือก:</b>
+    {% if applicant.has_admission_result %}
+      {% with applicant.admission_result as admission_result %}
+        {% if admission_result.is_final_admitted %}
+          รับเข้าศึกษา | สาขาที่รับ: {{ admission_result.final_admitted_major.number }} {{ admission_result.final_admitted_major.name }}
+        {% else %} 
+          {% if admission_result.is_admitted %}สละสิทธิ์{% else %}ไม่รับเข้าศึกษา{% endif %}
+        {% endif %}
+        <br/>
+        <b>ผลรอบแรก:</b>
+        {% if admission_result.is_admitted %}
+          {{ admission_result.admitted_major.number }}
+          {{ admission_result.admitted_major.name }}
+          | ข้อมูลการสัมภาษณ์: {{ admission_result.additional_info }}
+        {% else %}
+          {% if admission_result.is_waitlist %}
+            สำรอง
+	  {% else %}
+	    ไม่ผ่านการคัดเลือกรอบแรก
+          {% endif %}
+        {% endif %}
+      {% endwith %}
+    {% else %}
+      ไม่ผ่านการคัดเลือก
+    {% endif %}
+    <br/>
+    <b>ผลคะแนนจากสทศ.:</b>
+    {% if applicant.NIETS_scores %}
+      {% with applicant.NIETS_scores.as_list_by_exam_round as niets_scores %}
+        {% include "result/include/niets_scores.html" %}
+      {% endwith %}
+    {% else %}
+      ไม่มีข้อมูล
+    {% endif %}
+  </div>
+  <!--***** Admission result ***** -->
+  {% endcomment %}
+
+  <form action="" method="post">
+    <table class="applicants">
+      <tr>
+	<th>เอกสาร</th>
+	<th>ถูกต้อง</th>
+	<th>หมายเหตุสำหรับผู้สมัคร</th>
+	<th>หมายเหตุภายใน</th>
+	<th>มีเอกสาร</th>
+      </tr>
+      {% for item in review_data %}
+        {% with item.field as f %}
+        <tr>  
+	  <td>
+	    {{ f.name }} 
+	    <a id="doc-{{ f.short_name }}-link" href="#">[show]</a>
+	    {% if appdocs %}
+              {% with f.short_name as field_name %}
+  	        {% include "review/include/doc_view_link.html" %}
+              {% endwith %}
+            {% endif %}
+	  </td>
+	  {% if item.completed %}
+	    <td></td>
+	    <td>เคยผ่านการตรวจแล้ว</td>
+	    <td></td>
+	    <td></td>
+          {% else %}
+  	    <td>{{ item.form.is_passed }}</td>
+	    <td>
+	      {{ item.form.applicant_note }}
+	      {% if f.applicant_note_help_text %}
+    	        <div class="help-text">{{ f.applicant_note_help_text }}</div>
+	      {% endif %}
+	    </td>
+	    <td>
+	      {{ item.form.internal_note }}
+	      {% if f.admin_note_help_text %}
+  	        <div class="help-text">{{ f.admin_note_help_text }}</div>
+              {% endif %}
+	    </td>
+	    <td>
+	      {% if not f.required %}
+	        {{ item.form.is_submitted }}
+	      {% endif %}
+	    </td>
+          {% endif %}
+	</tr>
+	{% endwith %}
+      {% endfor %}
+    </table>
+    <div class="small-vert-sept"></div>
+    <div class="submission-bar">
+      <input type="submit" name="submit" value="เก็บข้อมูล"/>
+      <input type="submit" name="cancel" value="ยกเลิก"/>
+    </div>
+  </form>
+  <div class="small-vert-sept"></div>
+  <div id="doc-preview" class="application-info">
+    <div id="app-doc-personal-preview">
+      <h2>ข้อมูลส่วนตัว</h2>
+      <div class="section">
+	{% include "application/include/applicant_personal.html" %}
+      </div>
+      <h2>ที่อยู่</h2>
+      <div class="section">
+	{% include "application/include/applicant_address.html" %}
+      </div>
+    </div>
+    <div id="app-doc-education-preview" style="display: none">
+      <h2>ข้อมูลการศึกษา
+	[<a target="_blank" href="{% url manual-edu-popup applicant.id %}" id="id_education_edit_button">แก้ไขข้อมูล</a>] [<a href="#" id="id_education_refresh_button">refresh</a>]
+      </h2>
+      <div id="id_applicant_education_info" class="section">
+	{% include "application/include/applicant_edu.html" %}
+      </div>
+    </div>
+    <div id="app-doc-major-pref" style="display: none">
+      <h2>ข้อมูลการเลือก</h2>
+      {% include "application/include/applicant_ranks.html" %}
+    </div>
+  </div>
+  <script type="text/javascript">
+    function close_popup_and_refresh(win) {
+      $("#id_education_refresh_button").click();
+      win.close();
+    }
+    function show_personal_info() {
+      $("#app-doc-personal-preview").show();
+      $("#app-doc-education-preview").hide();
+      $("#app-doc-major-pref").hide();
+    }
+    function show_education_info() {
+      $("#app-doc-education-preview").show();
+      $("#app-doc-personal-preview").hide();
+      $("#app-doc-major-pref").hide();
+    }
+    function show_major_pref_info() {
+      $("#app-doc-major-pref").show();
+      $("#app-doc-personal-preview").hide();
+      $("#app-doc-education-preview").hide();
+    }
+    function register_personal_trigger(id) {
+      $(id).click(function() { show_personal_info(); return false; });
+    }
+    function register_education_trigger(id) {
+      $(id).click(function() { show_education_info(); return false; });
+    }
+    function register_major_pref_trigger(id) {
+      $(id).click(function() { show_major_pref_info(); return false; });
+    }
+    $(document).ready(function() {
+      register_personal_trigger("#doc-nat_id-link");
+      register_education_trigger("#doc-edu_certificate-link");
+      register_education_trigger("#doc-gat_score-link");
+      register_education_trigger("#doc-pat1_score-link");
+      register_education_trigger("#doc-pat3_score-link");
+      register_education_trigger("#doc-anet_score-link");
+      register_major_pref_trigger("#doc-major_pref-link");
+      $("#doc-picture-link").hide();
+      $("#doc-app_fee_doc-link").hide();
+      $("#doc-abroad_edu_certificate-link").hide();
+
+      register_doc_recevied_toggle_click();
+
+      $.facebox.settings.loadingImage = "{% media_url %}/facebox/loading.gif";
+      $.facebox.settings.closeImage = "{% media_url %}/facebox/closelabel.gif";
+      $('a[rel*=facebox]').facebox();
+
+      $("#id_education_edit_button").click(function() {
+        href = $(this).attr("href");
+        var win = window.open(href,'แก้ไขข้อมูลการศึกษา',
+                              'height=480,width=800,resizable=yes,scrollbars=yes'); 
+        win.focus();
+        return false;
+      });
+      $("#id_education_refresh_button").click(function(event) {
+        event.preventDefault();
+        $.get("{% url manual-show-edu applicant.id %}", function(data) {
+          $("#id_applicant_education_info").html(data);
+        });
+      });
+      $("#generate-password-link").click(function() {
+        return confirm("คุณกำลังจะเปลี่ยนรหัสผ่านของ{{ applicant.full_name }}\nคุณแน่ใจหรือไม่?");
+      });
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,80 @@
+{% load humanize %}
+
+<div class="light-frame">
+<p>
+  {% if is_last_round %}
+    เนื่องจากรอบนี้เป็นการคัดเลือกในรอบสุดท้ายแล้ว จะไม่มีการเลื่อนอันดับอีก
+  {% else %}
+    {% if not first_admission %}
+      เนื่องจากคุณได้ยืนยันสิทธิ์ในรอบก่อนแล้ว ระบบจึงคัดลอกการเลือกสาขาวิชาที่ต้องการเข้ายืนยันสิทธิ์ในรอบก่อนที่คุณได้เลือกไว้<br/>
+      {% if admission_major_pref.get_pref_type.is_move_up_inclusive or admission_major_pref.get_pref_type.is_move_up_strict %}
+        {% if admission_major_pref.is_nomove_request %}
+          อย่างไรก็ตาม สำหรับในรอบนี้ คุณได้ขอเลือกเข้าศึกษาต่อในสาขาที่รับคัดเลือกในรอบนี้ <b>โดยไม่ขอพิจารณาสาขาอันดับที่สูงขึ้นไปในรอบถัดไปแล้ว</b><br/>
+          <form class="light-frame" action="{% url confirmation-nomove-cancel %}" method="post" style="font-size: 90%;">
+            คุณสามารถเลือกที่จะกลับไปเข้ารับการพิจารณาเลื่อนสาขาตามที่คุณเคยเลือกไว้ก่อนหน้านี้ได้<br/>
+  	    ถ้าต้องการและแน่ใจ กรุณากด <input type="submit" value="ข้าพเจ้าขอกลับเข้ารับการพิจารณาเลื่อนสาขาเป็นสาขาในอันดับที่สูงขึ้นตามที่ข้าพเจ้าเคยเลือกไว้"/>
+  	  </form>
+        {% else %}
+          {% include "application/status/include/show_adm_major_pref.html" %}<br/>
+          <form class="light-frame" action="{% url confirmation-nomove-request %}" method="post" style="font-size: 90%;">
+            อย่างไรก็ตาม คุณสามารถเลือกที่จะขอคงสาขาที่ได้รับการพิจารณาเป็นสาขา {{ admission_result.admitted_major.name }} โดยไม่ต้องการเข้ารับการพิจารณาเลื่อนเป็นอันดับอื่น ๆ อีกได้<br/>
+  	    ถ้าแน่ใจ กรุณากด <input type="submit" value="ขอให้คงสาขาที่ข้าพเจ้าได้รับคัดเลือกเป็นสาขาที่ข้าพเจ้าได้รับในรอบนี้"/>
+	  </form>
+        {% endif %}
+      {% else %}
+        {% include "application/status/include/show_adm_major_pref.html" %}
+      {% endif %}
+    {% else %}
+      {% include "application/status/include/show_adm_major_pref.html" %}
+    {% endif %}
+  {% endif %}
+</p>
+
+{% if not admission_major_pref.is_withdrawn %}
+  {% if confirmation_complete %}
+    <p>
+      <h2>คุณได้ยืนยันสิทธิ์แล้ว</h2>
+      คุณได้ชำระเงินค่ายืนยันสิทธิ์เรียบร้อยแล้ว และเราได้รับข้อมูลจากทางธนาคารเมื่อวันที่ {{ recent_confirmation.confirmed_at|date:"d F" }} 2554<br/>
+      สำหรับผู้ที่ชำระเงินเพื่อยืนยันสิทธิ์แล้ว คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์จะส่งรายชื่อไปยัง สกอ. เพื่อตัดสิทธิ์การสอบระบบกลาง (อ่านรายละเอียดด้านล่าง)
+    </p>
+  {% else %}
+    <p>
+      <h2>การยืนยันสิทธิ์ของคุณยังไม่สมบูรณ์</h2>
+
+      {% if recent_confirmation %}
+        <p>คุณได้ชำระเงินค่ายืนยันสิทธิ์สำหรับรอบ {{ recent_confirmation.round_number }} แล้ว และเราได้รับข้อมูลเมื่อวันที่ {{ recent_confirmation.confirmed_at|date:"d F" }} 2554 แล้ว อย่างไรก็ตาม <b>สำหรับการเข้าศึกษาต่อในสาขา {{ admission_result.admitted_major.name }} คุณจะต้องชำระเงินเพิ่ม {{ additional_payment|intcomma }} บาท</b></p>
+      {% endif %}
+
+      การยืนยันสิทธิ์จะยังไม่สมบูรณ์จนกว่าคุณจะได้ไปชำระเงินค่ายืนยันสิทธิ์สำหรับสาขา {{ admission_result.admitted_major.name }} เป็นเงินรวมทั้งสิ้น {{ admission_result.admitted_major.confirmation_amount|intcomma }} บาท ที่ธนาคารไทยพาณิชย์ <b>ภายในวันที่ {{ current_round.last_date|date:"d F" }} 2554</b>  ถ้าคุณไม่ได้ไปชำระเงินภายในวันดังกล่าว จะถือว่าคุณสละสิทธิ์ &nbsp;&nbsp; <b>เมื่อคุณยืนยันสิทธิ์แล้ว ทางคณะจะส่งรายชื่อไปยัง สกอ. เพื่อตัดสิทธิ์การสอบระบบกลางต่อไป</b> (อ่านรายละเอียดด้านล่าง)
+    </p>
+    <center>
+      <a href="{% url status-confirm-ticket %}?{{ random_seed }}">
+	<div class="button medium">
+	  พิมพ์ใบชำระเงินสำหรับธนาคารเพื่อยืนยันสิทธิ์
+	</div>
+      </a>
+    </center>
+    <p>
+      <small><b>หมายเหตุ:</b> ทางธนาคารจะส่งข้อมูลการชำระเงินให้กับโครงการรับตรงในวันทำการวันถัดไป
+      ดังนั้น ถึงแม้คุณจะชำระเงินแล้ว ข้อมูลภายในเว็บอาจจะยังไม่ได้ปรับให้เป็นปัจจุบัน (ยกตัวอย่างเช่น ถ้าผู้สมัครชำระเงินวันศุกร์ ข้อมูลจะถูกปรับในวันจันทร์เช้า เป็นต้น)
+      </small>
+    </p>
+
+  {% endif %}
+{% endif %}
+
+{% include "application/status/include/student_registration_link.html" %}
+
+{% if first_admission and is_confirmation_time_left %}
+  <p>
+    คุณสามารถเปลี่ยนการเลือกของคุณได้ในรอบนี้ได้ ภายในวันที่ {{ current_round.last_date|date:"d F" }} 2554
+  </p>
+
+  <center>
+    <a href="{% url confirmation-pref %}">
+      <div class="button-blue medium">เปลี่ยนการเลือก</div>
+    </a>
+  </center>
+{% endif %}
+
+</div>

@@ -1,0 +1,31 @@
+{% load adm_media %}
+{% if applicant.is_submitted %}
+  <td>{{ applicant.ticket_number }}</td>
+{% else %}
+  <td>-</td>
+{% endif %}
+
+<td><a href="{% url review-show-app applicant.id %}">{{ applicant.full_name }}</a></td>
+<td>{{ applicant.national_id }}</td>
+
+{% if applicant.is_submitted %}
+  <td>{{ applicant.verification_number|slice:":8" }}</td>
+  <td>{{ applicant.submission_info.submitted_at|date:"H:i, j N" }}</td>
+{% else %}
+  <td></td>
+  <td></td>
+{% endif %}
+{% if applicant.submission_info.is_paid %}
+  <td style="text-align:center">{% passed_icon %}</td>
+  <td>{{ applicant.submission_info.paid_at|date:"j N" }}</td>
+{% else %}
+  <td>-</td>
+  <td></td>
+{% endif %}
+
+<td>
+  อีเมล์: {{ applicant.email }}
+  {% if user and user.is_staff %}
+    [<a href="{% url admin:application_applicant_change applicant.id %}">admin</a>]
+  {% endif %}
+</td>

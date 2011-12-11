@@ -1,0 +1,92 @@
+[
+ {
+  "pk": 2, 
+  "model": "review.reviewfield", 
+  "fields": {
+   "applicant_note_format": "", 
+   "admin_note_format": "", 
+   "applicant_note_help_text": "", 
+   "short_name": "nat_id", 
+   "required": true, 
+   "enabled": true, 
+   "admin_note_help_text": "", 
+   "order": 2, 
+   "name": "\u0e2a\u0e33\u0e40\u0e19\u0e32\u0e1a\u0e31\u0e15\u0e23\u0e1b\u0e23\u0e30\u0e08\u0e33\u0e15\u0e31\u0e27"
+  }
+ }, 
+ {
+  "pk": 4, 
+  "model": "review.reviewfield", 
+  "fields": {
+   "applicant_note_format": "", 
+   "admin_note_format": "", 
+   "applicant_note_help_text": "", 
+   "short_name": "gat_score", 
+   "required": true, 
+   "enabled": true, 
+   "admin_note_help_text": "", 
+   "order": 4, 
+   "name": "\u0e04\u0e30\u0e41\u0e19\u0e19 GAT"
+  }
+ }, 
+ {
+  "pk": 5, 
+  "model": "review.reviewfield", 
+  "fields": {
+   "applicant_note_format": "", 
+   "admin_note_format": "", 
+   "applicant_note_help_text": "", 
+   "short_name": "pat1_score", 
+   "required": true, 
+   "enabled": true, 
+   "admin_note_help_text": "", 
+   "order": 5, 
+   "name": "\u0e04\u0e30\u0e41\u0e19\u0e19 PAT1"
+  }
+ }, 
+ {
+  "pk": 6, 
+  "model": "review.reviewfield", 
+  "fields": {
+   "applicant_note_format": "", 
+   "admin_note_format": "", 
+   "applicant_note_help_text": "", 
+   "short_name": "pat3_score", 
+   "required": true, 
+   "enabled": true, 
+   "admin_note_help_text": "", 
+   "order": 6, 
+   "name": "\u0e04\u0e30\u0e41\u0e19\u0e19 PAT3"
+  }
+ }, 
+ {
+  "pk": 7, 
+  "model": "review.reviewfield", 
+  "fields": {
+   "applicant_note_format": "", 
+   "admin_note_format": "", 
+   "applicant_note_help_text": "", 
+   "short_name": "anet_score", 
+   "required": true, 
+   "enabled": true, 
+   "admin_note_help_text": "", 
+   "order": 7, 
+   "name": "\u0e04\u0e30\u0e41\u0e19\u0e19 A-NET"
+  }
+ }, 
+ {
+  "pk": 8, 
+  "model": "review.reviewfield", 
+  "fields": {
+   "applicant_note_format": "", 
+   "admin_note_format": "", 
+   "applicant_note_help_text": "", 
+   "short_name": "app_fee_doc", 
+   "required": true, 
+   "enabled": true, 
+   "admin_note_help_text": "\u0e01\u0e23\u0e2d\u0e01\u0e40\u0e27\u0e25\u0e32\u0e41\u0e25\u0e30\u0e27\u0e31\u0e19\u0e17\u0e35\u0e48\u0e1d\u0e32\u0e01\u0e40\u0e02\u0e49\u0e32\u0e1a\u0e31\u0e0d\u0e0a\u0e35 \u0e43\u0e19\u0e23\u0e39\u0e1b\u0e41\u0e1a\u0e1a\u0e40\u0e0a\u0e48\u0e19 17:15:38 17/11/52", 
+   "order": 8, 
+   "name": "\u0e2b\u0e25\u0e31\u0e01\u0e10\u0e32\u0e19\u0e43\u0e1a\u0e19\u0e33\u0e1d\u0e32\u0e01"
+  }
+ }
+]

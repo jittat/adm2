@@ -1,0 +1,21 @@
+{% if steps %}
+  <div id="step-bar">
+    <ul>
+      <li class="head">ขั้นตอน</li>
+      {% for s in steps %}
+        {% if s.is_current %}
+          <li class="current">{{ s.text }}</li>
+        {% else %}
+          {% if s.is_clickable %}
+            <li><a href="{{ s.url }}">{{ s.text }}</a></li>
+          {% else %}
+            <li class="future">{{ s.text }}</li>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </ul>
+    <div id="log-out-button">
+      <a id="logout-link" href="{% url apply-logout %}">ออกจากระบบ</a>
+    </div>
+  </div>
+{% endif %}

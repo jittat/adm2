@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block extra-head %}
+<script type="text/javascript" src="{% load adm_media %}{% media_url %}/js/jquery.js"></script>
+{% endblock %}
+
+{% block header %}
+<div class="title-bar">
+  <h1>{% block extra-title-bar %}{% endblock %}การสมัครเข้าศึกษาต่อคณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์ วิทยาเขตบางเขน</h1>
+</div>
+{% endblock %}
+
+{% block body %}
+{% endblock %}
+
+{% block footer %}
+  <div id="footer">
+    โครงการรับตรง คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์ วิทยาเขตบางเขน. 
+    50 พหลโยธิน ลาดยาว จตุจักร กรุงเทพ 10900.  โทร (02) 942-8555<br/>
+    Icon sets from <a href="http://www.webappers.com/2008/02/12/webappers-released-free-web-application-icons-set/">Webappers</a> and <a href="http://sekkyumu.deviantart.com/art/Developpers-Icons-63052312">Sekkyumu</a>.
+  </div>
+{% endblock %}
+

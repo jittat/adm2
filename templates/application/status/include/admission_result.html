@@ -1,0 +1,27 @@
+{% if admission_result %}
+  {% if admission_result.is_admitted %}
+    <b>ผลการคัดเลือกรอบ {{ admission_result.round_number }}:</b>
+    ขอแสดงความยินดีด้วย คุณผ่านการคัดเลือกให้เข้าศึกษาต่อแบบรับตรง<br/>
+    <b>สาขาที่ได้รับการคัดเลือก:</b>
+    {{ admission_result.admitted_major.number }}
+    {{ admission_result.admitted_major.name }}
+    <br/>
+
+    {% if not admission_major_pref %}
+      {% include "application/status/include/new_admission_major_pref.html" %}
+    {% else %}
+      {% include "application/status/include/edit_admission_major_pref.html" %}
+    {% endif %}
+
+    {% include "application/status/include/confirmation_warning.html" %}
+
+  {% else %}
+    {% if admission_result.is_waitlist %}
+      คุณมีชื่ออยู่ในรายชื่อสำรอง ดูข้อมูลเพิ่มเติมได้ที่<a href="{% url result-set-index "waitlist" %}">หน้าประกาศผลการรับสมัคร</a><br/>
+    {% else %}
+      {% include "application/status/include/not_admitted.html" %}
+    {% endif %}
+  {% endif %}
+{% else %}
+  {% include "application/status/include/not_admitted.html" %}
+{% endif %}

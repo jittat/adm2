@@ -1,0 +1,13 @@
+{% extends "application/registration/msg-base.html" %}
+
+{% block title %}การยืนยันอีเมล์: สำเร็จ{% endblock %}
+
+{% block msg-body %}
+  <p>
+    คุณ{{ applicant.first_name }} {{ applicant.last_name }}ยืนยันอีเมล์{{ applicant.email }}
+    เรียบร้อยแล้ว<br/> เราได้ส่งรหัสผ่านไปยัง {{ applicant.email }} แล้ว
+    กรุณาตรวจสอบจดหมายอิเล็กทรอนิกส์ที่ส่งไปที่อีเมล์นั้น
+    เป็นไปได้ที่จดหมายอาจอยู่คัดไปในกล่องจดหมายขยะ (spam) ดังนั้นถ้าไม่เห็นจดหมาย
+    อย่าลืมตรวจสอบที่กล่องขยะด้วย
+  </p>
+{% endblock %}

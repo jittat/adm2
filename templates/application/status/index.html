@@ -1,0 +1,58 @@
+{% extends "application/status/base.html" %}
+
+{% load adm_info %}
+
+{% block extra-head %}
+<link rel="stylesheet" type="text/css" href="{% load adm_media %}{% media_url %}/css/front.css" />
+<script type="text/javascript" src="{% media_url %}/js/jquery.js"></script>
+{% endblock %}
+
+{% block body %}
+  {% include "application/status/include/status_menu.html" %}
+
+  {% adm_submission_deadline_warning %}
+
+  {% if notice %}
+    <div class="notice-bar">
+      <span class="notice">{{ notice }}</span>
+    </div>
+  {% endif %}
+
+  <!--- *************************** --->
+
+  <p>
+    <b>ชื่อผู้สมัคร:</b> {{ applicant.full_name }} &nbsp;&nbsp;
+    <b>หมายเลขประจำตัวประชาชน:</b> {{ applicant.national_id }}<br/>
+
+    {% if applicant.is_eligible %} 
+      <hr/> 
+      {% if current_round %}
+        {% include "application/status/include/admission_result.html" %}
+      {% else %}
+        <b>คุณมีสิทธิ์เข้ารับพิจารณาคัดเลือกเข้าศึกษาต่อในโครงการรับตรง ประจำปีการศึกษา 2554 กรุณารอฟังผลการคัดเลือกรอบแรกในวันที่ 19 ม.ค. 2554</b>
+      {% endif %}
+      <hr />
+    {% else %}
+
+    {% endif %}
+  </p>
+
+  {% comment %}
+    {% include "application/status/include/submission_status.html" %}
+  {% endcomment %}
+
+  <p>
+    คุณสามารถ <a href="{% url status-show %}">ดูใบสมัครที่คุณส่งมาแล้วได้</a>
+    เพื่อตรวจสอบรายละเอียด{% if not applicant.online_doc_submission %}และพิมพ์ใบนำส่งหลักฐาน{% endif %}
+  </p>
+
+  <p>
+    ถ้ามีข้อขัดข้องหรือข้อผิดพลาดกรุณาแจ้งผู้ดูแลทางอีเมล์ {% load adm_info %}{% adm_admin_email_link %}
+  </p>
+  <br style="clear:both"/>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $(".notice-bar").animate({opacity:1.0}, 5000).fadeOut("slow");
+    });
+  </script>
+{% endblock %}

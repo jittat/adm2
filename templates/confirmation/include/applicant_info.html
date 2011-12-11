@@ -1,0 +1,51 @@
+<div class="light-frame">
+  <b>ชื่อผู้สมัคร:</b> {{ applicant.full_name }} | <b>หมายเลขประจำตัวผู้สมัคร:</b> {{ applicant.ticket_number }}<br/>
+  <b>สาขาที่ได้รับการคัดเลือกให้เข้าสัมภาษณ์</b>: 
+  {{ admission_result.admitted_major.number }}
+  {{ admission_result.admitted_major.name }}<br/>
+</div>
+<div class="light-frame">
+  <b>ที่อยู่:</b>
+  {% with applicant.address.home_address as address %}
+  {{ address.number }} {{ address.village_name }}
+  {% if address.village_number %}หมู่ {{ address.village_number }}{% endif %}
+  {% if address.road %}ถ. {{ address.road }}{% endif %} {{ address.district }}    
+  {{ address.city }}
+  {{ address.province }} {{ address.postal_code }}
+  {% endwith %}
+</div>
+<div class="light-frame">
+  <b>โรงเรียน:</b> {{ applicant.education.school_name }}, {{ applicant.education.school_province }}  | <b>เกรดเฉลี่ย:</b> {{ applicant.education.gpax }}<br/>
+  {% if applicant.NIETS_scores %}
+    <b>คะแนนรวม:</b> {{ applicant.NIETS_scores.get_score|floatformat:3 }}<br/>
+    {% with applicant.NIETS_scores.as_list_by_exam_round as niets_scores %}
+      <table id="niets-scores">
+	<tr>
+	  <th></th>
+	  <th>GAT</th><th>PAT1</th><th>PAT3</th>
+	</tr>
+	{% for sround in niets_scores %}
+          <tr>
+	    <td>ครั้งที่ {{ forloop.counter }}</td>
+	    {% for s in sround %}
+	      <td>{{ s|floatformat:2 }}</td>
+	    {% endfor %}
+	  </tr>
+        {% endfor %}
+	<tr class="best">
+	  <td>ดีที่สุด</td>
+	  {% for s in best_scores %}
+	    <td><b>{{ s|floatformat:2 }}</b></td>
+          {% endfor %}
+	</tr>
+      </table>
+    {% endwith %}
+  {% else %}
+    {% if not applicant.education.uses_gat_score %}
+      <b>คะแนน A-NET: </b>{{ applicant.education.anet|floatformat:2 }}
+    {% else %}
+      ไม่มีข้อมูลคะแนนจากสทศ
+    {% endif %}
+  {% endif %}
+  <br/>
+</div>

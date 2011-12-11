@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% load adm_info %}
+{% load feature_switch_tags %}
+
+{% block title %}Applying{% endblock %}
+
+{% block extra-head %}
+<link rel="stylesheet" type="text/css" href="{% load adm_media %}{% media_url %}/css/front.css" />
+<script type="text/javascript" src="{% media_url %}/js/jquery.js"></script>
+{% endblock %}
+
+{% block body %}
+<div class="front-body">
+  <h1>
+    การสมัครเข้าศึกษาต่อคณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์<br/>
+    โครงการรับตรงประจำปีการศึกษา 2554
+  </h1>
+
+  {% adm_submission_deadline_warning %}
+
+  <div class="right-box">
+
+      {% if submission_deadline_passed %}
+        <div class="login-box">
+          <center><b>หมดเวลารับสมัครออนไลน์แล้ว</b></center>
+        </div>
+      {% else %}
+        <div class="login-box">
+          <center>
+    	    เริ่มต้นสมัครโดยการ
+  	  </center>
+	  <a class="in-button" href="{% url apply-register %}">
+	    <div id="reg-button" class="button big">
+	      ลงทะเบียนเข้าใช้ระบบ
+	      <img src="{% media_url %}/image/Next.png"/>
+	    </div>
+	  </a>
+	</div>
+      {% endif %}
+      <br/>
+
+      <div class="login-box">
+	<center>
+	  {% if not submission_deadline_passed %}
+  	    หลังจากลงทะเบียนแล้ว<br/>
+	    เริ่มกรอกใบสมัคร กรอกใบสมัครที่ค้างไว้<br/>
+	    หรือตรวจสอบสถานะการสมัคร
+	  {% else %}
+	    เข้าสู่ระบบเพื่อตรวจสอบสถานะการสมัคร
+	  {% endif %}
+	  <form action="{% url apply-login %}" method="post">
+	    <table class="header-left">
+	      <tr>
+		<th width="45%">
+		  <label for="id_national_id">รหัสประจำตัวประชาชน:</label>
+		</th>
+		<td width="55%">
+		  {{ form.national_id.errors }}
+		  {{ form.national_id }}
+		</td>
+	      </tr>
+	      {% comment %}
+	      <!-- NO LOG IN WITH APPLICATION_ID -->
+	      <tr>
+		<td></td>
+		<td><small>หรือ (เลือกอย่างใดอย่างหนึ่ง)</small></td>
+	      </tr>
+	      <tr>
+		<td style="text-align:right;">
+		  <b><label for="id_application_id">หมายเลขผู้สมัคร:</label></b><br/>
+		  <small>เช่น 53007007</small>
+		</td>
+		<td>
+		  {{ form.application_id.errors }}
+		  {{ form.application_id }}
+		</td>
+	      </tr>
+	      <tr><td><br/></td><td></td></tr>
+	      {% endcomment %}
+	      <tr>
+		<th>
+		  <label for="id_password">รหัสผ่าน:</label>
+		</th>
+		<td>
+		  {{ form.password.errors }}
+		  {{ form.password }}
+		</td>
+	      </tr>
+	      <tr>
+		<td></td>
+		<td>
+		  <input type="submit" name="submit" value="เข้าใช้ระบบ"/>
+		</td>
+	      </tr>
+	    </table>
+	  </form>
+	</center>
+	
+	<center>
+	  <a href="{% url apply-forget %}">ลืมรหัสผ่านหรือขอรหัสผ่านใหม่</a>
+	</center>
+      </div>
+
+    <br/>
+
+    <div id="browser-notice">
+      สำหรับผู้ที่ใช้บราวเซอร์รุ่นเก่า เช่น Internet Explorer 6
+      อาจประสบปัญหาในการแสดงผลบ้าง แต่ยังสามารถใช้สมัครได้<br/> อย่างไรก็ตาม
+      ทีมงานสนับสนุนให้ผู้ใช้ติดตั้งบราวเซอร์สมัยใหม่ที่แสดงผลได้ตามมาตรฐาน เช่น
+      <a href="http://www.mozilla.com/en-US/firefox/">Firefox</a>, 
+      <a href="http://www.google.com/chrome">Google Chrome</a>, 
+      <a href="http://www.microsoft.com/windows/Internet-explorer/default.aspx">Internet Explorer 8</a>, 
+      <a href="http://www.opera.com/">Opera</a> หรือ 
+      <a href="http://www.apple.com/safari/">Safari</a>
+      เป็นต้น
+    </div>
+
+  </div>
+
+  {% if announcements %}
+    <div style="width: 510px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; -moz-border-radius-bottomright: 5px; -moz-border-radius-bottomleft: 5px; padding-left: 5px; padding-right: 5px;" class="normal-msg">
+      {% for announcement in announcements %}
+        {{ announcement.body|safe }}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+
+  {% include "application/include/applying_information.html" %}
+
+  <p>
+    ถ้าพบปัญหาในการสมัครกรุณาสอบถามที่เว็บบอร์ด หรือส่งอีเมล์มาที่ 
+    {% load adm_info %}{% adm_admin_email_link %}
+  </p>
+
+</div>
+<script type="text/javascript">
+  $(document).ready(function() {
+    var h = 0;
+    $(".tab-body").each(function (t) {
+      if(this.clientHeight > h)
+        h = this.clientHeight;
+    });
+    $(".tab-body").css("height",h);
+
+    $("#reg-button").hover(
+      function() {
+        $(this).addClass("selected");
+      },
+      function() {
+        $(this).removeClass("selected");
+      }
+    );
+  });
+</script>
+{% endblock %}

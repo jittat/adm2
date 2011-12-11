@@ -1,0 +1,10 @@
+{% with applicant.education as education %}
+  <ul>
+    <li>{{ education.get_has_graduated_display }}
+      {% if education.has_graduated %}จาก{% else %}ที่{% endif %}
+      {{ education.school_name }} 
+      {{ education.school_city }} 
+      {{ education.school_provice }}
+    </li>
+  </ul>
+{% endwith %}

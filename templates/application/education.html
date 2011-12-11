@@ -1,0 +1,15 @@
+{% extends "application/formbase.html" %}
+
+{% block title %}Education information{% endblock %}
+
+{% block form-body %}
+<div id="edu-form" class="app-form">
+  <form action="{% url apply-edu %}" method="post">
+    {% include "application/forms/education.html" %}
+    <div class="submission-bar">
+      <input type="submit" name="submit" value="เก็บข้อมูล"/>
+      <input type="submit" name="cancel" value="ยกเลิก"/>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends "review/base.html" %}
+
+{% load adm_media %}
+
+{% block extra-head %}
+  {{ block.super }}
+  <script type="text/javascript" src="{% load adm_media %}{% media_url %}/js/review.js"></script>
+{% endblock %}
+
+{% block regis-body %}
+  {% if form %}
+    <form action="{% url review-search %}" method="post">
+      {{ form }}
+      <input type="submit" name="search" value="ค้นข้อมูล"/>
+    </form>
+  {% endif %}
+
+  {% if notice %}
+    <div class="notice-bar">
+      <span class="notice">{{ notice }}</span>
+    </div>
+  {% endif %}
+
+  {% block list_summary %}
+    {% if applicant_count %}
+      <p>
+        ผลลัพธ์ทั้งหมด {{ applicant_count }} รายการ แสดงผลรายการที่ {{ display_start }} ถึงรายการที่ {{ display_end }} ({{ display_count }} รายการ) 
+        {% if pagination %}
+          | 
+          <small>
+  	    {% ifnotequal page 1 %}<a href="?page=1">หน้าแรก</a> - <a href="?page={{ page|add:"-1" }}">หน้าก่อนหน้า</a> - {% endifnotequal %}หน้าที่ {{ page }}{% ifnotequal page max_page %} - <a href="?page={{ page|add:"1" }}">หน้าถัดไป</a>{% endifnotequal %}
+  	  </small>
+        {% endif %}
+      </p>
+    {% endif %}
+  {% endblock %}
+
+  <div class="small-vert-sept"></div>
+
+  <table class="applicants">
+    <tr>
+      {% if display.ticket_number %}
+        <th>หมายเลขผู้สมัคร</th>
+      {% endif %}
+      <th>ชื่อ</th>
+      {% if display.edu %}<th>โรงเรียน</th>{% endif %}
+      <th>สถานะการยื่นใบสมัคร</th>
+      <th>วิธีส่ง</th>
+      {% if display.doc_received_at %}
+        <th>ได้รับหลักฐาน</th>
+      {% endif %}
+      {% if display.update_info %}
+        <th>เวลาที่แก้ไข</th>
+        <th>แก้ไขโดยคณะ</th>
+      {% endif %}
+      {% if display.doc_reviewed_at %}<th>ตรวจเมื่อ</th>{% endif %}
+      {% if display.doc_reviewed_at %}<th>ผลการตรวจ</th>{% endif %}
+      {% if force_review_link %}
+        <th></th>
+      {% endif %}
+    </tr>
+    {% for applicant in applicants %}
+      <tr id="app-{{ applicant.id }}-row" class="{% cycle 'odd' 'even' %}">
+
+	{% if display.ticket_number %}
+	  <td>{{ applicant.ticket_number }}</td>
+	{% endif %}
+
+	<td>{{ applicant.full_name }}</td>
+
+	{% if display.edu %}
+	  <td>{{ applicant.education.school_name }}</td>
+        {% endif %}
+
+	<td>
+	  {% if applicant.is_submitted %}
+	    {% if applicant.submission_info.is_resubmitted %}<img src="{% media_url %}/image/Backup.png"/>ยื่นหลักฐานเพิ่ม{% else %}ยื่นใบสมัครแล้ว{% endif %} 
+	  {% else %}
+	    ยังไม่ยื่น
+	  {% endif %}
+	</td>
+
+	<td>{{ applicant.get_doc_submission_method_display }}</td>
+	{% if display.doc_received_at %}
+	  <td>{{ applicant.submission_info.doc_received_at|date:"H:i, j N" }}</td>
+	{% endif %}
+
+	{% if display.update_info %}
+	  <td>{{ applicant.update_info.updated_at|date:"H:i, j N" }}</td>
+	  <td>
+	    {% if applicant.update_info.is_manual_update %}ใช่{% else %}ไม่ใช่{% endif %}
+	  </td>
+	{% endif %}
+
+	{% if display.doc_reviewed_at %}
+	  <td>{{ applicant.submission_info.doc_reviewed_at|date:"H:i, j N" }}</td>
+	{% endif %}
+
+	{% if display.doc_reviewed_complete %}
+	  <td>
+	    {% passed_icon applicant.submission_info.doc_reviewed_complete  %}
+	    {% if applicant.submission_info.doc_reviewed_complete %}ผ่าน{% else %}ไม่ผ่าน{% endif %}
+	  </td>
+	{% endif %}
+
+	{% if force_review_link %}
+	  <td>
+            {% if applicant.submission_info.can_be_reviewed %}
+              [<a href="{% url review-show applicant.id %}">ตรวจเอกสาร</a>]</td>
+	    {% endif %}
+	  </td>
+        {% endif %}
+      </tr>
+    {% empty %}
+      <tr><td colspan="7">ไม่พบผู้สมัคร</td></tr>
+    {% endfor %}
+  </table>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    register_doc_recevied_toggle_click();
+  });
+</script>
+{% endblock %}

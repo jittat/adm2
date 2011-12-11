@@ -1,0 +1,47 @@
+{% extends "review/base.html" %}
+
+{% block extra-title-bar %}หน่วยทะเบียน | {% endblock %}
+
+{% block regis-body %}
+<p>
+  สถิติพื้นฐาน:
+  <ul>
+    <li>จำนวนผู้สมัครที่ส่งใบสมัครแล้วทั้งหมด {{ stat.app_submitted }} คน</li>
+    <li>จำนวนผู้สมัครที่ชำระค่าสมัครแล้ว {{ stat.app_paid }} คน</li>
+    <li>จำนวนผู้ลงทะเบียนเว็บไซต์ {{ stat.online_app_registered }} คน</li>
+  </ul>
+  <b>รายการผู้สมัคร:</b>
+  <ul>
+    <li>
+      รายผู้สมัครที่หลักฐานไม่ผ่านการตรวจ
+      <ul>
+	<li>
+	  <a href="{% url review-list-incomplete-online %}">สมัครและส่งหลักฐานแบบออนไลน์ทั้งหมด (online)</a>
+	</li>
+	<li>
+	  <a href="{% url review-list-incomplete-postal %}">สมัครแบบออนไลน์ที่ส่งหลักฐานทางไปรษณีย์</a>
+	</li>
+	<li>
+	  <a href="{% url review-list-incomplete-offline %}">สมัครและส่งหลักฐานทางไปรษณีย์ (offline)</a>
+	</li>
+      </ul>
+    </li>
+
+    <li>
+      <a href="{% url review-list-supplements %}">รายชื่อผู้สมัครที่ยื่นหลักฐานเพิ่มหลังจากตรวจสอบแล้ว (เฉพาะที่หลักฐานยังตรวจไม่ผ่าน)</a>
+    </li>
+    <li>
+      รายการตรวจสอบพิเศษ
+      <ul>
+	<li>
+	  <a href="{% url review-list-inspect-supplement %}">รายชื่อที่เวลายื่นหลักฐานเพิ่มเติมและเวลาตรวจใกล้กันมากกว่า 10 นาที</a>
+	</li>
+	<li>
+	  <a href="{% url review-list-inspect-edu-update %}">รายชื่อที่เวลาแก้ไขข้อมูลด้านการศึกษากับเวลาตรวจใกล้กันมากกว่า 10 นาที (โปรดระวัง: ใช้เวลาคำนวณมาก)</a>
+	</li>
+      </ul>
+    </li>
+
+  </ul>
+</p>
+{% endblock %}

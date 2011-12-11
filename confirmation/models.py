@@ -1,0 +1,284 @@
+# -*- coding: utf-8 -*-
+from django.db import models
+from django.contrib.auth.models import User
+
+from application.fields import IntegerListField
+from application.models import Applicant
+
+class AdmissionMajorPreference(models.Model):
+    applicant = models.ForeignKey(Applicant,
+                                  related_name='admission_major_preferences')
+    round_number = models.IntegerField(default=0)
+    is_accepted_list = IntegerListField()
+
+    is_nomove_request = models.BooleanField(default=False)
+
+    ptype = models.IntegerField(default=0)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['-round_number']
+
+    class PrefType():
+        PREF_NO_MOVE = 1
+        PREF_MOVE_UP_INCLUSIVE = 2
+        PREF_MOVE_UP_STRICT = 3
+        PREF_WITHDRAWN = 4
+
+        def __init__(self, ptype):
+            self.ptype = ptype
+
+        def is_no_move(self):
+            return self.ptype == self.PREF_NO_MOVE
+        
+        def is_move_up_inclusive(self):
+            return self.ptype == self.PREF_MOVE_UP_INCLUSIVE
+        
+        def is_move_up_strict(self):
+            return self.ptype == self.PREF_MOVE_UP_STRICT
+        
+        def is_withdrawn(self):
+            return self.ptype == self.PREF_WITHDRAWN
+
+        @staticmethod
+        def new_empty():
+            return AdmissionMajorPreference.PrefType(0)
+
+    PrefType.NO_MOVE = PrefType(PrefType.PREF_NO_MOVE)
+    PrefType.MOVE_UP_INCLUSIVE = PrefType(PrefType.PREF_MOVE_UP_INCLUSIVE)
+    PrefType.MOVE_UP_STRICT = PrefType(PrefType.PREF_MOVE_UP_STRICT)
+    PrefType.WITHDRAWN = PrefType(PrefType.PREF_WITHDRAWN)
+
+    preftype_dict = { 1: PrefType.NO_MOVE,
+                      2: PrefType.MOVE_UP_INCLUSIVE,
+                      3: PrefType.MOVE_UP_STRICT,
+                      4: PrefType.WITHDRAWN }
+
+    @staticmethod
+    def new_for_applicant(applicant, 
+                          prev_accepted_list=None, 
+                          admission_result=None):
+        pref = AdmissionMajorPreference()
+        pref.applicant = applicant
+        if not admission_result:
+            admission_result = applicant.get_latest_admission_result()
+
+        if ((not admission_result) or
+            (not admission_result.is_admitted)):
+            pref.is_accepted_list = []
+            return pref
+
+        admitted_major = admission_result.admitted_major
+        majors = applicant.preference.get_major_list()
+        mcount = len(majors)
+        alist = [0] * mcount
+        i = 0
+        while (i < mcount) and (majors[i].id != admitted_major.id):
+            if prev_accepted_list!=None:
+                alist[i] = prev_accepted_list[i]
+            else:
+                alist[i] = 1
+            i += 1
+        if i < mcount:   # for admitted major
+            alist[i] = 1
+        pref.is_accepted_list = alist
+        return pref
+
+
+    def is_applicant_admitted(self):
+        applicant = self.applicant
+        if not applicant:
+            return False
+        
+        admission_result = applicant.get_latest_admission_result()
+        return (admission_result) and (admission_result.is_admitted)
+
+
+    def get_accepted_majors(self,check_admitted=True):
+        if check_admitted and (not self.is_applicant_admitted()):
+            return []
+        if self.is_nomove_request:
+            return [self.applicant.get_latest_admission_result().admitted_major]
+        majors = self.applicant.preference.get_major_list()
+        accepted_majors = [m 
+                           for a, m
+                           in zip(self.is_accepted_list,
+                                  majors)
+                           if a]
+        return accepted_majors
+
+
+    def set_ptype_cache(self, save=True):
+        if not self.is_applicant_admitted():
+            self.ptype = 4
+
+        else:
+            accepted_majors = self.get_accepted_majors()
+            assigned_majors = self.applicant.get_latest_admission_result().admitted_major
+
+            if len(accepted_majors)==0:
+                self.ptype = 4
+            elif (len(accepted_majors)==1 and
+                  accepted_majors[0].id == assigned_majors.id):
+                self.ptype = 1
+            elif assigned_majors.id in [a.id for a in accepted_majors]:
+                self.ptype = 2
+            else:
+                self.ptype = 3
+
+        if save:
+            self.save()
+
+    
+    def get_pref_type(self):
+        if self.ptype==0:
+            self.set_ptype_cache()
+        return AdmissionMajorPreference.preftype_dict[self.ptype]
+
+
+    def get_display(self):
+        pref_type = self.get_pref_type()
+        if pref_type == AdmissionMajorPreference.PrefType.WITHDRAWN:
+            return u'สละสิทธิ์'
+        elif pref_type == AdmissionMajorPreference.PrefType.NO_MOVE:
+            return u'ยืนยันสิทธิ์ในสาขาที่ได้รับคัดเลือก และไม่ต้องการเข้ารับการพิจารณาเลื่อนอันดับอีก'
+        elif pref_type == AdmissionMajorPreference.PrefType.MOVE_UP_INCLUSIVE:
+            return u'ยืนยันสิทธิ์ในสาขาที่ได้รับคัดเลือก และต้องการเข้ารับการพิจารณาเลื่อนอันดับในสาขาที่อยู่ในอันดับสูงกว่า'
+        else:
+            return u'ยืนยันสิทธิ์ในสาขาที่ได้รับคัดเลือก และต้องการเข้ารับการพิจารณาเลื่อนอันดับในสาขาที่อยู่ในอันดับสูงกว่า ถ้าไม่ได้รับการพิจารณาจะสละสิทธิ์ในสาขาที่ได้รับคัดเลือกนี้'
+
+
+    def is_withdrawn(self):
+        pref_type = self.get_pref_type()
+        return pref_type == AdmissionMajorPreference.PrefType.WITHDRAWN
+
+
+class AdmissionConfirmation(models.Model):
+    applicant = models.ForeignKey(Applicant, 
+                                  related_name='admission_confirmations')
+    round_number = models.IntegerField(default=0)
+    paid_amount = models.IntegerField(default=0)
+    confirmed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-confirmed_at']
+
+
+class AdmissionWaiver(models.Model):
+    applicant = models.OneToOneField(Applicant,
+                                     related_name='admission_waiver')
+    is_waiver = models.BooleanField(default=False)
+    waived_at = models.DateTimeField(auto_now_add=True)
+    editted_at = models.DateTimeField(auto_now=True)
+
+    @staticmethod
+    def is_waived(applicant):
+        try:
+            w = applicant.admission_waiver
+            return w.is_waiver
+        except:
+            return False
+
+
+TITLE_CHOICES = [
+    ('','--'),
+    (u'นาย', u'นาย'),
+    (u'น.ส.', u'น.ส.'),
+    (u'นาง', u'นาง'),
+    ]
+
+class StudentRegistration(models.Model):
+    applicant = models.OneToOneField(Applicant,
+                                    related_name='student_registration')
+
+    passport_number = models.CharField(max_length=40,
+                                       verbose_name=u'เลข Passport',
+                                       blank=True)
+    english_first_name = models.CharField(max_length=200,
+                                          verbose_name=u'ชื่อ (ภาษาอังกฤษ)')
+    english_last_name = models.CharField(max_length=300,
+                                         verbose_name=u'นามสกุล (ภาษาอังกฤษ)')
+    religion = models.CharField(max_length=50,
+                                verbose_name=u'ศาสนา')
+    birth_place = models.CharField(max_length=100,
+                                   verbose_name=u'ภูมิลำเนาเกิด')
+    home_phone_number = models.CharField(max_length=50,
+                                         verbose_name=u'เบอร์โทรศัพท์บ้าน',
+                                         blank=True)
+    cell_phone_number = models.CharField(max_length=50,
+                                         verbose_name=u'เบอร์โทรศัพท์มือถือ',
+                                         blank=True)
+    father_title = models.CharField(max_length=10,
+                                    choices=TITLE_CHOICES,
+                                    verbose_name="คำนำหน้าชื่อบิดา")
+    father_first_name = models.CharField(max_length=200,
+                                         verbose_name=u'ชื่อบิดา')
+    father_last_name = models.CharField(max_length=300,
+                                        verbose_name=u'นามสกุลบิดา')
+    father_national_id = models.CharField(max_length=20,
+                                          verbose_name=u'เลขบัตรประชาชนบิดา')
+
+    mother_title = models.CharField(max_length=10,
+                                    choices=TITLE_CHOICES,
+                                    verbose_name="คำนำหน้าชื่อมารดา")
+    mother_first_name = models.CharField(max_length=200,
+                                         verbose_name=u'ชื่อมารดา')
+    mother_last_name = models.CharField(max_length=300,
+                                        verbose_name=u'นามสกุลมารดา')
+    mother_national_id = models.CharField(max_length=20,
+                                          verbose_name=u'เลขบัตรประชาชนมารดา')
+
+    def validate(self, errors=None):
+        if errors==None:
+            errors = []
+        if (self.mother_national_id == '') and (self.father_national_id ==''):
+            errors.append(u'ไม่มีรหัสประชาชนทั้งบิดาและมารดา')
+        if self.birth_place == '':
+            errors.append(u'ไม่มีสถานที่เกิด')
+        if (self.home_phone_number == '') and (self.cell_phone_number == ''):
+            errors.append(u'ไม่มีหมายเลขโทรศัพท์ทั้งบ้านและมือถือ')
+
+        return len(errors)==0
+
+# -------------------- NOT USED ------------------------
+
+class Round2ApplicantConfirmation(models.Model):
+    applicant = models.OneToOneField(Applicant, related_name='round2_confirmation')
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    is_confirmed = models.BooleanField(
+        choices=((True,u'ยืนยัน'),
+                 (False,u'สละสิทธิ์')),
+        default=True,
+        verbose_name=u'การยืนยันการขอรับพิจารณาคัดเลือก')
+    is_applying_for_survey_engr = models.BooleanField(
+        choices=((True,u'ต้องการ'),
+                 (False,u'ไม่ต้องการ')),
+        default=False,
+        verbose_name=u'ถ้าไม่ได้คัดเลือกในสาขาที่สมัครในตอนแรก ต้องการให้พิจารณาคัดเลือกในสาขาวิศวกรรมสำรวจหรือไม่?')
+
+
+# REST api
+from django_restapi.resource import Resource
+from django_restapi.authentication import HttpBasicAuthentication
+from django.http import HttpResponse
+import json
+
+class AdmissionConfirmationResource(Resource):
+    def __init__(self, authentication=None,
+                 mimetype=None):
+        Resource.__init__(self, authentication, ('GET',), mimetype)
+
+    def read(self, request, *args, **kwargs):
+        confirmation = AdmissionConfirmation.objects.all().select_related(depth=1)
+        results = []
+        for c in confirmation:
+            result = {'national_id': c.applicant.personal_info.national_id}
+            results.append(result)
+        return HttpResponse(json.dumps(results))
+
+confirmation_resource = AdmissionConfirmationResource(
+    authentication = HttpBasicAuthentication()
+)
+

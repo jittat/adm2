@@ -1,0 +1,34 @@
+{% extends "commons/regis-base.html" %}
+
+{% block extra-title-bar %}หน่วยทะเบียน | สถิติการยืนยันสิทธิ์ {% endblock %}
+
+{% block regis-body %}
+
+<h3>จำนวนการยืนยันสิทธิ์แยกตามสาขา</h3>
+<table class=applicants>
+  <tr>
+    <th>หมายเลข</th>
+    <th>สาขา</th>
+    <th>จำนวนที่ยืนยันแล้ว</th>
+    <th>คะแนนสูงสุด</th>
+    <th>คะแนนต่ำสุด</th>
+  </tr>
+  {% for major, count, sstat in confirmation_stat %}
+    <tr class="{% cycle "odd" "even" %}">
+      <td>{{ major.number }}</td>
+      <td>{{ major.name }}</td>
+      <td>{{ count }}</td>
+      <td>{{ sstat.1|floatformat:3 }}</td>
+      <td>{{ sstat.0|floatformat:3 }}</td>
+    </tr>
+  {% endfor %}
+</table>
+ดาวน์โหลด 
+<ul>
+  <li><a href="{% url confirmation-stat-download %}">รายชื่อเป็นแฟ้มข้อมูล (มีสาขา)</a></li>
+  <li><a href="{% url confirmation-stat-download-regis %}">รายชื่อส่งสำนักทะเบียน (มีข้อมูลโรงเรียน)</a></li>
+  <li><a href="{% url confirmation-payment-net-download %}">รายชื่อและข้อมูลการจ่ายและคืนเงินค่ายืนยัน</a></li>
+</ul>
+
+
+{% endblock %}

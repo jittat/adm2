@@ -1,0 +1,23 @@
+{% extends "application/formbase.html" %}
+
+{% block title %}Log in{% endblock %}
+
+{% block form-body %}
+  {% load adm_steps %}{% step_bar "ขอรหัสผ่านใหม่" %}
+
+  <p>
+    ป้อนอีเมล์เพื่อขอรหัสผ่านใหม่  อย่างไรก็ตามในการขอรหัสใหม่นั้น ไม่ควรขอหลาย ๆ รอบติดกัน เนื่องจากระบบจะสร้างรหัสใหม่ให้ทุกครั้ง และเมื่อได้รับเมล์ อาจเป็นไปได้ที่ผู้สมัครจะได้รับเมล์ที่ไม่ใช่เมล์ล่าสุดซึ่งระบุรหัสผ่านเก่าที่ใช้ไม่ได้แล้วก็ได้
+  </p>
+
+  <form action="{% url apply-forget %}" method="post">
+    <table>
+      {{ form.as_table }}
+      <tr>
+	<td></td>
+	<td>
+	  <input type="submit" name="submit" value="ขอรหัสผ่านใหม่"/>
+	</td>
+      </tr>
+    </table>
+  </form>
+{% endblock %}
