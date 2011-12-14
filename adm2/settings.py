@@ -1,4 +1,4 @@
-# Django settings for admquota project.
+# Django settings for adm2 project.
 
 import os.path
 PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__),'..'))
@@ -16,8 +16,8 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'admquota',                      # Or path to database file if using sqlite3.
-        'USER': 'admquota',                      # Not used with sqlite3.
+        'NAME': 'admnew',                      # Or path to database file if using sqlite3.
+        'USER': 'admnew',                      # Not used with sqlite3.
         'PASSWORD': 'TbmQFy7j9FBVfN3N',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
@@ -105,10 +105,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'admquota.urls'
+ROOT_URLCONF = 'adm2.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'admquota.wsgi.application'
+WSGI_APPLICATION = 'adm2.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
