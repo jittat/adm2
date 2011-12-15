@@ -48,14 +48,4 @@ urlpatterns = patterns(
     #url(r'^update/postal_sub/$', 'update.update_to_postal_submission', 
     #    name='update-postal-sub'),
 
-    # Example:
-    # (r'^adm/', include('adm.foo.urls')),
-
-    # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
-    # to INSTALLED_APPS to enable admin documentation:
-    # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
-    # (r'^admin/', include(admin.site.urls)),
-               
 )

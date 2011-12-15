@@ -180,8 +180,6 @@ VERIFIY_MINIMUM_SCORE = False
 # maximum number of choices
 MAX_MAJOR_RANK = 3
 
-FORCE_UPLOAD_DOC = False
-
 # --------------
 # web interface settings
 

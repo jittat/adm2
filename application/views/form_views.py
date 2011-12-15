@@ -223,29 +223,7 @@ def applicant_major(request):
 
 @within_submission_deadline
 @active_applicant_required
-def applicant_doc_menu(request):
-    return HttpResponseForbidden()
-
-
-    if settings.FORCE_UPLOAD_DOC:
-        return HttpResponseRedirect(reverse('upload-index'))
-
-    applicant = request.applicant
-    chosen = applicant.doc_submission_method != Applicant.UNDECIDED_METHOD
-    #print applicant, chosen
-    form_step_info = build_form_step_info(4,applicant)
-    return render_to_response('application/doc_menu.html',
-                              {'form_step_info': form_step_info,
-                               'applicant': applicant,
-                               'chosen': chosen })
-
-
-@within_submission_deadline
-@active_applicant_required
 def info_confirm(request):
-    if settings.FORCE_UPLOAD_DOC:
-        return HttpResponseRedirect(reverse('upload-index'))
-
     applicant = request.applicant
 
     if request.method == 'POST':
@@ -302,8 +280,8 @@ def submission_ticket(request):
     if not request.applicant.is_submitted:
         return render_to_response('application/submission/ticket_not_submitted.html')
 
-    amount = 350
-    amount_str = u'สามร้อยห้าสิบบาทถ้วน'
+    amount = 300
+    amount_str = u'สามร้อยบาทถ้วน'
 
     verification = request.applicant.verification_number()
     return render_to_response('application/payin/ticket.html',
