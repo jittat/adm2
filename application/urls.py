@@ -19,7 +19,6 @@ urlpatterns = patterns(
     url(r'^confirm/$', 'info_confirm', name='apply-confirm'),
 
     url(r'^conditions/$', 'applicant_conditions', name='apply-conditions'),
-    url(r'^success/$', 'submission_success', name='apply-success'),
 
     url(r'^ticket/$', 'submission_ticket', name='apply-ticket'),
 

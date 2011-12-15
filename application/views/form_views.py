@@ -258,7 +258,7 @@ def applicant_conditions(request):
                         { 'applicant': applicant })
 
                 send_submission_confirmation_by_email(applicant)
-                return HttpResponseRedirect(reverse('apply-success'))
+                return HttpResponseRedirect(reverse('status-index'))
         else:
             return render_to_response('application/submission/not_submitted.html')
 
@@ -267,13 +267,6 @@ def applicant_conditions(request):
                                'conditions': conditions })
     
 
-@applicant_required
-def submission_success(request):
-    if not request.applicant.is_submitted:
-        return render_to_response('application/submission/ticket_not_submitted.html')
-
-    return render_to_response('application/submission/success.html',
-                              {'applicant': request.applicant})
 
 @applicant_required
 def submission_ticket(request):
