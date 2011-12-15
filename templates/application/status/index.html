@@ -8,7 +8,18 @@
 {% endblock %}
 
 {% block body %}
-  {% include "application/status/include/status_menu.html" %}
+  {% load adm_steps %}{% step_bar "ตรวจสอบสถานะการสมัคร" %}
+
+  <div class="right-box">
+    <br/>
+    {% include "application/status/include/status_menu.html" %}
+    {% include "application/include/ticket_printing.html" %}
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+  </div>
 
   {% adm_submission_deadline_warning %}
 
@@ -37,9 +48,7 @@
     {% endif %}
   </p>
 
-  {% comment %}
-    {% include "application/status/include/submission_status.html" %}
-  {% endcomment %}
+  {% include "application/status/include/submission_status.html" %}
 
   <p>
     คุณสามารถ <a href="{% url status-show %}">ดูใบสมัครที่คุณส่งมาแล้วได้</a>

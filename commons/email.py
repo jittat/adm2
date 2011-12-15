@@ -125,7 +125,6 @@ u"""เรียนคุณ %(firstname)s %(lastname)s
     'email': applicant.get_email(), 
     'national_id': applicant.national_id,
     'verification': applicant.verification_number(),
-    'submission_method': applicant.get_doc_submission_method_display(),
     }
 ).replace('\n','<br/>\n')
     adm_send_mail(applicant.get_email(), subject, message, force)

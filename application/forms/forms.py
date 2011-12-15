@@ -72,10 +72,18 @@ class RegistrationForm(forms.Form):
     def clean_national_id(self):
         nat = self.cleaned_data['national_id']
         
+        try:
+            if not self.national_id_verification:
+                return nat
+        except:
+            pass
+
         if not validate_national_id(nat):
             raise forms.ValidationError(u'รหัสประชาชนที่ป้อนไม่ถูกต้อง')
         return nat
 
+    def disable_national_id_verification(self):
+        self.national_id_verification = False
 
     def get_applicant(self):
         return Applicant(title=self.cleaned_data['title'],

@@ -273,7 +273,7 @@ def applicant_conditions(request):
                     all_checked = False
             if all_checked:
                 try:
-                    applicant.submit(Applicant.SUBMITTED_ONLINE)
+                    applicant.submit()
                 except Applicant.DuplicateSubmissionError:
                     return render_to_response(
                         'commons/submission_already_submitted.html',

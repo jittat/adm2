@@ -35,7 +35,7 @@ TIME_ZONE = 'America/Chicago'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'th'
 
 SITE_ID = 1
 
@@ -126,15 +126,16 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
+    'django.contrib.humanize',
 
     'south',
     'commons',
     'application',
-    'upload',
+    #'upload',
     'result',
     'review',
     'confirmation',
-    'feature_switch',
+    #'feature_switch',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -168,12 +169,24 @@ LOGGING = {
 
 ##########################################################
 
-ADMISSION_YEAR = 2555
-LOGIN_ENABLED = True
-UPLOADED_DOC_PATH = os.path.join(PROJECT_DIR,'data/upload')
+# --------------
+# general settings
 
-# used in redirect_to_index
-INDEX_PAGE = 'start-page'
+ADMISSION_YEAR = 2555
+
+ACCEPT_ONLY_GRADUATED = False
+VERIFIY_MINIMUM_SCORE = False
+
+# maximum number of choices
+MAX_MAJOR_RANK = 3
+
+FORCE_UPLOAD_DOC = False
+
+# --------------
+# web interface settings
+
+LOGIN_ENABLED = True
+NAT_ID_VERIFICATION = False
 
 MAX_PASSWORD_REQUST_PER_DAY = 10
 MAX_DOC_UPLOAD_PER_DAY = 100
@@ -188,3 +201,13 @@ EMAIL_HOST = 'nontri.ku.ac.th'
 EMAIL_HOST_USER = 'jtf'
 EMAIL_HOST_PASSWORD = 'xxxxxxxx'
 EMAIL_SENDER = 'KU Eng Admission Team <jtf@ku.ac.th>'
+
+# used in redirect_to_index
+INDEX_PAGE = 'start-page'
+
+# ---------------
+# web system settings
+
+UPLOADED_DOC_PATH = os.path.join(PROJECT_DIR,'data/upload')
+MAX_UPLOADED_DOC_FILE_SIZE = 2000000
+

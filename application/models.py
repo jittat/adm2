@@ -370,7 +370,6 @@ class Applicant(models.Model):
         except:
             raise Applicant.DuplicateSubmissionError()
 
-        self.doc_submission_method = submission_method
         self.is_submitted = True
         self.save()
 

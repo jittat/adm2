@@ -12,6 +12,12 @@ urlpatterns = patterns(
         name='start-page'),
 
     (r'^apply/', include('application.urls')),
+    #(r'^doc/', include('upload.urls')),
+    #(r'^review/', include('adm.review.urls')),
+    #(r'^manual/', include('adm.manual.urls')),
+    #(r'^supplement/', include('adm.supplement.urls')),
+    #(r'^result/', include('adm.result.urls')),
+    #(r'^confirm/', include('adm.confirmation.urls')),
 
     url(r'^deadline_passed/$', 
         'commons.views.deadline_passed_error',

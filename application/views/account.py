@@ -145,6 +145,10 @@ def register(request):
         if 'cancel' in request.POST:
             return redirect_to_index(request)
         form = RegistrationForm(request.POST)
+
+        if not settings.NAT_ID_VERIFICATION:
+            form.disable_national_id_verification()
+
         if form.is_valid():
             email = form.cleaned_data['email']
             first_name=form.cleaned_data['first_name']

@@ -1,16 +1,16 @@
+{% comment %}
 <a id="id_status-show-button" class="in-button" href="{% url status-show %}">
-  <div class="menu-item">
+  <div class="button">
     ตรวจสอบข้อมูลในใบสมัคร
   </div>
 </a>
 
 <a id="id_status-show-score" class="in-button" href="{% url status-show-score %}">
-  <div class="menu-item">
+  <div class="button">
     ผลคะแนน
   </div>
 </a>
-
-  {% comment %}
+{% endcomment %}
 
   <div class="small-vert-sept"></div>
   <a id="id_payin-button" class="in-button" href="{% url apply-ticket %}?{{ random_seed }}" target="_blank">
@@ -45,5 +45,4 @@
   </a>
   <center><small>สามารถแก้อันดับสาขาวิชาได้จนถึงวันที่ 31 ธ.ค. 2553</small></center>
 
-  {% endcomment %}
 
