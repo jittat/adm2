@@ -258,6 +258,7 @@ def applicant_conditions(request):
                         { 'applicant': applicant })
 
                 send_submission_confirmation_by_email(applicant)
+                request.session['submission_successful'] = True
                 return HttpResponseRedirect(reverse('status-index'))
         else:
             return render_to_response('application/submission/not_submitted.html')

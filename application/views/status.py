@@ -65,16 +65,32 @@ def copy_previous_adm_major_pref(prev_pref,
     new_pref.set_ptype_cache(save=False)
     return new_pref
 
+def get_session_data_and_delete(session, key, default):
+    if key in session:
+        v = session[key]
+        del session[key]
+    else:
+        v = default
+    return v
+
+def prepare_instruction_info(request):
+    session = request.session
+    inst = {}
+    inst['after_submission_guide'] = (
+        get_session_data_and_delete(session,
+                                    'submission_successful',
+                                    False))
+    return inst
+        
 
 @submitted_applicant_required
 def index(request):
-    notice = ''
-    if 'notice' in request.session:
-        notice = request.session['notice']
-        del request.session['notice']
+    notice = get_session_data_and_delete(request.session,'notice','')
+    
+    instruction_info = prepare_instruction_info(request)
 
     submission_info = request.applicant.submission_info
-    random_seed = 1000000 + randint(0,8999999)
+    ticket_random_seed = 1000000 + randint(0,8999999)
 
     applicant = request.applicant
 
@@ -153,6 +169,9 @@ def index(request):
 
     return render_to_response("application/status/index.html",
                               { 'applicant': request.applicant,
+
+                                'instruction_info': instruction_info,
+
                                 'submission_info': submission_info,
                                 'admission_result': admission_result,
                                 'first_admission': first_admission,
@@ -177,7 +196,7 @@ def index(request):
                                 'current_round': current_round,
                                 'is_last_round': is_last_round,
                                 'is_confirmation_time_left': is_confirmation_time_left,
-                                'random_seed': random_seed,
+                                'ticket_random_seed': ticket_random_seed,
                                 'notice': notice,
                                 'can_log_out': True })
 

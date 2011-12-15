@@ -182,6 +182,9 @@ ADMISSION_YEAR = 2555
 ACCEPT_ONLY_GRADUATED = False
 VERIFIY_MINIMUM_SCORE = False
 
+# to distinguish payments between direct adm and quota adm
+TICKET_SYSTEM_SALT = 'salt'
+
 # maximum number of choices
 MAX_MAJOR_RANK = 3
 
@@ -214,3 +217,7 @@ INDEX_PAGE = 'start-page'
 UPLOADED_DOC_PATH = os.path.join(PROJECT_DIR,'data/upload')
 MAX_UPLOADED_DOC_FILE_SIZE = 2000000
 
+try:
+    from settings_local import *
+except ImportError:
+    pass 

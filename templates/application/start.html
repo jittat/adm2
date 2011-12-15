@@ -118,7 +118,7 @@
   </div>
 
   {% if announcements %}
-    <div style="width: 510px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; -moz-border-radius-bottomright: 5px; -moz-border-radius-bottomleft: 5px; padding-left: 5px; padding-right: 5px;" class="normal-msg">
+    <div class="announcement-box normal-msg">
       {% for announcement in announcements %}
         {{ announcement.body|safe }}
       {% endfor %}

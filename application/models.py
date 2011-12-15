@@ -335,7 +335,8 @@ class Applicant(models.Model):
 
     def verification_number(self,additional_salt=''):
         try:
-            key = u"%s-%s-%s-%s-%s%s" % (
+            key = u"%s%s-%s-%s-%s-%s%s" % (
+                settings.TICKET_SYSTEM_SALT,
                 self.submission_info.salt,
                 self.national_id,
                 self.email,

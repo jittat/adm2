@@ -18,7 +18,6 @@
     <br/>
     <br/>
     <br/>
-    <br/>
   </div>
 
   {% adm_submission_deadline_warning %}
@@ -28,6 +27,8 @@
       <span class="notice">{{ notice }}</span>
     </div>
   {% endif %}
+
+  {% include "application/status/include/instructions.html" %}
 
   <!--- *************************** --->
 
