@@ -30,9 +30,25 @@ table.schedule {
     padding-right: 5px; }
 
 .right-box {
-  margin-left: 20px;
-  width: 40%;
+  margin-top: 10px;
+  margin-left: 10px;
+  width: 370px;
   float: right; }
+
+.announcement-box {
+  margin-right: 380px;
+  margin-top: 10px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  padding-left: 5px;
+  padding-right: 5px; }
+
+.instruction-box {
+  margin-right: 380px;
+  margin-top: 10px;
+  border: 1px black solid;
+  padding: 5px;
+  background: #fafcc8; }
 
 .login-box {
   padding: 10px;
@@ -55,14 +71,13 @@ div.button {
   text-align: center;
   margin: 2px;
   font-weight: bold;
-  font-size: 120%;
+  font-size: 110%;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
   border: 1px double gray;
   vertical-align: middle;
-  padding-top: 5px;
-  padding-bottom: 5px; }
+  padding: 5px 10px 5px 10px; }
   div.button:hover {
     background: #10a010; }
   div.button img {
@@ -78,14 +93,13 @@ div.button-blue {
   text-align: center;
   margin: 2px;
   font-weight: bold;
-  font-size: 120%;
+  font-size: 110%;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
   border: 1px double gray;
   vertical-align: middle;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding: 5px 10px 5px 10px;
   background: darkblue;
   border: 1px double black; }
   div.button-blue:hover {
