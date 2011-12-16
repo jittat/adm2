@@ -65,6 +65,7 @@ def copy_previous_adm_major_pref(prev_pref,
     new_pref.set_ptype_cache(save=False)
     return new_pref
 
+
 def get_session_data_and_delete(session, key, default):
     if key in session:
         v = session[key]
@@ -76,24 +77,68 @@ def get_session_data_and_delete(session, key, default):
 def prepare_instruction_info(request):
     session = request.session
     inst = {}
-    inst['after_submission_guide'] = (
+    inst['after_submission_notice'] = (
         get_session_data_and_delete(session,
                                     'submission_successful',
                                     False))
-    return inst
-        
+    return {'instruction_info': inst}
 
-@submitted_applicant_required
-def index(request):
-    notice = get_session_data_and_delete(request.session,'notice','')
-    
-    instruction_info = prepare_instruction_info(request)
+def prepare_notice(request):
+    return {'notice': 
+            get_session_data_and_delete(request.session,'notice','')}
 
-    submission_info = request.applicant.submission_info
-    ticket_random_seed = 1000000 + randint(0,8999999)
+def prepare_ticket_random_seed(request):
+    return {'ticket_random_seed': 1000000 + randint(0,8999999)}
 
-    applicant = request.applicant
 
+def prepare_confirmation_data(applicant, admitted_major):
+    confirmations = applicant.admission_confirmations.all()
+    total_amount_confirmed = sum([c.paid_amount for c in confirmations])
+
+    if admitted_major and (total_amount_confirmed >= admitted_major.confirmation_amount):
+        confirmation_complete = True
+        additional_payment = 0
+    else:
+        confirmation_complete = False
+        if admitted_major:
+            additional_payment = admitted_major.confirmation_amount - total_amount_confirmed
+        else:
+            additional_payment = 0
+
+    if len(confirmations)!=0:
+        recent_confirmation = confirmations[0]
+    else:
+        recent_confirmation = None
+
+    is_confirmation_time_left = (AdmissionRound.time_to_recent_round_deadline() > timedelta(0))
+
+    return {
+        'confirmation_complete': confirmation_complete,
+        'recent_confirmation': recent_confirmation,
+        'confirmations': confirmations,
+        'total_amount_confirmed': total_amount_confirmed,
+        'additional_payment': additional_payment,
+        'is_confirmation_time_left': is_confirmation_time_left,
+        }
+             
+STATUS_COMPONENT_FUNCTIONS = [
+    prepare_notice,
+    prepare_instruction_info,
+    prepare_ticket_random_seed,
+]        
+
+def prepare_round_data():
+    first_admission = False
+    current_round = AdmissionRound.get_recent()
+    is_last_round = False
+
+    return {
+        'first_admission': first_admission,
+        'current_round': current_round,
+        'is_last_round': is_last_round,
+        }
+
+def prepare_admission_result_data(applicant, current_round):
     admission_result = None
     admission_major_pref = None
     admitted_major = None
@@ -103,12 +148,6 @@ def index(request):
     student_registration = None
 
     accepting_majors = None
-
-    first_admission = False
-
-    current_round = AdmissionRound.get_recent()
-
-    is_last_round = True
 
     if current_round:
         admission_result = applicant.get_latest_admission_result()
@@ -146,59 +185,58 @@ def index(request):
             results = applicant.admission_results.filter(round_number__lte=current_round.number).all()
             if len(results)>0:
                 latest_admission_result = results[len(results)-1]
+    return {
+        'admission_result': admission_result,
+        'first_admission': first_admission,
+        'latest_admission_result':
+            latest_admission_result,
+        'admission_major_pref': admission_major_pref,
+        'accepting_majors': accepting_majors,
+        'latest_admission_major_pref':
+            latest_admission_major_pref,
+        'is_adm_major_pref_copied_from_prev_round':
+            is_adm_major_pref_copied_from_prev_round,
+        'admitted_major': admitted_major,
 
-    confirmations = applicant.admission_confirmations.all()
-    total_amount_confirmed = sum([c.paid_amount for c in confirmations])
+        'student_registration':
+            student_registration,
+        } 
 
-    if admitted_major and (total_amount_confirmed >= admitted_major.confirmation_amount):
-        confirmation_complete = True
-        additional_payment = 0
-    else:
-        confirmation_complete = False
-        if admitted_major:
-            additional_payment = admitted_major.confirmation_amount - total_amount_confirmed
-        else:
-            additional_payment = 0
+@submitted_applicant_required
+def index(request):
+    template_data = []
 
-    if len(confirmations)!=0:
-        recent_confirmation = confirmations[0]
-    else:
-        recent_confirmation = None
+    for f in STATUS_COMPONENT_FUNCTIONS:
+        template_data.append(f(request))
 
-    is_confirmation_time_left = (AdmissionRound.time_to_recent_round_deadline() > timedelta(0))
+    submission_info = request.applicant.submission_info
+    applicant = request.applicant
+
+    round_data = prepare_round_data()
+
+    admission_data = (
+        prepare_admission_result_data(applicant,
+                                      round_data['current_round']))
+    confirmation_data = (
+        prepare_confirmation_data(applicant, 
+                                  admission_data['admitted_major']))
+
+    template_data.append(round_data)
+    template_data.append(admission_data)
+    template_data.append(confirmation_data)
+
+    core_data = { 'applicant': applicant,
+                  'submission_info': submission_info,
+                  'can_log_out': True }
+    
+    template_data.append(core_data)
+
+    template_items = []
+    for d in template_data:
+        template_items += d.items()
 
     return render_to_response("application/status/index.html",
-                              { 'applicant': request.applicant,
-
-                                'instruction_info': instruction_info,
-
-                                'submission_info': submission_info,
-                                'admission_result': admission_result,
-                                'first_admission': first_admission,
-                                'latest_admission_result':
-                                    latest_admission_result,
-                                'admission_major_pref': admission_major_pref,
-                                'accepting_majors': accepting_majors,
-                                'latest_admission_major_pref':
-                                    latest_admission_major_pref,
-                                'is_adm_major_pref_copied_from_prev_round':
-                                    is_adm_major_pref_copied_from_prev_round,
-
-                                'confirmation_complete': confirmation_complete,
-                                'recent_confirmation': recent_confirmation,
-                                'confirmations': confirmations,
-                                'total_amount_confirmed': total_amount_confirmed,
-                                'additional_payment': additional_payment,
-
-                                'student_registration':
-                                    student_registration,
-
-                                'current_round': current_round,
-                                'is_last_round': is_last_round,
-                                'is_confirmation_time_left': is_confirmation_time_left,
-                                'ticket_random_seed': ticket_random_seed,
-                                'notice': notice,
-                                'can_log_out': True })
+                              dict(template_items))
 
 
 @submitted_applicant_required
