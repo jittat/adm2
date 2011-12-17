@@ -27,6 +27,14 @@ from review.models import ReviewFieldResult
 from result.models import AdmissionResult, AdmissionRound
 from confirmation.models import Round2ApplicantConfirmation, AdmissionMajorPreference
 
+def get_applicant_score_request_status(applicant):
+    try:
+        niets_scores = applicant.NIETS_scores
+    except:
+        return (None,None)
+    return (niets_scores.is_request_successful,
+            niets_scores.requested_at)
+
 def prepare_exam_scores(applicant):
     try:
         niets_scores = applicant.NIETS_scores
@@ -121,12 +129,6 @@ def prepare_confirmation_data(applicant, admitted_major):
         'is_confirmation_time_left': is_confirmation_time_left,
         }
              
-STATUS_COMPONENT_FUNCTIONS = [
-    prepare_notice,
-    prepare_instruction_info,
-    prepare_ticket_random_seed,
-]        
-
 def prepare_round_data():
     first_admission = False
     current_round = AdmissionRound.get_recent()
@@ -200,6 +202,22 @@ def prepare_admission_result_data(applicant, current_round):
         'student_registration':
             student_registration,
         } 
+
+def prepare_score_request_status(request):
+    applicant = request.applicant
+    successful, requested_at = (
+        get_applicant_score_request_status(applicant))
+    return {
+        'is_score_request_successful': successful,
+        'score_requested_at': requested_at
+        }
+
+STATUS_COMPONENT_FUNCTIONS = [
+    prepare_notice,
+    prepare_instruction_info,
+    prepare_ticket_random_seed,
+    prepare_score_request_status,
+]        
 
 @submitted_applicant_required
 def index(request):

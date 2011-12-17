@@ -22,8 +22,20 @@
       <td class="category">
 	การดึงคะแนนสอบจากสทศ.
       </td>
-      <td>อยู่ระหว่างดำเนินการ</td>
-      <td>-</td>
+      {% if is_score_request_successful == None %}
+        <td>อยู่ระหว่างดำเนินการ</td>
+        <td>-</td>
+      {% else %}
+        {% if is_score_request_successful %}
+          <td>สำเร็จ [<a href="{% url status-show-score %}">ดูคะแนนของคุณ</a>]</td>
+        {% else %}
+          <td>
+	    มีปัญหา<br/>
+	    กรุณาติดต่อโครงการรับตรงโดยด่วนที่สุด
+	  </td>
+        {% endif %}	
+	<td>{{ score_requested_at|date:"j N y" }}</td>
+      {% endif %}
     </tr>
   </table>
 </p>

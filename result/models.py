@@ -187,6 +187,8 @@ EXAM_COUNT = len(SCORE_STATS)
 class NIETSScores(models.Model):
     applicant = models.OneToOneField(Applicant,
                                      related_name='NIETS_scores')
+    is_request_successful = models.NullBooleanField()
+    requested_at = models.DateTimeField(null=True)
     score_list = models.CharField(max_length=200)
 
     @staticmethod
