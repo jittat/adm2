@@ -274,14 +274,16 @@ def submission_ticket(request):
     if not request.applicant.is_submitted:
         return render_to_response('application/submission/ticket_not_submitted.html')
 
-    amount = 300
-    amount_str = u'สามร้อยบาทถ้วน'
+    amount = settings.ADMISSION_PAYMENT
+    amount_str = settings.ADMISSION_PAYMENT_TEXT
+    deadline = settings.PAYMENT_DEADLINE_DISPLAY
 
     verification = request.applicant.verification_number()
     return render_to_response('application/payin/ticket.html',
                               {'amount': amount,
                                'amount_str': amount_str,
                                'applicant': request.applicant,
-                               'verification': verification })
+                               'verification': verification,
+                               'deadline': deadline })
         
     

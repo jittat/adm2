@@ -1,12 +1,15 @@
-
-    
 <p>
+  สถานะของการสมัครและการดึงข้อมูลคะแนนสอบแสดงในตารางด้านล่าง
   <table id="doc-status-table">
     <tr>
-      <th>สถานะการชำระค่าสมัคร</th>
-      <th>วันที่ได้รับข้อมูลการชำระ</th>
+      <th width="40%"></th>
+      <th width="40%">สถานะ</th>
+      <th>วันที่ได้รับข้อมูล</th>
     </tr>
     <tr>
+      <td class="category">
+	ค่าสมัคร
+      </td>
       {% if submission_info.is_paid %}
         <td>ชำระแล้ว</td>
         <td>{{ submission_info.paid_at|date:"j N y" }}</td>
@@ -14,6 +17,13 @@
         <td>ยังไม่ได้รับข้อมูลการชำระ</td>
         <td>ยังไม่ได้รับ</td>
       {% endif %}  
+    </tr>
+    <tr>
+      <td class="category">
+	การดึงคะแนนสอบจากสทศ.
+      </td>
+      <td>อยู่ระหว่างดำเนินการ</td>
+      <td>-</td>
     </tr>
   </table>
 </p>

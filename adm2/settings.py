@@ -1,5 +1,7 @@
-# Django settings for adm2 project.
+# -*- coding: utf-8 -*-
 
+# Django settings for adm2 project.
+from datetime import datetime
 import os.path
 PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__),'..'))
 
@@ -16,12 +18,12 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'onlineadmission_local54',                      # Or path to database file if using sqlite3.
-        'USER': 'onlineadmission',                      # Not used with sqlite3.
-        'PASSWORD': 'o-adm-for-dev',                  # Not used with sqlite3.
-#        'NAME': 'admnew',                      # Or path to database file if using sqlite3.
-#        'USER': 'admnew',                      # Not used with sqlite3.
-#        'PASSWORD': 'TbmQFy7j9FBVfN3N',                  # Not used with sqlite3.
+#        'NAME': 'onlineadmission_local54',                      # Or path to database file if using sqlite3.
+#        'USER': 'onlineadmission',                      # Not used with sqlite3.
+#        'PASSWORD': 'o-adm-for-dev',                  # Not used with sqlite3.
+        'NAME': 'admnew',                      # Or path to database file if using sqlite3.
+        'USER': 'admnew',                      # Not used with sqlite3.
+        'PASSWORD': 'TbmQFy7j9FBVfN3N',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
@@ -185,11 +187,17 @@ ADMISSION_YEAR = 2555
 ACCEPT_ONLY_GRADUATED = False
 VERIFIY_MINIMUM_SCORE = False
 
-# to distinguish payments between direct adm and quota adm
-TICKET_SYSTEM_SALT = 'salt'
-
 # maximum number of choices
 MAX_MAJOR_RANK = 3
+
+SUBMISSION_DEADLINE = datetime(2012,2,16,0,0)
+
+PAYMENT_DEADLINE_DISPLAY = datetime(2012,2,15)
+ADMISSION_PAYMENT = 300
+ADMISSION_PAYMENT_TEXT = u'สามร้อยบาทถ้วน'
+
+# to distinguish payments between direct adm and quota adm
+TICKET_SYSTEM_SALT = 'salt'
 
 # --------------
 # web interface settings

@@ -187,7 +187,6 @@ def prepare_admission_result_data(applicant, current_round):
                 latest_admission_result = results[len(results)-1]
     return {
         'admission_result': admission_result,
-        'first_admission': first_admission,
         'latest_admission_result':
             latest_admission_result,
         'admission_major_pref': admission_major_pref,
