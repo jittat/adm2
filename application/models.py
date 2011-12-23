@@ -500,6 +500,10 @@ class ApplicantAddress(models.Model):
 class GPExamDate(models.Model):
     month_year = models.CharField(max_length=20,
                                   verbose_name="เดือนและปีของการสอบ")
+    rank = models.IntegerField(unique=True)
+
+    class Meta:
+        ordering = ['rank']
 
     dates = None
 

@@ -48,6 +48,9 @@
   </p>
 
   {% include "application/status/include/submission_status.html" %}
+  {% if is_score_request_successful %}
+    {% include "application/status/include/exam_scores.html" %}
+  {% endif %}
 
   <p>
     คุณสามารถ <a href="{% url status-show %}">ดูใบสมัครที่คุณส่งมาแล้วได้</a>

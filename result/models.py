@@ -163,15 +163,15 @@ class ScoreStat:
         return 0.5 + 0.5 * z / ScoreStat.SUPER_ZMAX
 
 SCORE_STATS = [
-    { 'gat': ScoreStat(78.09, 44.32, 290),
-      'pat1': ScoreStat(88.33, 30.63, 300),
-      'pat3': ScoreStat(108.66, 26.17, 240) },
-    { 'gat': ScoreStat(93.10, 51.13, 287.5),
-      'pat1': ScoreStat(87.11, 31.14, 300),
-      'pat3': ScoreStat(97.86, 28.56, 260) },
-    { 'gat': ScoreStat(106.78, 55.59, 292.5),
-      'pat1': ScoreStat(63.56, 25.90, 270),
-      'pat3': ScoreStat(86.73, 24.64, 237) },
+    #{ 'gat': ScoreStat(78.09, 44.32, 290),
+    #  'pat1': ScoreStat(88.33, 30.63, 300),
+    #  'pat3': ScoreStat(108.66, 26.17, 240) },
+    #{ 'gat': ScoreStat(93.10, 51.13, 287.5),
+    #  'pat1': ScoreStat(87.11, 31.14, 300),
+    #  'pat3': ScoreStat(97.86, 28.56, 260) },
+    #{ 'gat': ScoreStat(106.78, 55.59, 292.5),
+    #  'pat1': ScoreStat(63.56, 25.90, 270),
+    #  'pat3': ScoreStat(86.73, 24.64, 237) },
     { 'gat': ScoreStat(130.82, 58.27, 295),
       'pat1': ScoreStat(63.97, 30.86, 294),
       'pat3': ScoreStat(103.19, 42.46, 276) },
@@ -180,7 +180,13 @@ SCORE_STATS = [
       'pat3': ScoreStat(83.54, 35.78, 300) },
     { 'gat': ScoreStat(139.38, 67.85, 300),
       'pat1': ScoreStat(48.34, 23.45, 300),
-      'pat3': ScoreStat(121.25, 41.56, 300) }
+      'pat3': ScoreStat(121.25, 41.56, 300) },
+    { 'gat': ScoreStat(171.89, 48.04, 297.5),
+      'pat1': ScoreStat(64.22, 18.08, 274),
+      'pat3': ScoreStat(101.95, 40.68, 270) },
+    { 'gat': ScoreStat(139.38, 67.85, 300),
+      'pat1': ScoreStat(48.34, 23.45, 300),
+      'pat3': ScoreStat(121.25, 41.56, 300) },
     ]
 EXAM_COUNT = len(SCORE_STATS)
 

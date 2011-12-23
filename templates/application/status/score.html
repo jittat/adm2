@@ -24,13 +24,13 @@
     <b>ชื่อผู้สมัคร:</b> {{ applicant.full_name }}<br/>
     <b>หมายเลขประจำตัวประชาชน:</b> {{ applicant.national_id }}<br/>
 
-    {% if applicant.is_eligible %} 
+    {#% if applicant.is_eligible %} 
       <hr/> 
       <b>คุณมีสิทธิ์เข้ารับพิจารณาคัดเลือกเข้าศึกษาต่อในโครงการรับตรง ประจำปีการศึกษา 2554</b>
       <hr/>
       {% include "application/status/include/exam_scores.html" %}
       <hr/>
-    {% endif %}
+    {#% endif %}
   </p>
 
   กลับไปหน้า<a href="{% url status-index %}">หลัก</a>

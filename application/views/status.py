@@ -212,16 +212,16 @@ def prepare_score_request_status(request):
         'score_requested_at': requested_at
         }
 
-STATUS_COMPONENT_FUNCTIONS = [
-    prepare_notice,
-    prepare_instruction_info,
-    prepare_ticket_random_seed,
-    prepare_score_request_status,
-]        
-
 @submitted_applicant_required
 def index(request):
     template_data = []
+
+    STATUS_COMPONENT_FUNCTIONS = [
+        prepare_notice,
+        prepare_instruction_info,
+        prepare_ticket_random_seed,
+        prepare_score_request_status,
+        ]        
 
     for f in STATUS_COMPONENT_FUNCTIONS:
         template_data.append(f(request))
@@ -241,6 +241,9 @@ def index(request):
     template_data.append(round_data)
     template_data.append(admission_data)
     template_data.append(confirmation_data)
+    template_data.append({
+            'exam_scores':
+                prepare_exam_scores(request.applicant)})
 
     core_data = { 'applicant': applicant,
                   'submission_info': submission_info,
@@ -264,7 +267,6 @@ def show_score(request):
         del request.session['notice']
 
     exam_scores = prepare_exam_scores(request.applicant)
-
     return render_to_response("application/status/score.html",
                               { 'applicant': request.applicant,
                                 'exam_scores': exam_scores,
