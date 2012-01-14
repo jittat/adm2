@@ -16,8 +16,8 @@ from commons.utils import serve_file
 
 from application.models import Applicant, Education
 from application.models import SubmissionInfo, PersonalInfo
-from upload.models import AppDocs
-from manual.models import AdminEditLog
+#from upload.models import AppDocs
+#from manual.models import AdminEditLog
 
 from commons.email import send_validation_successful_by_email
 from commons.email import send_validation_error_by_email
@@ -26,7 +26,7 @@ from commons.email import send_resubmission_reminder_by_email
 from commons.models import Log
 
 from models import ReviewField, ReviewFieldResult, CompletedReviewField
-from supplement.models import Supplement
+#from supplement.models import Supplement
 from confirmation.models import AdmissionConfirmation
 
 def find_basic_statistics():
