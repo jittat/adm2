@@ -6,6 +6,8 @@ from application.models import Major, MajorPreference, Education
 from application.models import Address, ApplicantAddress
 from application.forms import EducationForm, PersonalInfoForm
 from application.forms import AddressForm
+from quota.models import AdditionalEducation
+from quota.forms import QuotaForm
 
 def extract_ranks(post_data, major_list):
     """
@@ -92,17 +94,48 @@ def handle_personal_info_form(request, old_info, applicant=None):
                                   old_info,
                                   applicant)
 
-def handle_education_form(request, old_education, applicant=None):
+def handle_education_forms(request, 
+                           old_education, 
+                           old_additional_eduction=None,
+                           applicant=None):
     if settings.ACCEPT_ONLY_GRADUATED:
         if old_education==None:
             old_education = Education(has_graduated=True)
         else:
             old_education.has_graduated = True;
-    return handle_basic_form_save(EducationForm,
-                                  'educational_info',
-                                  request,
-                                  old_education,
-                                  applicant)
+
+    if applicant==None:
+        applicant = request.applicant
+
+    if (request.method == 'POST') and ('cancel' not in request.POST):
+        form = EducationForm(request.POST, 
+                             instance=old_education)
+        fvalid = form.is_valid()
+
+        quota_form = QuotaForm(request.POST,
+                               prefix='quota',
+                               instance=old_education)
+        qvalid = quota_form.is_valid()
+
+        forms = (form,quota_form)
+
+        if fvalid and qvalid:
+            education = form.save(commit=False)
+            education.applicant = applicant
+            education.save()
+            applicant.add_related_model('educational_info',
+                                        save=True,
+                                        smart=True)
+            additional_eduction = quota_form.save(commit=False)
+            additional_eduction.applicant = applicant
+            additional_eduction.save()
+            return (True, forms)
+    else:
+        form = EducationForm(instance=old_education)
+        quota_form = QuotaForm(instance=old_additional_eduction,
+                               prefix='quota')
+        forms = (form,quota_form)
+    return (False, forms)
 
 
 def handle_address_form(request, applicant=None):

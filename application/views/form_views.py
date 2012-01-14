@@ -24,10 +24,9 @@ from application.models import ApplyingCondition
 from application.forms import PersonalInfoForm, AddressForm, EducationForm, SingleMajorPreferenceForm
 from application.forms.handlers import handle_major_form
 from application.forms.handlers import assign_major_pref_to_applicant
-from application.forms.handlers import handle_education_form
+from application.forms.handlers import handle_education_forms
 from application.forms.handlers import handle_personal_info_form
 from application.forms.handlers import handle_address_form
-from quota.forms import QuotaForm
 
 def build_form_step_dict(form_steps):
     d = {}
@@ -127,16 +126,20 @@ def applicant_address(request):
 def applicant_education(request):
     applicant = request.applicant
     old_education = applicant.get_educational_info_or_none()
-    result, form = handle_education_form(request, old_education)
+    old_additional_eduction = applicant.get_additional_education_or_none()
+    result, forms = handle_education_forms(request, 
+                                           old_education,
+                                           old_additional_eduction)
     if result:
         return HttpResponseRedirect(reverse('apply-majors'))
 
-    quota_form = QuotaForm()
     accept_only_graduated = settings.ACCEPT_ONLY_GRADUATED
+
+    edu_form, quota_form = forms
 
     form_step_info = build_form_step_info(2,applicant)
     return render_to_response('application/education.html', 
-                              { 'form': form,
+                              { 'form': edu_form,
                                 'quota_form': quota_form,
                                 'accept_only_graduated': accept_only_graduated,
                                 'form_step_info': form_step_info })

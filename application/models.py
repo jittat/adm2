@@ -171,6 +171,13 @@ class Applicant(models.Model):
         else:
             return None
 
+    def get_additional_education_or_none(self):
+        from quota.models import AdditionalEducation
+        try:
+            return self.additional_education
+        except AdditionalEducation.DoesNotExist:
+            return None
+
     def has_major_preference(self):
         result = self.check_related_model('major_preference')
         if result!=None:

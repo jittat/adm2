@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from django.db import models
 
 from application.models import Applicant
@@ -17,7 +17,8 @@ class AdditionalEducation(models.Model):
         (2,'ค่าย 2 ของการอบรมสอวน. (อบรมที่ศูนย์แต่ละภูมิภาค)'),
         (3,'ค่ายอบรมระดับประเทศ (อบรมที่สสวท. ช่วงเดือนตุลาคม)'))
 
-    applicant = models.ForeignKey(Applicant)
+    applicant = models.OneToOneField(Applicant,
+                                     related_name='additional_education')
     training_round = models.IntegerField(verbose_name=u'รอบการอบรมโอลิมปิกวิชาการ',
                                          choices=TRAINING_ROUND_CHOICES)
     training_subject = models.CharField(max_length=100,
@@ -25,4 +26,5 @@ class AdditionalEducation(models.Model):
                                         choices=SUBJECT_CHOICES)
     gpax = models.FloatField(verbose_name=u'คะแนนเฉลี่ยรวม (GPAX) 5 ภาคการศึกษา')
     pat3 = models.FloatField(verbose_name=u'คะแนน PAT 3',
+                             blank=True,
                              null=True)

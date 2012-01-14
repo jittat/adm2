@@ -14,7 +14,7 @@ from commons.utils import submission_deadline_passed, redirect_to_deadline_error
 from application.views.form_views import prepare_major_form
 from application.forms.handlers import handle_major_form
 from application.forms.handlers import assign_major_pref_to_applicant
-from application.forms.handlers import handle_education_form
+from application.forms.handlers import handle_education_forms
 from application.forms.handlers import handle_address_form
 from application.forms.handlers import handle_personal_info_form
 from application.forms import EducationForm, SingleMajorPreferenceForm
@@ -105,7 +105,7 @@ def update_education(request):
     applicant = request.applicant
     old_education = applicant.get_educational_info_or_none()
 
-    result, form = handle_education_form(request, old_education)
+    result, form = handle_education_forms(request, old_education)
 
     if result:
         request.session['notice'] = 'การแก้ไขข้อมูลการศึกษาเรียบร้อย'
