@@ -32,7 +32,37 @@
   </table>
 </div>
 <div id="edu-gen-info">
-  <h2>ชื่ออื่นในการสอบ</h2>
+  <h2>ข้อมูลเพิ่มเติมเกี่ยวกับการสมัครโควตา</h2>
+  <table class="header-left">
+    <tr>
+      <th>{{ quota_form.training_round.label_tag }}:</th>
+      <td>{{ quota_form.training_round }}</td>
+      <td>{{ quota_form.training_round.errors }}</td>
+    </tr>
+    <tr>
+      <th>สาขาวิชาที่เข้าอบรม:</th>
+      <td>{{ quota_form.training_subject }}</td>
+      <td>{{ quota_form.training_subject.errors }}</td>
+    </tr>
+    <tr>
+      <th>{{ quota_form.gpax.label_tag }}:</th>
+      <td>{{ quota_form.gpax }}</td>
+      <td>{{ quota_form.gpax.errors }}</td>
+    </tr>
+    <tr>
+      <th>{{ quota_form.pat3.label_tag }}:</th>
+      <td>
+	{{ quota_form.pat3 }}<br/>
+	<span class="hint">
+	  สามารถเว้นไว้ได้ถ้ายังไม่ทราบผล ในวันสัมภาษณ์ให้นำหลักฐานคะแนนสอบมาด้วย
+	</span>
+      </td>
+      <td>{{ quota_form.pat3.errors }}</td>
+    </tr>
+  </table>
+</div>
+<div id="edu-gen-info">
+  <h2>ชื่ออื่นในการสอบ GAT/PAT</h2>
   <table class="header-left">
     <tr>
       <th>ชื่อ-นามสกุลอื่น:</th>

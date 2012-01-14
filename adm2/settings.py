@@ -143,6 +143,7 @@ INSTALLED_APPS = (
     'result',
     'review',
     'confirmation',
+    'quota',
     #'feature_switch',
 )
 
@@ -188,22 +189,22 @@ ACCEPT_ONLY_GRADUATED = False
 VERIFIY_MINIMUM_SCORE = False
 
 # maximum number of choices
-MAX_MAJOR_RANK = 3
+MAX_MAJOR_RANK = 1
 
-SUBMISSION_DEADLINE = datetime(2012,2,16,0,0)
+SUBMISSION_DEADLINE = datetime(2012,2,2,0,0)
 
-PAYMENT_DEADLINE_DISPLAY = datetime(2012,2,15)
+PAYMENT_DEADLINE_DISPLAY = datetime(2012,2,1)
 ADMISSION_PAYMENT = 300
 ADMISSION_PAYMENT_TEXT = u'สามร้อยบาทถ้วน'
 
 # to distinguish payments between direct adm and quota adm
-TICKET_SYSTEM_SALT = 'salt'
+TICKET_SYSTEM_SALT = 'quota'
 
 # --------------
 # web interface settings
 
 LOGIN_ENABLED = True
-NAT_ID_VERIFICATION = False
+NAT_ID_VERIFICATION = True
 
 MAX_PASSWORD_REQUST_PER_DAY = 10
 MAX_DOC_UPLOAD_PER_DAY = 100
@@ -231,4 +232,5 @@ MAX_UPLOADED_DOC_FILE_SIZE = 2000000
 try:
     from settings_local import *
 except ImportError:
+    print "Oh!"
     pass 
