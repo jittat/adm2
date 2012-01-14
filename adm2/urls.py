@@ -13,7 +13,7 @@ urlpatterns = patterns(
 
     (r'^apply/', include('application.urls')),
     #(r'^doc/', include('upload.urls')),
-    #(r'^review/', include('adm.review.urls')),
+    (r'^review/', include('review.urls')),
     #(r'^manual/', include('adm.manual.urls')),
     #(r'^supplement/', include('adm.supplement.urls')),
     #(r'^result/', include('adm.result.urls')),
