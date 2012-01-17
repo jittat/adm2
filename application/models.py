@@ -562,7 +562,7 @@ class Education(models.Model):
 
 class Major(models.Model):
     number = models.CharField(max_length=5)
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=100)
 
     confirmation_amount = models.IntegerField(default=0)
 
