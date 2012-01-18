@@ -1,5 +1,5 @@
 <p>
-  สถานะของการสมัครและการดึงข้อมูลคะแนนสอบแสดงในตารางด้านล่าง<br/>
+  สถานะของการสมัคร{% if shows_score_import_status %}และการดึงข้อมูลคะแนนสอบ{% endif %}แสดงในตารางด้านล่าง<br/>
   <table id="doc-status-table">
     <tr>
       <th width="40%"></th>
@@ -18,27 +18,29 @@
         <td>ยังไม่ได้รับ</td>
       {% endif %}  
     </tr>
-    <tr>
-      <td class="category">
-	การดึงคะแนนสอบจากสทศ.
-      </td>
-      {% if is_score_request_successful == None %}
-        <td>อยู่ระหว่างดำเนินการ</td>
-        <td>-</td>
-      {% else %}
-        {% if is_score_request_successful %}
-          <td>สำเร็จ (ดูคะแนนด้านล่าง)</td>
-        {% else %}
-          <td>
-	    <b style="color:red">มีปัญหาในการดึงคะแนนสอบ</b><br/>
-	    กรุณาติดต่อโครงการรับตรงโดยด่วนที่สุด 
-	    สามารถติดต่อได้ทางอีเมล์ admission.eng.ku@gmail.com 
-	    หรือทางโทรศัพท์ 0-2579-2222
-	  </td>
-        {% endif %}	
-	<td>{{ score_requested_at|date:"j N y" }}</td>
-      {% endif %}
-    </tr>
+    {% if shows_score_import_status %}
+      <tr>
+        <td class="category">
+	  การดึงคะแนนสอบจากสทศ.
+	</td>
+	{% if is_score_request_successful == None %}
+          <td>อยู่ระหว่างดำเนินการ</td>
+          <td>-</td>
+	{% else %}
+          {% if is_score_request_successful %}
+            <td>สำเร็จ (ดูคะแนนด้านล่าง)</td>
+          {% else %}
+            <td>
+	      <b style="color:red">มีปัญหาในการดึงคะแนนสอบ</b><br/>
+	      กรุณาติดต่อโครงการรับตรงโดยด่วนที่สุด 
+	      สามารถติดต่อได้ทางอีเมล์ admission.eng.ku@gmail.com 
+	      หรือทางโทรศัพท์ 0-2579-2222
+	    </td>
+          {% endif %}	
+   	  <td>{{ score_requested_at|date:"j N y" }}</td>
+        {% endif %}
+      </tr>
+    {% endif %}
   </table>
   <small>หมายเหตุ: ธนาคารไทยพาณิชย์จะส่งข้อมูลการชำระเงินให้กับทางคณะเป็นวันต่อวัน เว้นวันหยุดธนาคาร ดังนั้นเมื่อชำระเงินแล้วสถานะการชำระเงินจะถูกปรับในวันถัดไปในช่วงก่อนเที่ยง</small>
 </p>

@@ -186,7 +186,6 @@ FORMAT_MODULE_PATH = 'adm2.formats'
 # general settings
 
 ADMISSION_YEAR = 2555
-
 APPLICANT_TICKET_PREFIX = 1
 
 ACCEPT_ONLY_GRADUATED = False
@@ -195,8 +194,10 @@ VERIFIY_MINIMUM_SCORE = False
 # maximum number of choices
 MAX_MAJOR_RANK = 3
 
+# deadlines
 SUBMISSION_DEADLINE = datetime(2012,2,16,0,0)
 
+# payment
 PAYMENT_DEADLINE_DISPLAY = datetime(2012,2,15)
 ADMISSION_PAYMENT = 300
 ADMISSION_PAYMENT_TEXT = u'สามร้อยบาทถ้วน'
@@ -223,6 +224,8 @@ EMAIL_HOST = 'nontri.ku.ac.th'
 EMAIL_HOST_USER = 'jtf'
 EMAIL_HOST_PASSWORD = 'xxxxxxxx'
 EMAIL_SENDER = 'KU Eng Admission Team <jtf@ku.ac.th>'
+
+SHOW_SCORE_IMPORT_STATUS = True
 
 # used in redirect_to_index
 INDEX_PAGE = 'start-page'

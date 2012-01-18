@@ -48,7 +48,7 @@
   </p>
 
   {% include "application/status/include/submission_status.html" %}
-  {% if is_score_request_successful %}
+  {% if show_score_import_status and is_score_request_successful %}
     {% include "application/status/include/exam_scores.html" %}
   {% endif %}
 
