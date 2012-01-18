@@ -109,12 +109,9 @@ class Applicant(models.Model):
             return applicants[0]
 
     @staticmethod
-    def get_active_offline_applicants():
-        return Applicant.objects.filter(is_offline=True).filter(is_submitted=False)
-
-    @staticmethod
-    def get_submitted_offline_applicants():
-        return Applicant.objects.filter(is_offline=True).filter(is_submitted=True)
+    def get_ready_applicants():
+        return Applicant.objects.filter(submission_info__is_paid=True, 
+                                        NIETS_scores__is_request_successful=True)
 
     # accessor methods
 

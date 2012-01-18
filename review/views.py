@@ -28,14 +28,21 @@ from commons.models import Log
 from models import ReviewField, ReviewFieldResult, CompletedReviewField
 #from supplement.models import Supplement
 from confirmation.models import AdmissionConfirmation
+from result.models import NIETSScores
 
 def find_basic_statistics():
     total_submitted_app_count = SubmissionInfo.objects.count()
     paid_app_count = SubmissionInfo.objects.filter(is_paid=True).count()
+    imported_app_count = NIETSScores.objects.filter(is_request_successful=True).count()
+    imported_problem_app_count = NIETSScores.objects.filter(is_request_successful=False).count()
+    ready_app_count = Applicant.get_ready_applicants().count()
     stat = {
         'online_app_registered': Applicant.objects.count(),
+        'app_ready': ready_app_count,
         'app_submitted': total_submitted_app_count,
         'app_paid':  paid_app_count,
+        'app_imported': imported_app_count,
+        'app_imported_problem': imported_problem_app_count,
         }
     return stat
 
@@ -465,7 +472,7 @@ def get_applicants_using_update_review_time_diff(time_diff, review_status=None):
 APPLICANTS_PER_PAGE = 200
 
 @login_required
-def list_applicant(request, reviewed=True, pagination=True):
+def list_applicant(request, pagination=True):
     applicants = []
     display = {}
     submission_infos = SubmissionInfo.objects.filter(doc_received_at__isnull=False).filter(has_been_reviewed=reviewed).select_related(depth=1)

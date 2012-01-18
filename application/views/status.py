@@ -40,7 +40,8 @@ def prepare_exam_scores(applicant):
         niets_scores = applicant.NIETS_scores
     except:
         niets_scores = None
-    if not niets_scores:
+
+    if not niets_scores or not niets_scores.is_request_successful:
         return None
 
     cal_scores = niets_scores.as_calculated_list_by_exam_round()

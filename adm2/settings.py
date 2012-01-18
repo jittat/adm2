@@ -111,6 +111,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'adm2.urls'
@@ -137,6 +138,8 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
 
     'south',
+    'debug_toolbar',
+
     'commons',
     'application',
     #'upload',
@@ -203,7 +206,7 @@ TICKET_SYSTEM_SALT = 'salt'
 # web interface settings
 
 LOGIN_ENABLED = True
-NAT_ID_VERIFICATION = False
+NAT_ID_VERIFICATION = True
 
 MAX_PASSWORD_REQUST_PER_DAY = 10
 MAX_DOC_UPLOAD_PER_DAY = 100
@@ -227,6 +230,10 @@ INDEX_PAGE = 'start-page'
 
 UPLOADED_DOC_PATH = os.path.join(PROJECT_DIR,'data/upload')
 MAX_UPLOADED_DOC_FILE_SIZE = 2000000
+
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False
+}
 
 try:
     from settings_local import *

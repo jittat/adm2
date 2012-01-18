@@ -4,44 +4,41 @@
 
 {% block regis-body %}
 <p>
-  สถิติพื้นฐาน:
+  <b>สถิติพื้นฐาน:</b>
   <ul>
-    <li>จำนวนผู้สมัครที่ส่งใบสมัครแล้วทั้งหมด {{ stat.app_submitted }} คน</li>
-    <li>จำนวนผู้สมัครที่ชำระค่าสมัครแล้ว {{ stat.app_paid }} คน</li>
-    <li>จำนวนผู้ลงทะเบียนเว็บไซต์ {{ stat.online_app_registered }} คน</li>
+    <li>
+      จำนวนผู้สมัครที่พร้อมเข้าคัดเลือก {{ stat.app_ready }} คน 
+      <small>[<a href="{% url review-list-complete %}">รายการล่าสุด</a>]</small><br/>
+      <small>ผู้สมัครกลุ่มนี้ชำระค่าสมัครแล้วและข้อมูลการสอบถูกนำเข้าเรียบร้อย</small>
+    </li>
+    <li>
+      จำนวนผู้สมัครที่ส่งใบสมัครแล้วทั้งหมด {{ stat.app_submitted }} คน 
+      <small>[<a href="{% url review-list-all %}">รายการล่าสุด</a>]</small>
+    </li>
+    <li>
+      จำนวนผู้สมัครที่ชำระค่าสมัครแล้ว {{ stat.app_paid }} คน
+      <small>[<a href="{% url review-list-paid %}">รายการล่าสุด</a>]</small>
+    </li>
+    <li>
+      จำนวนผู้สมัครที่นำเข้าข้อมูลการสอบแล้ว {{ stat.app_imported }} คน
+      <small>[<a href="{% url review-list-score-imported %}">รายการล่าสุด</a>]</small>
+      มีปัญหา {{ stat.app_imported_problem }} คน
+      <small>[ดูรายการ]</small>
+    </li>
+    <li>
+      จำนวนผู้ลงทะเบียนเว็บไซต์ {{ stat.online_app_registered }} คน
+    </li>
   </ul>
   <b>รายการผู้สมัคร:</b>
   <ul>
     <li>
-      รายผู้สมัครที่หลักฐานไม่ผ่านการตรวจ
-      <ul>
-	<li>
-	  <a href="{% url review-list-incomplete-online %}">สมัครและส่งหลักฐานแบบออนไลน์ทั้งหมด (online)</a>
-	</li>
-	<li>
-	  <a href="{% url review-list-incomplete-postal %}">สมัครแบบออนไลน์ที่ส่งหลักฐานทางไปรษณีย์</a>
-	</li>
-	<li>
-	  <a href="{% url review-list-incomplete-offline %}">สมัครและส่งหลักฐานทางไปรษณีย์ (offline)</a>
-	</li>
-      </ul>
+      รายการล่าสุด (200 อันดับล่าสุด): 
+      <a href="{% url review-list-complete %}">ผู้สมัครที่พร้อมเข้าคัดเลือก</a> |
+      <a href="{% url review-list-paid %}">ผู้สมัครที่ชำระเงินแล้ว</a> |
+      <a href="{% url review-list-score-imported %}">ผู้สมัครที่นำเข้าข้อมูลการสอบแล้ว</a> |
+      <a href="{% url review-list-all %}">ผู้สมัครทั้งหมด</a>
     </li>
-
-    <li>
-      <a href="{% url review-list-supplements %}">รายชื่อผู้สมัครที่ยื่นหลักฐานเพิ่มหลังจากตรวจสอบแล้ว (เฉพาะที่หลักฐานยังตรวจไม่ผ่าน)</a>
-    </li>
-    <li>
-      รายการตรวจสอบพิเศษ
-      <ul>
-	<li>
-	  <a href="{% url review-list-inspect-supplement %}">รายชื่อที่เวลายื่นหลักฐานเพิ่มเติมและเวลาตรวจใกล้กันมากกว่า 10 นาที</a>
-	</li>
-	<li>
-	  <a href="{% url review-list-inspect-edu-update %}">รายชื่อที่เวลาแก้ไขข้อมูลด้านการศึกษากับเวลาตรวจใกล้กันมากกว่า 10 นาที (โปรดระวัง: ใช้เวลาคำนวณมาก)</a>
-	</li>
-      </ul>
-    </li>
-
+    <li>รายการผู้สมัครที่มีปัญหาการนำเข้าข้อมูลการสอบ</li>
   </ul>
 </p>
 {% endblock %}
