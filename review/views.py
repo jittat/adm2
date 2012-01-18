@@ -121,15 +121,14 @@ def verify_ticket(request):
 
             if applicants != None and len(applicants) > 0:
                 if (('search-and-show' in request.POST) 
-                    and (len(applicants)==1) and (applicants[0].is_submitted) and
-                    (applicants[0].submission_info.can_be_reviewed()) and
-                    (not applicants[0].online_doc_submission())):
-                    return HttpResponseRedirect(reverse('review-show',
+                    and (len(applicants)==1) and (applicants[0].is_submitted)):
+                    return HttpResponseRedirect(reverse('review-show-app',
                                                         args=[applicants[0].id]))
 
                 for applicant in applicants:
                     match_ticket = (applicant.is_submitted and
                                     applicant.ticket_number()==str(ticket))
+
                     match_verinum = (applicant.is_submitted and
                         applicant.verification_number().startswith(verinum))
                     results.append({ 'ticket': match_ticket,
