@@ -36,7 +36,7 @@ DATABASES = {
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'Asia/Bangkok'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -187,6 +187,7 @@ FORMAT_MODULE_PATH = 'adm2.formats'
 # general settings
 
 ADMISSION_YEAR = 2555
+APPLICANT_TICKET_PREFIX = 1
 
 ACCEPT_ONLY_GRADUATED = False
 VERIFIY_MINIMUM_SCORE = False
@@ -194,8 +195,10 @@ VERIFIY_MINIMUM_SCORE = False
 # maximum number of choices
 MAX_MAJOR_RANK = 1
 
+# deadlines
 SUBMISSION_DEADLINE = datetime(2012,2,2,0,0)
 
+# payment
 PAYMENT_DEADLINE_DISPLAY = datetime(2012,2,1)
 ADMISSION_PAYMENT = 300
 ADMISSION_PAYMENT_TEXT = u'สามร้อยบาทถ้วน'
@@ -222,6 +225,8 @@ EMAIL_HOST = 'nontri.ku.ac.th'
 EMAIL_HOST_USER = 'jtf'
 EMAIL_HOST_PASSWORD = 'xxxxxxxx'
 EMAIL_SENDER = 'KU Eng Admission Team <jtf@ku.ac.th>'
+
+SHOW_SCORE_IMPORT_STATUS = True
 
 # used in redirect_to_index
 INDEX_PAGE = 'start-page'

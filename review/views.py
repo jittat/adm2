@@ -121,15 +121,14 @@ def verify_ticket(request):
 
             if applicants != None and len(applicants) > 0:
                 if (('search-and-show' in request.POST) 
-                    and (len(applicants)==1) and (applicants[0].is_submitted) and
-                    (applicants[0].submission_info.can_be_reviewed()) and
-                    (not applicants[0].online_doc_submission())):
-                    return HttpResponseRedirect(reverse('review-show',
+                    and (len(applicants)==1) and (applicants[0].is_submitted)):
+                    return HttpResponseRedirect(reverse('review-show-app',
                                                         args=[applicants[0].id]))
 
                 for applicant in applicants:
                     match_ticket = (applicant.is_submitted and
                                     applicant.ticket_number()==str(ticket))
+
                     match_verinum = (applicant.is_submitted and
                         applicant.verification_number().startswith(verinum))
                     results.append({ 'ticket': match_ticket,
@@ -864,3 +863,25 @@ def show_applicant(request, applicant_id):
                                 'exam_scores': exam_scores,
                                 'admission_results': admission_results,
                                 'confirmations': confirmations })
+
+@login_required
+def export_app_nat_id(request):
+
+    from datetime import datetime
+
+    filename = "req" + datetime.now().strftime("%Y%m%d%H%M") + ".csv"
+
+    response = HttpResponse(mimetype='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=' + filename
+
+    data = ["No,CITIZENID,Name,SurName\n"]
+    applicants = Applicant.objects.filter(NIETS_scores=None).all()
+
+    counter = 1
+    for a in applicants:
+        data.append('"%d","%s","%s","%s"\n' %
+                    (counter, a.national_id, a.first_name, a.last_name))
+
+    response.write(''.join(data))
+
+    return response

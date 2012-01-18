@@ -32,13 +32,13 @@ def extract_ranks(post_data, major_list):
         ranks.append(rank_dict[r])
     return ranks
 
-def assign_major_pref_to_applicant(applicant, major_ranks):
+def assign_major_pref_to_applicant(applicant, pref_list):
     if applicant.has_major_preference():
         preference = applicant.preference
     else:
         preference = MajorPreference()
             
-    preference.majors = major_ranks
+    preference.majors = [int(m.number) for m in pref_list]
 
     preference.applicant = applicant
     preference.save()
@@ -46,25 +46,41 @@ def assign_major_pref_to_applicant(applicant, major_ranks):
                                 save=True,
                                 smart=True)
 
-def handle_major_form(request, applicant=None):
+def handle_major_form(request, max_major_rank, applicant=None):
     if applicant==None:
         applicant = request.applicant
 
     majors = Major.get_all_majors()
+    mdict = dict([(int(m.number),m) for m in majors])
 
     errors = None
 
-    #print extract_ranks(request.POST, majors)
+    pref_list = []
+    used = set()
+    is_dupplicate = False
+    for r in range(1, max_major_rank+1):
+        name = "major-%d" % r
+        try:
+            major_num = int(request.POST[name])
+            if major_num!=0:
+                if major_num not in used:
+                    pref_list.append(mdict[major_num])
+                    used.add(major_num)
+                else:
+                    is_dupplicate = True
+        except:
+            pass
 
-    major_ranks = extract_ranks(request.POST, majors)
-    if len(major_ranks)==0:
+    if len(pref_list)==0:
         # chooses no majors
         errors = ['ต้องเลือกอย่างน้อยหนึ่งอันดับ']
+    elif is_dupplicate:
+        errors = ['เลือกสาขาซ้ำกันในสองอันดับ กรุณาเลือกใหม่ ระบบได้ตัดสาขาที่ซ้ำกันทิ้งให้แล้ว']
     else:
-        assign_major_pref_to_applicant(applicant, major_ranks)
-        return (True, major_ranks, None)
+        assign_major_pref_to_applicant(applicant, pref_list)
+        return (True, pref_list, None)
 
-    return (False, major_ranks, errors)
+    return (False, pref_list, errors)
 
 
 def handle_basic_form_save(form_class, field_name, request, old_data, 

@@ -331,8 +331,9 @@ class Applicant(models.Model):
     def ticket_number(self):
         try:
             application_id = self.submission_info.applicantion_id
-            return ("%(year)d%(id)05d" % 
-                    { 'year': settings.ADMISSION_YEAR,
+            return ("%(year)d%(pref)d%(id)05d" % 
+                    { 'year': settings.ADMISSION_YEAR % 100,
+                      'pref': settings.APPLICANT_TICKET_PREFIX,
                       'id': application_id })
         except SubmissionInfo.DoesNotExist:
             return None

@@ -249,8 +249,11 @@ def index(request):
     core_data = { 'applicant': applicant,
                   'submission_info': submission_info,
                   'can_log_out': True }
-    
     template_data.append(core_data)
+
+    config_data = { 'shows_score_import_status' 
+                    : settings.SHOW_SCORE_IMPORT_STATUS }
+    template_data.append(config_data)
 
     template_items = []
     for d in template_data:

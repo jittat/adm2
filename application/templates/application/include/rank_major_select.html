@@ -1,0 +1,10 @@
+<select id="major-{{ selection.number }}-select" name="major-{{ selection.number }}">
+  <option value="0">ไม่ประสงค์เลือก</option>
+  {% for m in majors %}
+    {% if m.number == selection.major_number %}
+      <option selected="selected" value="{{ m.number }}">{{ m }}</option>
+    {% else %}
+      <option value="{{ m.number }}">{{ m }}</option>
+    {% endif %}
+  {% endfor %}
+</select>
