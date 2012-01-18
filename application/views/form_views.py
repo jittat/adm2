@@ -188,9 +188,7 @@ def prepare_major_form(applicant, pref_ranks=None, errors=None):
              'errors': errors }
 
 
-@within_submission_deadline
-@active_applicant_required
-def applicant_major(request):
+def applicant_major_as_major_lists(request):
     if settings.MAX_MAJOR_RANK == 1:
         return applicant_major_single_choice(request)
 
@@ -217,6 +215,62 @@ def applicant_major(request):
     # add step info
     form_step_info = build_form_step_info(3, applicant)
     form_data['form_step_info'] = form_step_info
+    return render_to_response('application/major_select_by_majors.html',
+                              form_data)
+
+
+def prepare_major_selections(pref_list, padding):
+    if len(pref_list) < padding:
+        pref_list += [None] * (padding - len(pref_list))
+
+    selections = []
+    num = 0
+    for p in pref_list:
+        num += 1
+        sel = {'number': num }
+        if p!=None:
+            sel['major'] = p
+            sel['major_number'] = p.number
+        else:
+            sel['major'] = None
+            sel['major_number'] = None
+        selections.append(sel)
+    return selections
+
+@within_submission_deadline
+@active_applicant_required
+def applicant_major(request):
+    max_major_rank = settings.MAX_MAJOR_RANK
+
+    if max_major_rank == 1:
+        return applicant_major_single_choice(request)
+
+    applicant = request.applicant
+    form_data = { 'majors': Major.get_all_majors() }
+
+    if (request.method == 'POST') and ('cancel' not in request.POST):
+
+        result, pref_list, errors = handle_major_form(request, max_major_rank)
+
+        if result:
+            return HttpResponseRedirect(reverse('apply-confirm'))
+
+        selections = prepare_major_selections(pref_list, max_major_rank)
+        form_data['errors'] = errors
+
+    else:
+        if applicant.has_major_preference():
+            pref_list = applicant.preference.get_major_list()
+        else:
+            pref_list = [None] * max_major_rank
+
+        selections = prepare_major_selections(pref_list, max_major_rank)
+
+    # add step info
+    form_step_info = build_form_step_info(3, applicant)
+    form_data['form_step_info'] = form_step_info
+    form_data['selections'] = selections
+    form_data['max_major_rank'] = max_major_rank
     return render_to_response('application/majors.html',
                               form_data)
 
