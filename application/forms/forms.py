@@ -154,3 +154,10 @@ class SingleMajorPreferenceForm(forms.Form):
     major = forms.ModelChoiceField(queryset=Major.objects.all(),
                                    label='สาขาวิชา',
                                    empty_label='ยังไม่ได้เลือก')
+
+    def __init__(self, majors=None, *args, **kwargs):
+        super(SingleMajorPreferenceForm, self).__init__(*args, **kwargs)
+        if majors:
+            self.fields['major'] = forms.ModelChoiceField(queryset=majors,
+                                                          label='สาขาวิชา',
+                                                          empty_label='ยังไม่ได้เลือก')

@@ -114,7 +114,7 @@ def handle_education_forms(request,
 
         quota_form = QuotaForm(request.POST,
                                prefix='quota',
-                               instance=old_education)
+                               instance=old_additional_eduction)
         qvalid = quota_form.is_valid()
 
         forms = (form,quota_form)

@@ -104,8 +104,11 @@ def update_majors(request):
 def update_education(request):
     applicant = request.applicant
     old_education = applicant.get_educational_info_or_none()
+    old_additional_education = applicant.get_additional_education_or_none()
 
-    result, form = handle_education_forms(request, old_education)
+    result, forms = handle_education_forms(request, 
+                                           old_education, 
+                                           old_additional_education)
 
     if result:
         request.session['notice'] = 'การแก้ไขข้อมูลการศึกษาเรียบร้อย'
@@ -114,8 +117,11 @@ def update_education(request):
         request.session['notice'] = 'ข้อมูลการศึกษาไม่ถูกแก้ไข'
         return HttpResponseRedirect(reverse('status-index'))
 
+    edu_form, quota_form = forms
+
     return render_to_response('application/update/education.html',
-                              {'form': form,
+                              {'form': edu_form,
+                               'quota_form': quota_form,
                                'can_log_out': True,
                                'applicant': applicant })
 

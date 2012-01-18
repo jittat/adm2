@@ -590,6 +590,14 @@ class Major(models.Model):
             Major.__major_list = list(Major.objects.all())
         return Major.__major_list
 
+    @staticmethod
+    def get_majors_for_training_round(r):
+        if r==2:
+            return Major.objects.filter(number__startswith=1)
+        else:
+            return Major.objects.all()
+        
+
 
 class MajorPreference(models.Model):
     applicant = models.OneToOneField(Applicant,

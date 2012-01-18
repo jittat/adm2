@@ -126,10 +126,10 @@ def applicant_address(request):
 def applicant_education(request):
     applicant = request.applicant
     old_education = applicant.get_educational_info_or_none()
-    old_additional_eduction = applicant.get_additional_education_or_none()
+    old_additional_education = applicant.get_additional_education_or_none()
     result, forms = handle_education_forms(request, 
                                            old_education,
-                                           old_additional_eduction)
+                                           old_additional_education)
     if result:
         return HttpResponseRedirect(reverse('apply-majors'))
 
@@ -147,14 +147,18 @@ def applicant_education(request):
 
 def applicant_major_single_choice(request):
     applicant = request.applicant
+    additional_education = applicant.additional_education
+    training_round = additional_education.training_round
+
+    major_query_set = Major.get_majors_for_training_round(training_round)
 
     if (request.method == 'POST') and ('cancel' not in request.POST):
 
-        form = SingleMajorPreferenceForm(request.POST)
+        form = SingleMajorPreferenceForm(major_query_set,request.POST)
         if form.is_valid():
             assign_major_pref_to_applicant(applicant,
                                            [form.cleaned_data['major'].number])
-            return HttpResponseRedirect(reverse('apply-doc-menu'))
+            return HttpResponseRedirect(reverse('apply-confirm'))
     else:
         prev_major = None
         if applicant.has_major_preference():
@@ -165,15 +169,16 @@ def applicant_major_single_choice(request):
                 majors = dict([(int(m.number), m) for m in Major.get_all_majors()])
                 prev_major = majors[pref[0]]
         if prev_major!=None:
-            form = SingleMajorPreferenceForm(initial={'major': prev_major.id})
+            form = SingleMajorPreferenceForm(major_query_set, initial={'major': prev_major.id})
         else:
-            form = SingleMajorPreferenceForm()
+            form = SingleMajorPreferenceForm(major_query_set)
 
     # add step info
     form_data = {}
     form_step_info = build_form_step_info(3, applicant)
     form_data['form_step_info'] = form_step_info
     form_data['form'] = form
+    form_data['training_round'] = training_round
     return render_to_response('application/majors_single.html',
                               form_data)
 

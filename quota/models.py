@@ -28,3 +28,4 @@ class AdditionalEducation(models.Model):
     pat3 = models.FloatField(verbose_name=u'คะแนน PAT 3',
                              blank=True,
                              null=True)
+
