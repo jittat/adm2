@@ -16,6 +16,10 @@ urlpatterns = patterns(
         { 'paid': True, 'score_imported': True }, name='review-list-complete'),
 
 
+    url(r'^export/app-nat-id/$', 'export_app_nat_id',
+        name='review-export-app-nat-id'),
+
+
     url(r'^ticket/$', 'verify_ticket', name='review-ticket'),
     url(r'^search/$', 'search', name='review-search'),
 

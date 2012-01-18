@@ -864,3 +864,25 @@ def show_applicant(request, applicant_id):
                                 'exam_scores': exam_scores,
                                 'admission_results': admission_results,
                                 'confirmations': confirmations })
+
+@login_required
+def export_app_nat_id(request):
+
+    from datetime import datetime
+
+    filename = "req" + datetime.now().strftime("%Y%m%d%H%M") + ".csv"
+
+    response = HttpResponse(mimetype='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=' + filename
+
+    data = ["No,CITIZENID,Name,SurName\n"]
+    applicants = Applicant.objects.filter(NIETS_scores=None).all()
+
+    counter = 1
+    for a in applicants:
+        data.append('"%d","%s","%s","%s"\n' %
+                    (counter, a.national_id, a.first_name, a.last_name))
+
+    response.write(''.join(data))
+
+    return response
