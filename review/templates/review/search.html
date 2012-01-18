@@ -22,16 +22,15 @@
   {% endif %}
 
   {% block list_summary %}
+    {% if title %}<b>{{ title }}</b><br/>{% endif %}
     {% if applicant_count %}
-      <p>
-        ผลลัพธ์ทั้งหมด {{ applicant_count }} รายการ แสดงผลรายการที่ {{ display_start }} ถึงรายการที่ {{ display_end }} ({{ display_count }} รายการ) 
-        {% if pagination %}
-          | 
-          <small>
-  	    {% ifnotequal page 1 %}<a href="?page=1">หน้าแรก</a> - <a href="?page={{ page|add:"-1" }}">หน้าก่อนหน้า</a> - {% endifnotequal %}หน้าที่ {{ page }}{% ifnotequal page max_page %} - <a href="?page={{ page|add:"1" }}">หน้าถัดไป</a>{% endifnotequal %}
-  	  </small>
-        {% endif %}
-      </p>
+      ผลลัพธ์ทั้งหมด {{ applicant_count }} รายการ แสดงผลรายการที่ {{ display_start }} ถึงรายการที่ {{ display_end }} ({{ display_count }} รายการ) 
+      {% if pagination %}
+        | 
+        <small>
+          {% ifnotequal page 1 %}<a href="?page=1">หน้าแรก</a> - <a href="?page={{ page|add:"-1" }}">หน้าก่อนหน้า</a> - {% endifnotequal %}หน้าที่ {{ page }}{% ifnotequal page max_page %} - <a href="?page={{ page|add:"1" }}">หน้าถัดไป</a>{% endifnotequal %}
+  	</small>
+      {% endif %}
     {% endif %}
   {% endblock %}
 
@@ -44,8 +43,7 @@
       {% endif %}
       <th>ชื่อ</th>
       {% if display.edu %}<th>โรงเรียน</th>{% endif %}
-      <th>สถานะการยื่นใบสมัคร</th>
-      <th>วิธีส่ง</th>
+      <th>การยื่นใบสมัคร</th>
       {% if display.doc_received_at %}
         <th>ได้รับหลักฐาน</th>
       {% endif %}
@@ -55,32 +53,30 @@
       {% endif %}
       {% if display.doc_reviewed_at %}<th>ตรวจเมื่อ</th>{% endif %}
       {% if display.doc_reviewed_at %}<th>ผลการตรวจ</th>{% endif %}
-      {% if force_review_link %}
-        <th></th>
-      {% endif %}
+      {% if display.payment_status %}<th>ชำระเงิน</th>{% endif %}
+      {% if display.score_import_status %}<th>คะแนนสอบ</th>{% endif %}
     </tr>
+
     {% for applicant in applicants %}
       <tr id="app-{{ applicant.id }}-row" class="{% cycle 'odd' 'even' %}">
 
 	{% if display.ticket_number %}
-	  <td>{{ applicant.ticket_number }}</td>
+	  <td><a href="{% url review-show-app applicant.id %}">{{ applicant.ticket_number }}</a></td>
 	{% endif %}
 
-	<td>{{ applicant.full_name }}</td>
+	<td><a href="{% url review-show-app applicant.id %}">{{ applicant.full_name }}</a></td>
 
 	{% if display.edu %}
 	  <td>{{ applicant.education.school_name }}</td>
         {% endif %}
 
 	<td>
-	  {% if applicant.is_submitted %}
-	    {% if applicant.submission_info.is_resubmitted %}<img src="{% static_url %}/image/Backup.png"/>ยื่นหลักฐานเพิ่ม{% else %}ยื่นใบสมัครแล้ว{% endif %} 
-	  {% else %}
-	    ยังไม่ยื่น
-	  {% endif %}
+          {% passed_icon applicant.is_submitted %}
+          {% if applicant.is_submitted %}
+            {{ applicant.submission_info.submitted_at|date:"j N" }}
+          {% endif %}
 	</td>
 
-	<td>{{ applicant.get_doc_submission_method_display }}</td>
 	{% if display.doc_received_at %}
 	  <td>{{ applicant.submission_info.doc_received_at|date:"H:i, j N" }}</td>
 	{% endif %}
@@ -102,14 +98,22 @@
 	    {% if applicant.submission_info.doc_reviewed_complete %}ผ่าน{% else %}ไม่ผ่าน{% endif %}
 	  </td>
 	{% endif %}
-
-	{% if force_review_link %}
+        {% if display.payment_status %}
 	  <td>
-            {% if applicant.submission_info.can_be_reviewed %}
-              [<a href="{% url review-show applicant.id %}">ตรวจเอกสาร</a>]</td>
-	    {% endif %}
+            {% passed_icon applicant.submission_info.is_paid %}
+            {% if applicant.submission_info.is_paid %}
+              {{ applicant.submission_info.paid_at|date:"j N" }}
+            {% endif %}
 	  </td>
         {% endif %}
+        {% if display.score_import_status %}
+	  <td>
+	    {% passed_icon applicant.NIETS_scores.is_request_successful %}
+	    {% if applicant.NIETS_scores %}
+	      {{ applicant.NIETS_scores.requested_at|date:"j N" }}
+	    {% endif %}
+	  </td>
+	{% endif %}
       </tr>
     {% empty %}
       <tr><td colspan="7">ไม่พบผู้สมัคร</td></tr>

@@ -10,9 +10,10 @@ urlpatterns = patterns(
         { 'paid': True }, name='review-list-paid'),
     url(r'^list/score-imported/$', 'list_applicant',
         { 'score_imported': True }, name='review-list-score-imported'),
+    url(r'^list/broken-score-imported/$', 'list_applicant',
+        { 'score_imported': False }, name='review-list-broken-score-imported'),
     url(r'^list/complete/$', 'list_applicant',
         { 'paid': True, 'score_imported': True }, name='review-list-complete'),
-
 
 
     url(r'^ticket/$', 'verify_ticket', name='review-ticket'),

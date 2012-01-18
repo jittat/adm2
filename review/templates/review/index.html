@@ -23,7 +23,7 @@
       จำนวนผู้สมัครที่นำเข้าข้อมูลการสอบแล้ว {{ stat.app_imported }} คน
       <small>[<a href="{% url review-list-score-imported %}">รายการล่าสุด</a>]</small>
       มีปัญหา {{ stat.app_imported_problem }} คน
-      <small>[ดูรายการ]</small>
+      <small>[<a href="{% url review-list-broken-score-imported %}">ดูรายการ</a>]</small>
     </li>
     <li>
       จำนวนผู้ลงทะเบียนเว็บไซต์ {{ stat.online_app_registered }} คน
@@ -38,7 +38,9 @@
       <a href="{% url review-list-score-imported %}">ผู้สมัครที่นำเข้าข้อมูลการสอบแล้ว</a> |
       <a href="{% url review-list-all %}">ผู้สมัครทั้งหมด</a>
     </li>
-    <li>รายการผู้สมัครที่มีปัญหาการนำเข้าข้อมูลการสอบ</li>
+    <li>
+      <a href="{% url review-list-broken-score-imported %}">รายการผู้สมัครที่มีปัญหาการนำเข้าข้อมูลการสอบ</a>
+    </li>
   </ul>
 </p>
 {% endblock %}
