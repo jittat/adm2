@@ -4,6 +4,18 @@ urlpatterns = patterns(
     'review.views',
 
     url(r'^$', 'index', name='review-index'),
+
+    url(r'^list/all/$', 'list_applicant', name='review-list-all'),
+    url(r'^list/paid/$', 'list_applicant',
+        { 'paid': True }, name='review-list-paid'),
+    url(r'^list/score-imported/$', 'list_applicant',
+        { 'score_imported': True }, name='review-list-score-imported'),
+    url(r'^list/broken-score-imported/$', 'list_applicant',
+        { 'score_imported': False }, name='review-list-broken-score-imported'),
+    url(r'^list/complete/$', 'list_applicant',
+        { 'paid': True, 'score_imported': True }, name='review-list-complete'),
+
+
     url(r'^ticket/$', 'verify_ticket', name='review-ticket'),
     url(r'^search/$', 'search', name='review-search'),
 
@@ -21,13 +33,10 @@ urlpatterns = patterns(
     url(r'^reviewall/$', 'auto_review_all_apps',
         name='review-auto-review-all'),
 
-    url(r'^list/complete/$', 'list_applicant',
-        { 'reviewed': True }, name='review-list-complete'),
-    url(r'^list/wait/$', 'list_applicant',
-        { 'reviewed': False }, name='review-list-wait'),
-
     url(r'^list/qualified/$', 'list_qualified_applicants',
         { 'download': True }, name='review-download-list-qualified'),
+
+
 
     url(r'^list/incomplete/postal$', 'list_incomplete_applicants',
         { 'submission_method': 'postal' },

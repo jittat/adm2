@@ -1,0 +1,46 @@
+{% extends "review/base.html" %}
+
+{% block extra-title-bar %}หน่วยทะเบียน | {% endblock %}
+
+{% block regis-body %}
+<p>
+  <b>สถิติพื้นฐาน:</b>
+  <ul>
+    <li>
+      จำนวนผู้สมัครที่พร้อมเข้าคัดเลือก {{ stat.app_ready }} คน 
+      <small>[<a href="{% url review-list-complete %}">รายการล่าสุด</a>]</small><br/>
+      <small>ผู้สมัครกลุ่มนี้ชำระค่าสมัครแล้วและข้อมูลการสอบถูกนำเข้าเรียบร้อย</small>
+    </li>
+    <li>
+      จำนวนผู้สมัครที่ส่งใบสมัครแล้วทั้งหมด {{ stat.app_submitted }} คน 
+      <small>[<a href="{% url review-list-all %}">รายการล่าสุด</a>]</small>
+    </li>
+    <li>
+      จำนวนผู้สมัครที่ชำระค่าสมัครแล้ว {{ stat.app_paid }} คน
+      <small>[<a href="{% url review-list-paid %}">รายการล่าสุด</a>]</small>
+    </li>
+    <li>
+      จำนวนผู้สมัครที่นำเข้าข้อมูลการสอบแล้ว {{ stat.app_imported }} คน
+      <small>[<a href="{% url review-list-score-imported %}">รายการล่าสุด</a>]</small>
+      มีปัญหา {{ stat.app_imported_problem }} คน
+      <small>[<a href="{% url review-list-broken-score-imported %}">ดูรายการ</a>]</small>
+    </li>
+    <li>
+      จำนวนผู้ลงทะเบียนเว็บไซต์ {{ stat.online_app_registered }} คน
+    </li>
+  </ul>
+  <b>รายการผู้สมัคร:</b>
+  <ul>
+    <li>
+      รายการล่าสุด (200 อันดับล่าสุด): 
+      <a href="{% url review-list-complete %}">ผู้สมัครที่พร้อมเข้าคัดเลือก</a> |
+      <a href="{% url review-list-paid %}">ผู้สมัครที่ชำระเงินแล้ว</a> |
+      <a href="{% url review-list-score-imported %}">ผู้สมัครที่นำเข้าข้อมูลการสอบแล้ว</a> |
+      <a href="{% url review-list-all %}">ผู้สมัครทั้งหมด</a>
+    </li>
+    <li>
+      <a href="{% url review-list-broken-score-imported %}">รายการผู้สมัครที่มีปัญหาการนำเข้าข้อมูลการสอบ</a>
+    </li>
+  </ul>
+</p>
+{% endblock %}

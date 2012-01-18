@@ -230,6 +230,9 @@ class NIETSScores(models.Model):
 
     def as_calculated_list_by_exam_round(self):
         all_scores = self.as_list_by_exam_round()
+        if not all_scores:
+            return []
+
         exams = ['gat','pat1','pat3']
         scores = []
         best_scores = dict([(ex,(0,None)) for ex in exams])

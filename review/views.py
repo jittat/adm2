@@ -28,14 +28,21 @@ from commons.models import Log
 from models import ReviewField, ReviewFieldResult, CompletedReviewField
 #from supplement.models import Supplement
 from confirmation.models import AdmissionConfirmation
+from result.models import NIETSScores
 
 def find_basic_statistics():
     total_submitted_app_count = SubmissionInfo.objects.count()
     paid_app_count = SubmissionInfo.objects.filter(is_paid=True).count()
+    imported_app_count = NIETSScores.objects.filter(is_request_successful=True).count()
+    imported_problem_app_count = NIETSScores.objects.filter(is_request_successful=False).count()
+    ready_app_count = Applicant.get_ready_applicants().count()
     stat = {
         'online_app_registered': Applicant.objects.count(),
+        'app_ready': ready_app_count,
         'app_submitted': total_submitted_app_count,
         'app_paid':  paid_app_count,
+        'app_imported': imported_app_count,
+        'app_imported_problem': imported_problem_app_count,
         }
     return stat
 
@@ -462,17 +469,35 @@ def get_applicants_using_update_review_time_diff(time_diff, review_status=None):
     return get_applicants_from_submission_infos(submission_infos)
 
 
+def build_search_title(paid, score_imported):
+    t = u'รายการผู้สมัครที่ส่งใบสมัครแล้ว'
+    if paid!=None:
+        if paid:
+            t += u' ที่ชำระเงินแล้ว'
+        else:
+            t += u' ที่ยังไม่ได้ชำระเงิน'
+    if score_imported!=None:
+        if score_imported:
+            t += u' ที่นำเข้าคะแนนสอบแล้ว'
+        else:
+            t += u' ที่การนำเข้าคะแนนสอบมีปัญหา'
+    return t
+
+
 APPLICANTS_PER_PAGE = 200
 
 @login_required
-def list_applicant(request, reviewed=True, pagination=True):
+def list_applicant(request, paid=None, score_imported=None, pagination=True):
     applicants = []
     display = {}
-    submission_infos = SubmissionInfo.objects.filter(doc_received_at__isnull=False).filter(has_been_reviewed=reviewed).select_related(depth=1)
-    if reviewed:
-        submission_infos = submission_infos.order_by('-doc_reviewed_at')
-    else:
-        submission_infos = submission_infos.order_by('doc_received_at')
+    submission_infos = SubmissionInfo.objects.order_by('-submitted_at').select_related(depth=1)
+
+    if paid!=None:
+        submission_infos = submission_infos.filter(is_paid=paid)
+    if score_imported!=None:
+        submission_infos = submission_infos.filter(applicant__NIETS_scores__is_request_successful=score_imported)
+
+    title = build_search_title(paid, score_imported)
 
     applicant_count = submission_infos.count()
 
@@ -495,22 +520,12 @@ def list_applicant(request, reviewed=True, pagination=True):
     submission_infos = submission_infos.all()[display_start-1:display_end]
     display_count = len(submission_infos)
 
-    # add resubmitted applicants
-    if not reviewed:
-        resubmitted_submission_infos = list(SubmissionInfo.get_unreviewed_resubmitted_submissions().select_related(depth=1).all())
-        applicant_count += len(resubmitted_submission_infos)
-        submission_infos = list(resubmitted_submission_infos) + list(submission_infos)
-        display_count = len(submission_infos)
-        display_end += len(resubmitted_submission_infos)
-
     applicants = get_applicants_from_submission_infos(submission_infos)
 
     display['ticket_number']=True
-    display['doc_received_at']=True
-    if reviewed==True:
-        display['doc_reviewed_at']=True
-        display['doc_reviewed_complete']=True
-
+    display['payment_status']=True
+    if score_imported!=None:
+        display['score_import_status']=True
 
     return render_to_response("review/search.html",
                               { 'form': None,
@@ -523,7 +538,8 @@ def list_applicant(request, reviewed=True, pagination=True):
                                 'display_count': display_count,
                                 'page': page,
                                 'max_page': max_page,
-                                'display': display })
+                                'display': display,
+                                'title': title })
 
 @login_required
 def list_applicants_with_supplements(request, time_diff=None, review_status=False):
