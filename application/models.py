@@ -498,6 +498,8 @@ class ApplicantAddress(models.Model):
 class GPExamDate(models.Model):
     month_year = models.CharField(max_length=20,
                                   verbose_name="เดือนและปีของการสอบ")
+    year = models.IntegerField(verbose_name=u'ปีการศึกษา')
+    number = models.IntegerField(verbose_name=u'รอบที่')
     rank = models.IntegerField(unique=True)
 
     class Meta:
@@ -519,7 +521,7 @@ class GPExamDate(models.Model):
             return None
 
     def __unicode__(self):
-        return self.month_year
+        return u"%d/%d (%s)" % (self.number, self.year % 100, self.month_year)
 
 class Education(models.Model):
     applicant = models.OneToOneField(Applicant,

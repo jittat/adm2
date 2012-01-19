@@ -1,0 +1,34 @@
+{% extends "review/base.html" %}
+
+{% load adm_media %}
+
+{% block extra-title-bar %}นำเข้าคะแนนสอบ | {% endblock %}
+
+{% block regis-body %}
+<p>
+กรุณาตรวจสอบตัวอย่างการนำเข้าคะแนนของผู้สมัครด้านล่าง โดยจะเป็นคะแนนของผู้สมัคร 3 คนแรกในแฟ้มและ 2 คนสุดท้ายในแฟ้มข้อมูล ถ้าถูกต้องสามารถนำเข้าข้อมูลได้ ถ้ามีข้อผิดพลาดกรุณาแจ้งผู้พัฒนาโดยด่วนเนื่องจากอาจมีปัญหาว่าข้อมูลคะแนนมีการเปลี่ยนแปลงรูปแบบ
+</p>
+{% if message %}
+<b>{{ message }}</b>
+{% endif %}
+<ul>
+{% for a in applicants %}
+  <li>
+    {{ a.nat_id }} - {{ a.first_name }} {{ a.last_name }}
+    <ul>
+      {% for s in a.scores %}
+        <li>
+	  {{ s.0.0 }}/{{ s.0.1 }} -- 
+	  gat: {{ s.1.gat }}, pat1: {{ s.1.pat1 }}, pat3: {{ s.1.pat3 }}
+	</li>
+      {% endfor %}
+    </ul>
+  </li>
+{% endfor %}
+</ul>
+<b>ถ้าข้อมูลข้างต้นถูกต้องตามแฟ้มข้อมูล กรุณานำเข้าข้อมูลจริงด้านล่าง</b>
+<form enctype="multipart/form-data" method="post" action="{% url review-import-niets-scores-real %}">
+  {{ form }}
+  <input type="submit" value="นำเข้า"/>
+</form>
+{% endblock %}

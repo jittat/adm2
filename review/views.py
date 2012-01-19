@@ -885,3 +885,40 @@ def export_app_nat_id(request):
     response.write(''.join(data))
 
     return response
+
+
+class ScoreUploadForm(forms.Form):
+    file = forms.FileField(label=u'ไฟล์ csv ของคะแนนสอบ')
+
+@login_required
+def import_niets_scores(request, testing=True):
+
+    from score_import import score_import, test_score_import
+
+    result = ""
+    if request.method == 'POST':
+        form = ScoreUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            if testing:
+                imported_applicants = test_score_import(request.FILES['file'])
+                new_form = ScoreUploadForm()
+                return render_to_response("review/score_import_test_result.html",
+                                          { 'form': new_form,
+                                            'applicants': imported_applicants,
+                                            'message': "" })
+            else:
+                result = score_import(request.FILES['file'])
+        else:
+            if not testing:
+                test_result = None
+                message = u'เกิดข้อผิดพลาดในการกรอกฟอร์ม (เช่นลืมเลือกแฟ้มข้อมูล) ทำให้ตัวอย่างผลลัพธ์ของการนำเข้าไม่แสดง แต่ถ้าคุณแน่ใจว่าการทดสอบการนำเข้าทำงานได้ถูกต้อง คุณสามารถนำเข้าข้อมูลใหม่ได้'
+                return render_to_response("review/score_import_test_result.html",
+                                          { 'form': form,
+                                            'test_result': test_result,
+                                            'message': message })                
+    else:
+        form = ScoreUploadForm()
+
+    return render_to_response("review/score_import.html",
+                              { 'form': form,
+                                'result': result })

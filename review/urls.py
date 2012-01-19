@@ -15,15 +15,18 @@ urlpatterns = patterns(
     url(r'^list/complete/$', 'list_applicant',
         { 'paid': True, 'score_imported': True }, name='review-list-complete'),
 
+    url(r'^ticket/$', 'verify_ticket', name='review-ticket'),
+    url(r'^show_app/(\d+)/$', 'show_applicant', name='review-show-app'),
 
     url(r'^export/app-nat-id/$', 'export_app_nat_id',
         name='review-export-app-nat-id'),
+    url(r'^import/scores/$', 'import_niets_scores',
+        name='review-import-niets-scores'),
+    url(r'^import/scores/real/$', 'import_niets_scores', 
+        { 'testing':False },
+        name='review-import-niets-scores-real'),
 
-
-    url(r'^ticket/$', 'verify_ticket', name='review-ticket'),
     url(r'^search/$', 'search', name='review-search'),
-
-    url(r'^show_app/(\d+)/$', 'show_applicant', name='review-show-app'),
 
     url(r'^show/(\d+)/$', 'review_document', name='review-show'),
     url(r'^show/(\d+)/manual/$', 'review_document', 
