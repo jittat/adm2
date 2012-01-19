@@ -9,7 +9,7 @@
 การนำเข้าคะแนนสอบจะทำสองรอบ รอบแรกเพื่อตรวจสอบความถูกต้องของการนำเข้า
 รอบที่สองจะนำเข้าจริง
 </p>
-<form enctype="multipart/form-data" method="post" action="">
+<form enctype="multipart/form-data" method="post" action="{% url review-import-niets-scores %}">
   {{ form }}
   <input type="submit" value="ทดสอบการนำเข้า"/>
 </form>
