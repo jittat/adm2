@@ -505,6 +505,8 @@ class ApplicantAddress(models.Model):
 class GPExamDate(models.Model):
     month_year = models.CharField(max_length=20,
                                   verbose_name="เดือนและปีของการสอบ")
+    year = models.IntegerField(verbose_name=u'ปีการศึกษา')
+    number = models.IntegerField(verbose_name=u'รอบที่')
     rank = models.IntegerField(unique=True)
 
     class Meta:
@@ -518,6 +520,11 @@ class GPExamDate(models.Model):
             GPExamDate.dates = dict([(d.id, d) for d in GPExamDate.objects.all()])
 
     @staticmethod
+    def get_all():
+        GPExamDate.cache_dates()
+        return GPExamDate.dates
+
+    @staticmethod
     def get_by_id(id):
         GPExamDate.cache_dates()
         try:
@@ -525,8 +532,16 @@ class GPExamDate(models.Model):
         except:
             return None
 
+    @staticmethod
+    def get_by_year_and_number(y,num):
+        GPExamDate.cache_dates()
+        for i,d in GPExamDate.dates.items():
+            if d.year == y and d.number == num:
+                return d
+        return None
+
     def __unicode__(self):
-        return self.month_year
+        return u"%d/%d (%s)" % (self.number, self.year % 100, self.month_year)
 
 class Education(models.Model):
     applicant = models.OneToOneField(Applicant,
