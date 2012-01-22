@@ -3,6 +3,8 @@ from django.conf import settings
 from commons.utils import admin_email, submission_deadline_passed
 from django.core.urlresolvers import reverse
 
+AUTO_ADD_BR = False
+
 # favour django-mailer but fall back to django.core.mail
 try:
     if (("mailer" in settings.INSTALLED_APPS) and 
@@ -47,18 +49,16 @@ def send_password_by_email(applicant, password, force=False):
     """
     subject = 'รหัสผ่านสำหรับการสมัครเข้าศึกษาแบบทางตรง คณะวิศวกรรมศาสตร์ ม.เกษตรศาสตร์ บางเขน'
     message = (
-u"""เรียนคุณ %(firstname)s %(lastname)s<br/>
-<br/>
-ขอบคุณที่ได้ลงทะเบียนเพื่อสมัครเข้าศึกษาต่อที่คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์ บางเขน<br/>
-<pre>
+u"""เรียนคุณ %(firstname)s %(lastname)s
+
+ขอบคุณที่ได้ลงทะเบียนเพื่อสมัครเข้าศึกษาต่อที่คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์ บางเขน
 
 รหัสผ่านของคุณคือ %(password)s
 
-</pre>
-คุณสามารถเข้าใช้ระบบได้โดยป้อนหมายเลขประจำตัวประชาชน %(national_id)s ที่คุณได้ลงทะเบียนไว้ แล้วป้อนรหัสผ่านด้านบน<br/>
-<br/>
-ถ้าคุณได้รับเมล์นี้โดยไม่ได้ลงทะเบียน อาจมีผู้ไม่หวังดีแอบอ้างนำอีเมล์คุณไปใช้ กรุณาช่วยแจ้งผู้ดูแล้วด้วย</br>
-<br/>
+คุณสามารถเข้าใช้ระบบได้โดยป้อนหมายเลขประจำตัวประชาชน %(national_id)s ที่คุณได้ลงทะเบียนไว้ แล้วป้อนรหัสผ่านด้านบน
+
+ถ้าคุณได้รับเมล์นี้โดยไม่ได้ลงทะเบียน อาจมีผู้ไม่หวังดีแอบอ้างนำอีเมล์คุณไปใช้ กรุณาช่วยแจ้งผู้ดูแล้วด้วย
+
 -โครงการรับสมัครตรง
 """
 % { 'firstname': applicant.first_name, 
@@ -81,7 +81,7 @@ u"""เรียน คุณ %(firstname)s %(lastname)s
 
 เราขอส่งรหัสสำหรับยืนยันอีเมล์เพื่อสำหรับบัญชีผู้ใช้ของระบบรับสมัครเข้าศึกษาต่อของคณะวิศวกรรมศาสตร์ ม.เกษตรศาสตร์ วิทยาเขตบางเขน
 
-กรุณากดลิงก์ต่อไปนี้ <a href="%(link)s">%(link)s</a> เพื่อยืนยันบัญชีที่คุณได้ลงทะเบียนไว้
+กรุณากดลิงก์ต่อไปนี้ %(link)s เพื่อยืนยันบัญชีที่คุณได้ลงทะเบียนไว้
 
 เมื่อยืนยันเรียบร้อยแล้ว เราจะส่งรหัสผ่านมายังอีเมล์นี้อีกครั้งหนึ่ง
 
@@ -94,7 +94,9 @@ u"""เรียน คุณ %(firstname)s %(lastname)s
     'email': applicant.get_email(), 
     'link': base_path + reverse('apply-activate', 
                                 args=[activation_key]) }
-).replace('\n','<br/>\n')
+)
+    if AUTO_ADD_BR:
+        message = message.replace('\n','<br/>\n')
     adm_send_mail(applicant.get_email(), subject, message, force)
 
 
@@ -126,7 +128,9 @@ u"""เรียนคุณ %(firstname)s %(lastname)s
     'national_id': applicant.national_id,
     'verification': applicant.verification_number(),
     }
-).replace('\n','<br/>\n')
+)
+    if AUTO_ADD_BR:
+        message = message.replace('\n','<br/>\n')
     adm_send_mail(applicant.get_email(), subject, message, force)
 
 
@@ -159,7 +163,9 @@ u"""เรียนคุณ %(firstname)s %(lastname)s
     'verification': applicant.verification_number(),
     'submission_method': applicant.get_doc_submission_method_display(),
     }
-).replace('\n','<br/>\n')
+)
+    if AUTO_ADD_BR:
+        message = message.replace('\n','<br/>\n')
     adm_send_mail(applicant.get_email(), subject, message, force)
 
 
@@ -190,7 +196,9 @@ u"""เรียนคุณ %(firstname)s %(lastname)s
     'lastname': applicant.last_name,
     'email': applicant.get_email(), 
     }
-).replace('\n','<br/>\n')
+)
+    if AUTO_ADD_BR:
+        message = message.replace('\n','<br/>\n')
     adm_send_mail(applicant.get_email(), subject, message, force)
 
 
@@ -214,7 +222,9 @@ u"""เรียนคุณ %(firstname)s %(lastname)s
     'lastname': applicant.last_name,
     'email': applicant.get_email(), 
     }
-).replace('\n','<br/>\n')
+)
+    if AUTO_ADD_BR:
+        message = message.replace('\n','<br/>\n')
     adm_send_mail(applicant.get_email(), subject, message, force)
 
 
@@ -264,7 +274,9 @@ u"""เรียนคุณ %(firstname)s %(lastname)s
     'extra_msg': extra_msg,
     'admin_email': admin_email()
     }
-).replace('\n','<br/>\n')
+)
+    if AUTO_ADD_BR:
+        message = message.replace('\n','<br/>\n')
     adm_send_mail(applicant.get_email(), subject, message, force)
 
 
@@ -303,7 +315,9 @@ u"""เรียนคุณ %(firstname)s %(lastname)s
     'email': applicant.get_email(), 
     'admin_email': admin_email()
     }
-).replace('\n','<br/>\n')
+)
+    if AUTO_ADD_BR:
+        message = message.replace('\n','<br/>\n')
     adm_send_mail(applicant.get_email(), subject, message, force)
 
 
@@ -327,7 +341,9 @@ u"""เรียนผู้ใช้อีเมล์ %(email)s
 """
 % { 'email': email,
     'admin_email': admin_email() }
-).replace('\n','<br/>\n')
+)
+    if AUTO_ADD_BR:
+        message = message.replace('\n','<br/>\n')
     adm_send_mail(email, subject, message, force)
 
 
@@ -357,7 +373,9 @@ u"""เรียนผู้ใช้อีเมล์ %(email)s
 % { 'email': email,
     'applicant_names': applicant_names,
     'admin_email': admin_email() }
-).replace('\n','<br/>\n')
+)
+    if AUTO_ADD_BR:
+        message = message.replace('\n','<br/>\n')
     adm_send_mail(email, subject, message, force)
 
 
@@ -438,7 +456,9 @@ u"""เรียนคุณ %(first_name)s %(last_name)s
     'status': summarize_applicant_status(applicant), 
     'admin_email': admin_email()
     }
-).replace('\n','<br/>\n')
+)
+    if AUTO_ADD_BR:
+        message = message.replace('\n','<br/>\n')
     adm_send_mail(applicant.get_email(), subject, message, force)
 
 
@@ -479,7 +499,9 @@ u"""เรียนผู้ใช้อีเมล์ %(email)s
     'statuses': statuses,
     'admin_email': admin_email()
     }
-).replace('\n','<br/>\n')
+)
+    if AUTO_ADD_BR:
+        message = message.replace('\n','<br/>\n')
     adm_send_mail(applicants[0].get_email(), subject, message, force)
 
 
@@ -500,7 +522,9 @@ u"""เรียนผู้ใช้อีเมล์ %(email)s
 % { 'email': email,
     'admin_email': admin_email()
     }
-).replace('\n','<br/>\n')
+)
+    if AUTO_ADD_BR:
+        message = message.replace('\n','<br/>\n')
     adm_send_mail(applicants[0].get_email(), subject, message, force)
 
 
@@ -547,7 +571,9 @@ u"""เรียนคุณ %(first_name)s %(last_name)s
     'result': result,
     'admin_email': admin_email()
     }
-).replace('\n','<br/>\n')
+)
+    if AUTO_ADD_BR:
+        message = message.replace('\n','<br/>\n')
     adm_send_mail(applicant.get_email(), subject, message, force)
 
 
@@ -586,6 +612,8 @@ u"""เรียนคุณ %(first_name)s %(last_name)s
     'result': result,
     'admin_email': admin_email()
     }
-).replace('\n','<br/>\n')
+)
+    if AUTO_ADD_BR:
+        message = message.replace('\n','<br/>\n')
     adm_send_mail(applicant.get_email(), subject, message, force)
 
