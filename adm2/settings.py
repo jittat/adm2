@@ -139,6 +139,7 @@ INSTALLED_APPS = (
 
     'south',
     'debug_toolbar',
+    'mailer',
 
     'commons',
     'application',
