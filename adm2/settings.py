@@ -216,11 +216,13 @@ NAT_ID_VERIFICATION = True
 MAX_PASSWORD_REQUST_PER_DAY = 10
 MAX_DOC_UPLOAD_PER_DAY = 100
 
-FAKE_SENDING_EMAIL = True
-
 HTTP_BASE_PATH = 'http://localhost:8000'
 
-EMAIL_BACKEND = 'commons.backends.smtp'
+FAKE_SENDING_EMAIL = True
+
+SEND_MAILS_THROUGH_DJANGO_MAILER = False
+
+EMAIL_BACKEND = 'commons.backends.smtp.EmailBackend'
 
 EMAIL_HOST = 'nontri.ku.ac.th'
 EMAIL_HOST_USER = 'jtf'
