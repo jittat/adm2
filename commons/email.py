@@ -47,7 +47,7 @@ def send_password_by_email(applicant, password, force=False):
     """
     sends password to applicant.
     """
-    subject = 'รหัสผ่านสำหรับการสมัครเข้าศึกษาแบบทางตรง คณะวิศวกรรมศาสตร์ ม.เกษตรศาสตร์ บางเขน'
+    subject = 'รหัสผ่านสำหรับการสมัครเข้าศึกษาระบบโควตา คณะวิศวกรรมศาสตร์ ม.เกษตรศาสตร์ บางเขน'
     message = (
 u"""เรียนคุณ %(firstname)s %(lastname)s
 
@@ -59,7 +59,7 @@ u"""เรียนคุณ %(firstname)s %(lastname)s
 
 ถ้าคุณได้รับเมล์นี้โดยไม่ได้ลงทะเบียน อาจมีผู้ไม่หวังดีแอบอ้างนำอีเมล์คุณไปใช้ กรุณาช่วยแจ้งผู้ดูแล้วด้วย
 
--โครงการรับสมัครตรง
+-โครงการรับสมัคร
 """
 % { 'firstname': applicant.first_name, 
     'lastname': applicant.last_name,
@@ -87,7 +87,7 @@ u"""เรียน คุณ %(firstname)s %(lastname)s
 
 ถ้าคุณได้รับเมล์นี้โดยไม่ได้ลงทะเบียน อาจมีผู้ไม่หวังดีแอบอ้างนำอีเมล์คุณไปใช้ กรุณาช่วยแจ้งผู้ดูแลด้วย
 
--โครงการรับสมัครตรง
+-โครงการรับสมัคร
 """
 % { 'firstname': applicant.first_name, 
     'lastname': applicant.last_name,
@@ -104,7 +104,7 @@ def send_submission_confirmation_by_email(applicant, force=False):
     """
     sends submission confirmation
     """
-    subject = 'ยืนยันการสมัครตรง คณะวิศวกรรมศาสตร์ ม.เกษตรศาสตร์ บางเขน'
+    subject = 'ยืนยันการสมัครระบบโควตา คณะวิศวกรรมศาสตร์ ม.เกษตรศาสตร์ บางเขน'
 
     greeting = u"จดหมายอิเล็กทรอนิกส์ฉบับนี้ ยืนยันว่าคณะวิศวกรรมศาสตร์ได้รับใบสมัครของคุณแล้ว"
 
@@ -120,7 +120,7 @@ u"""เรียนคุณ %(firstname)s %(lastname)s
 คุณสามารถเข้าสู่ระบบรับสมัครเพื่อตรวจสอบสถานะใบสมัครได้โดยใช้รหัสประจำตัวประชาชนของคุณ
 
 ขอบคุณ
-โครงการรับตรง คณะวิศวกรรมศาสตร์"""
+โครงการรับสมัคร คณะวิศวกรรมศาสตร์"""
 % { 'greeting': greeting,
     'firstname': applicant.first_name, 
     'lastname': applicant.last_name,
@@ -154,7 +154,7 @@ u"""เรียนคุณ %(firstname)s %(lastname)s
 คุณสามารถเข้าสู่ระบบรับสมัครเพื่อตรวจสอบสถานะใบสมัครได้โดยใช้อีเมล์ %(email)s 
 
 ขอบคุณ
-โครงการรับตรง คณะวิศวกรรมศาสตร์"""
+โครงการรับสมัคร คณะวิศวกรรมศาสตร์"""
 % { 'greeting': greeting,
     'firstname': applicant.first_name, 
     'lastname': applicant.last_name,
@@ -191,7 +191,7 @@ u"""เรียนคุณ %(firstname)s %(lastname)s
 ถ้าคุณได้รับเมล์นี้ โดยไม่ได้เลือกเปลี่ยนการส่งข้อมูล อาจมีผู้ไม่หวังดีแอบอ้างนำอีเมล์คุณไปใช้ กรุณาช่วยแจ้งผู้ดูแล้วด้วย
 
 ขอบคุณ
-โครงการรับตรง คณะวิศวกรรมศาสตร์"""
+โครงการรับสมัคร คณะวิศวกรรมศาสตร์"""
 % { 'firstname': applicant.first_name, 
     'lastname': applicant.last_name,
     'email': applicant.get_email(), 
