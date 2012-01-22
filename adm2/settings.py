@@ -187,7 +187,7 @@ FORMAT_MODULE_PATH = 'adm2.formats'
 # general settings
 
 ADMISSION_YEAR = 2555
-APPLICANT_TICKET_PREFIX = 1
+APPLICANT_TICKET_PREFIX = 2
 
 ACCEPT_ONLY_GRADUATED = False
 VERIFIY_MINIMUM_SCORE = False
@@ -226,7 +226,7 @@ EMAIL_HOST_USER = 'jtf'
 EMAIL_HOST_PASSWORD = 'xxxxxxxx'
 EMAIL_SENDER = 'KU Eng Admission Team <jtf@ku.ac.th>'
 
-SHOW_SCORE_IMPORT_STATUS = True
+SHOW_SCORE_IMPORT_STATUS = False
 
 # used in redirect_to_index
 INDEX_PAGE = 'start-page'
@@ -244,5 +244,4 @@ DEBUG_TOOLBAR_CONFIG = {
 try:
     from settings_local import *
 except ImportError:
-    print "Oh!"
     pass 
