@@ -157,7 +157,7 @@ def applicant_major_single_choice(request):
         form = SingleMajorPreferenceForm(major_query_set,request.POST)
         if form.is_valid():
             assign_major_pref_to_applicant(applicant,
-                                           [form.cleaned_data['major'].number])
+                                           [form.cleaned_data['major']])
             return HttpResponseRedirect(reverse('apply-confirm'))
     else:
         prev_major = None
