@@ -27,14 +27,18 @@ from application.forms.widgets import ThaiSelectDateWidget
 
 def update_major_single_choice(request):
     applicant = request.applicant
+    additional_education = applicant.additional_education
+    training_round = additional_education.training_round
+    
+    major_query_set = Major.get_majors_for_training_round(training_round)
 
     if request.method == 'POST':
 
         if 'cancel' not in request.POST:
-            form = SingleMajorPreferenceForm(request.POST)
+            form = SingleMajorPreferenceForm(major_query_set,request.POST)
             if form.is_valid():
                 assign_major_pref_to_applicant(applicant,
-                                               [form.cleaned_data['major'].number])
+                                               [form.cleaned_data['major']])
                 request.session['notice'] = 'การแก้ไขอันดับสาขาวิชาเรียบร้อย'
                 return HttpResponseRedirect(reverse('status-index'))
         else:
@@ -49,7 +53,7 @@ def update_major_single_choice(request):
             else:
                 majors = dict([(int(m.number), m) for m in Major.get_all_majors()])
                 prev_major = majors[pref[0]]
-        form = SingleMajorPreferenceForm(initial={'major': prev_major.id})
+        form = SingleMajorPreferenceForm(major_query_set, initial={'major': prev_major.id})
 
     # add step info
     form_data = {}
