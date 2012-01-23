@@ -3,6 +3,8 @@
 {% block title %}Choosing majors{% endblock %}
 
 {% block form-body %}
+  {% include "application/include/form_instructions.html" %}
+
   {% if errors %}
     <div class="doc-error">
       <b>เกิดข้อผิดพลาด</b> {% for e in errors %}{{ e }}{% endfor %}
