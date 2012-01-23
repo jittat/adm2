@@ -3,6 +3,8 @@
 {% block title %}Personal information{% endblock %}
 
 {% block form-body %}
+  {% include "application/include/form_instructions.html" %}
+
   <form action="{% url apply-personal-info %}" method="post">
     {% include "application/forms/personal.html" %}
     <div class="submission-bar">

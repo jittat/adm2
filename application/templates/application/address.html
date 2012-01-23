@@ -3,6 +3,8 @@
 {% block title %}Address{% endblock %}
 
 {% block form-body %}
+{% include "application/include/form_instructions.html" %}
+
 <div class="app-form">
   <form action="{% url apply-address %}" method="post">
     {% include "application/forms/address.html" %}

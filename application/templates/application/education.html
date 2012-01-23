@@ -3,6 +3,8 @@
 {% block title %}Education information{% endblock %}
 
 {% block form-body %}
+{% include "application/include/form_instructions.html" %}
+
 <div id="edu-form" class="app-form">
   <form action="{% url apply-edu %}" method="post">
     {% include "application/forms/education.html" %}
