@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import os
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.http import HttpResponse
 from django.http import HttpResponseForbidden
 from django.http import HttpResponseNotFound
@@ -922,3 +922,23 @@ def import_niets_scores(request, testing=True):
     return render_to_response("review/score_import.html",
                               { 'form': form,
                                 'result': result })
+
+@login_required
+def create_payment(request, applicant_id):
+    applicant = get_object_or_404(Applicant, pk=applicant_id)
+    try:
+        submission_info = applicant.submission_info
+    except:
+        submission_info = None
+
+    if submission_info and (not submission_info.is_paid):
+        submission_info.is_paid = True
+        submission_info.paid_at = datetime.now()
+        submission_info.save()
+
+        log = Log.create("Manual accept payment: %s (%s)" % 
+                         (applicant_id, applicant.national_id),
+                         request.user.username,
+                         applicant_id=int(applicant_id))
+
+    return redirect('review-show-app',applicant_id)
