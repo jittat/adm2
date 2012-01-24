@@ -53,32 +53,30 @@ def index(request):
                               { 'stat': stat })
 
 class ApplicantSearchByIDForm(forms.Form):
-    ticket_number = forms.IntegerField(required=False)
+    national_id = forms.IntegerField(required=False,
+                                     widget=forms.TextInput(attrs={'size':10}))
     full_name = forms.CharField(required=False)
     verification_number = forms.CharField(required=False)
 
 def find_applicants(form):
-    ticket = form.cleaned_data['ticket_number']
-    verinum = form.cleaned_data['verification_number']
+    national_id = str(form.cleaned_data['national_id'])
     full_name = form.cleaned_data['full_name']
-    if ticket:
-        submission_info = SubmissionInfo.find_by_ticket_number(str(ticket))
-        if submission_info!=None:
-            return [submission_info.applicant]
+    applicants = Applicant.objects.all()
+    if national_id:
+        if len(national_id)==13:
+            applicants = applicants.filter(national_id=national_id)
         else:
-            return []
-    elif full_name:
-        # search by name
-        applicants = []
+            applicants = applicants.filter(national_id__startswith=national_id)
+
+    if full_name:
         items = full_name.strip().split(' ')
         if items[0]!='':
-            applicants = Applicant.objects.all()
             applicants = applicants.filter(first_name__contains=items[0])
             if len(items)>1 and items[1]!='':
                 applicants = applicants.filter(last_name__contains=items[1])
         return applicants
     else:
-        return []
+        return applicants
 
 def put_minimal_info_to_applicants(applicants):
 
@@ -109,7 +107,6 @@ def verify_ticket(request):
     if request.method=='POST':
         form = ApplicantSearchByIDForm(request.POST)
         if form.is_valid():
-            ticket = form.cleaned_data['ticket_number']
             verinum = form.cleaned_data['verification_number']
 
             applicants = find_applicants(form)
@@ -126,13 +123,9 @@ def verify_ticket(request):
                                                         args=[applicants[0].id]))
 
                 for applicant in applicants:
-                    match_ticket = (applicant.is_submitted and
-                                    applicant.ticket_number()==str(ticket))
-
                     match_verinum = (applicant.is_submitted and
                         applicant.verification_number().startswith(verinum))
-                    results.append({ 'ticket': match_ticket,
-                                     'verinum': match_verinum })
+                    results.append({ 'verinum': match_verinum })
     else:
         form = ApplicantSearchByIDForm()
 

@@ -12,11 +12,11 @@
 {% block regis-body %}
   <div class="search-form">
     <form action="{% url review-ticket %}" method="post">
-      หมายเลข: {{ form.ticket_number }}{{ form.ticket_number.errors }} | 
+      หมายเลขประชาชน: {{ form.national_id }}{{ form.national_id.errors }} | 
       ชื่อ: {{ form.full_name }} |
       หมายเลขตรวจสอบ: {{ form.verification_number }}{{ form.verification_number.errors }} |
       <input type="submit" name="search" value="ค้นข้อมูล"/>
-      <input type="submit" name="search-and-show" value="ค้นแล้วแสดงข้อมูลผู้สมัคร"/>
+      <input type="submit" name="search-and-show" value="ค้นแล้วแสดงข้อมูล"/>
     </form>
   </div>
 
