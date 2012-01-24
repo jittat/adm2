@@ -59,7 +59,9 @@ class ApplicantSearchByIDForm(forms.Form):
     verification_number = forms.CharField(required=False)
 
 def find_applicants(form):
-    national_id = str(form.cleaned_data['national_id'])
+    national_id = form.cleaned_data['national_id']
+    if national_id:
+        national_id = str(national_id)
     full_name = form.cleaned_data['full_name']
     applicants = Applicant.objects.all()
     if national_id:
@@ -74,9 +76,9 @@ def find_applicants(form):
             applicants = applicants.filter(first_name__contains=items[0])
             if len(items)>1 and items[1]!='':
                 applicants = applicants.filter(last_name__contains=items[1])
-        return applicants
+        return applicants[:200]
     else:
-        return applicants
+        return applicants[:200]
 
 def put_minimal_info_to_applicants(applicants):
 
