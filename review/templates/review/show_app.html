@@ -8,8 +8,16 @@
   <b>ผู้สมัคร:</b> {{ applicant.full_name }} | 
   <b>หมายเลขประชาชน:</b> {{ applicant.national_id }} | 
   <b>ยื่นเมื่อ:</b> {{ submission_info.submitted_at|date }} |
-  {% if submission_info.is_paid %}<b>ชำระเงินแล้ว</b>{% else %}<b>ยังไม่ได้ชำระเงิน</b>{% endif %}<br/>
-
+  {% if submission_info.is_paid %}
+    <b>ชำระเงินแล้ว</b>
+  {% else %}
+    <b>ยังไม่ได้ชำระเงิน</b> 
+    {% if submission_info %}
+      <small>
+	[<a id="payment-create" href="{% url review-app-create-payment applicant.id %}">รับรองการชำระเงิน</a>]
+      </small>
+    {% endif %}
+  {% endif %}<br/>
   <hr/>
   <b>อันดับการเลือก:</b>
   {% with applicant.preference as preference %}
@@ -55,4 +63,12 @@
   </table>
   <hr/>
   {% include "application/status/include/exam_scores.html" %}
+
+<script type="text/javascript">
+  $(function(){
+    $("#payment-create").click(function(){
+      return confirm("คุณแน่ใจที่จะยืนยันการชำระเงินของ {{ applicant.full_name }}");
+    });
+  });
+</script>
 {% endblock %}
