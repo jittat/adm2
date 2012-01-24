@@ -20,6 +20,7 @@ from application.models import Applicant
 filename = sys.argv[1]
 
 lines = open(filename).readlines()
+outf = open(filename + '.left',"w")
 
 updated_count = 0
 error_count = 0
@@ -38,10 +39,12 @@ for ln in lines:
             except:
                 error_count += 1
                 print "ERROR (no submission info):", applicant, applicant.verification_number(), verification
+                outf.write(ln)
                 continue
                 
             if applicant.verification_number() != verification:
                 print "ERROR:", applicant, national_id, applicant.verification_number(), verification
+                outf.write(ln)
                 error_count += 1
             else:
                 submission_info.is_paid = True
@@ -50,5 +53,9 @@ for ln in lines:
                 updated_count += 1
         else:
             print "ERROR: NAT ID NOT FOUND", national_id
+            outf.write(ln)
+    else:
+        outf.write(ln)
 
 print updated_count, 'updated, with ', error_count, 'errors'
+outf.close()
