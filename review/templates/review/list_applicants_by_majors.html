@@ -1,0 +1,40 @@
+{% extends "review/base.html" %}
+
+{% load adm_media %}
+
+{% block regis-body %}
+  {% for m in major_lists.values %}
+    <b>{{ m.major }}</b> ({{ m.applicants|length }})<br/>
+    {% if m.applicants %}
+      <table class="applicants">
+	<tr>
+          <th>หมายเลขผู้สมัคร</th>
+	  <th>ชื่อ</th>
+	  <th>เลขประชาชน</th>
+	  <th>การยื่นใบสมัคร</th>
+	  <th>ชำระเงิน</th>
+	</tr>
+	{% for applicant in m.applicants %}
+	  <tr id="app-{{ applicant.id }}-row" class="{% cycle 'odd' 'even' %}">
+	    <td><a href="{% url review-show-app applicant.id %}">{{ applicant.ticket_number }}</a></td>
+	    <td><a href="{% url review-show-app applicant.id %}">{{ applicant.full_name }}</a></td>
+	    <td>{{ applicant.national_id }}</td>
+	    <td>
+              {% passed_icon applicant.is_submitted %}
+              {% if applicant.is_submitted %}
+                {{ applicant.submission_info.submitted_at|date:"j N" }}
+              {% endif %}
+	    </td>
+	    <td>
+              {% passed_icon applicant.submission_info.is_paid %}
+              {% if applicant.submission_info.is_paid %}
+                {{ applicant.submission_info.paid_at|date:"j N" }}
+              {% endif %}
+	    </td>
+	  </tr>
+	{% endfor %}
+      </table>
+    {% endif %}
+    <div class="small-vert-sept"></div>
+  {% endfor %}
+{% endblock %}

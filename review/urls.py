@@ -77,3 +77,9 @@ urlpatterns = patterns(
         name='review-supplement-img-view'),
 
 )
+
+urlpatterns += patterns(
+    'review.quota_views',
+    url(r'^list/submitted/by-majors',
+        'list_by_majors', name='review-list-by-majors'),
+)
