@@ -82,4 +82,7 @@ urlpatterns += patterns(
     'review.quota_views',
     url(r'^list/submitted/by-majors',
         'list_by_majors', name='review-list-by-majors'),
+
+    url(r'^report/apps/$', 'report_applicants',
+        name='review-report-apps'),
 )
