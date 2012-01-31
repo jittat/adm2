@@ -1,10 +1,5 @@
 {% extends "application/formbase.html" %}
 
-{% block extra-head %}
-{{ block.super }}
-<script type="text/javascript" src="{% load adm_media %}{% static_url %}/js/major_selection.js"></script>
-{% endblock %}
-
 {% block title %}แก้ไขอันดับสาขาวิชา{% endblock %}
 
 {% block form-body %}
@@ -18,7 +13,27 @@
   {% endif %}
 
   <form action="{% url update-majors %}" method="post">
-    {% include "application/forms/major_ranks.html" %}
+    {% if not hide_description %}
+      <p>
+	<b>เลือกอันดับสาขาที่ต้องการ</b> สามารถเลือกอันดับสาขาวิชาได้ {{ max_major_rank }} อันดับ   อันดับที่น้อยกว่าแสดงความประสงค์เข้าเรียนมากกว่า อันดับที่ 1 แสดงว่าต้องการสาขานั้นมากที่สุด
+	ผู้สมัครไม่จำเป็นต้องเลือกให้ครบ {{ max_major_rank }} อันดับ แต่ต้องเลือกอย่างน้อยหนึ่งอันดับ
+	ถ้าเลือกอันดับไม่ต่อกัน เช่น เลือกข้ามลำดับที่ 2 เมื่อเก็บเข้าในระบบ
+	ระบบจะปรับลำดับให้ต่อเนื่องกันและเริ่มต้นจากอันดับที่ 1 เสมอ
+      </p>
+    {% endif %}    
+
+    <table>
+      {% for selection in selections %}
+      <tr>
+        <td>อันดับที่ {{ selection.number }}</td>
+        <td>
+	  {% include "application/include/rank_major_select.html" %}
+	</td>
+      </tr>
+      {% endfor %}
+    </table>
+    <br/>
+
     <div class="submission-bar">
       <input id="change-button" type="submit" name="submit" value="แก้ไขอันดับ"/>
       <input id="cancel-button" type="submit" name="cancel" value="ยกเลิก"/>
@@ -26,6 +41,20 @@
   </form>
   <script type="text/javascript">
     $(document).ready(function() {
+      {% for s in selections %}
+        $("#major-{{ s.number }}-select").data('rank',{{ s.number }});
+      {% endfor %}
+      $("select").change(function() {
+        var myid = this.id;
+        var mychoice = $(this).val();
+        if(mychoice != "0") {
+          $("select").each(function(i) {
+            if((this.id != myid) && ($(this).val() == mychoice))
+              $(this).val("0");
+          });
+        }
+      });
+
       $("#change-button").click(function() {
         return confirm("คุณแน่ใจที่จะแก้ไขอันดับหรือไม่?\nอันดับที่เลือกใหม่นี้จะเข้าไปแทนอันดับที่เลือกไว้เดิมทันที\nถ้าต้องการยืนยันกด OK ถ้าไม่ต้องการเปลี่ยนกด Cancel");
       });

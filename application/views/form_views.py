@@ -189,6 +189,12 @@ def prepare_major_form(applicant, pref_ranks=None, errors=None):
 
 
 def applicant_major_as_major_lists(request):
+    """
+    WARNINGS: 
+    Unused in the current version.
+    This is for the case when the number of choices is small.
+    """
+
     if settings.MAX_MAJOR_RANK == 1:
         return applicant_major_single_choice(request)
 
