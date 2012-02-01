@@ -876,6 +876,7 @@ def export_app_nat_id(request):
     for a in applicants:
         data.append('"%d","%s","%s","%s"\n' %
                     (counter, a.national_id, a.first_name, a.last_name))
+        counter += 1
 
     response.write(''.join(data))
 
