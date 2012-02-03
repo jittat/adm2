@@ -872,11 +872,14 @@ def export_app_nat_id(request):
     data = ["No,CITIZENID,Name,SurName\n"]
     applicants = Applicant.objects.filter(NIETS_scores=None).all()
 
+    submitted_ids = set([s.applicant_id for s in SubmissionInfo.objects.all()])
+
     counter = 1
     for a in applicants:
-        data.append('"%d","%s","%s","%s"\n' %
-                    (counter, a.national_id, a.first_name, a.last_name))
-        counter += 1
+        if a.id in submitted_ids:
+            data.append('"%d","%s","%s","%s"\n' %
+                        (counter, a.national_id, a.first_name, a.last_name))
+            counter += 1
 
     response.write(''.join(data))
 
