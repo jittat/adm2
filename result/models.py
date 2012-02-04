@@ -151,7 +151,7 @@ class AdmissionResult(models.Model):
 
 class ScoreStat:
 
-    SUPER_ZMAX = 8
+    SUPER_ZMAX = 13
 
     def __init__(self, mean, sd, max_score):
         self.mean = mean
@@ -184,9 +184,9 @@ SCORE_STATS = [
     { 'gat': ScoreStat(171.89, 48.04, 297.5),
       'pat1': ScoreStat(64.22, 18.08, 274),
       'pat3': ScoreStat(101.95, 40.68, 270) },
-    { 'gat': ScoreStat(139.38, 67.85, 300),
-      'pat1': ScoreStat(48.34, 23.45, 300),
-      'pat3': ScoreStat(121.25, 41.56, 300) },
+    { 'gat': ScoreStat(130.59, 68.04, 300),
+      'pat1': ScoreStat(39.64, 20.07, 288),
+      'pat3': ScoreStat(83.45, 32.44, 267) },
     ]
 EXAM_COUNT = len(SCORE_STATS)
 

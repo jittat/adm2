@@ -16,6 +16,7 @@ from django_bootstrap import bootstrap
 bootstrap(__file__)
 
 from application.models import Applicant
+from commons.email import send_payment_acceptance_by_email
 
 filename = sys.argv[1]
 
@@ -50,6 +51,9 @@ for ln in lines:
                 submission_info.is_paid = True
                 submission_info.paid_at = datetime.datetime.today()
                 submission_info.save()
+                
+                send_payment_acceptance_by_email(applicant, True)
+                
                 updated_count += 1
         else:
             print "ERROR: NAT ID NOT FOUND", national_id

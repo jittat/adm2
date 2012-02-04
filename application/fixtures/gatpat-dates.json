@@ -1,45 +1,52 @@
 [
-  {
-    "model": "application.gpexamdate",
-    "pk": 1,
-    "fields": {
-      "month_year": "มีนาคม 2552"
-    }
-  },
-  {
-    "model": "application.gpexamdate",
-    "pk": 2,
-    "fields": {
-      "month_year": "กรกฎาคม 2552"
-    }
-  },
-  {
-    "model": "application.gpexamdate",
-    "pk": 3,
-    "fields": {
-      "month_year": "ตุลาคม 2552"
-    }
-  },
-  {
-    "model": "application.gpexamdate",
-    "pk": 4,
-    "fields": {
-      "month_year": "มีนาคม 2553"
-    }
-  },
-  {
-    "model": "application.gpexamdate",
-    "pk": 5,
-    "fields": {
-      "month_year": "กรกฎาคม 2553"
-    }
-  },
-  {
-    "model": "application.gpexamdate",
-    "pk": 6,
-    "fields": {
-      "month_year": "ตุลาคม 2553"
-    }
+ {
+  "pk": 1, 
+  "model": "application.gpexamdate", 
+  "fields": {
+   "month_year": "\u0e21\u0e35.\u0e04. 2553", 
+   "number": 1, 
+   "rank": 1, 
+   "year": 2553
   }
+ }, 
+ {
+  "pk": 2, 
+  "model": "application.gpexamdate", 
+  "fields": {
+   "month_year": "\u0e01.\u0e04. 2553", 
+   "number": 2, 
+   "rank": 2, 
+   "year": 2553
+  }
+ }, 
+ {
+  "pk": 3, 
+  "model": "application.gpexamdate", 
+  "fields": {
+   "month_year": "\u0e15.\u0e04. 2553", 
+   "number": 3, 
+   "rank": 3, 
+   "year": 2553
+  }
+ }, 
+ {
+  "pk": 4, 
+  "model": "application.gpexamdate", 
+  "fields": {
+   "month_year": "\u0e21\u0e35.\u0e04. 2554", 
+   "number": 1, 
+   "rank": 4, 
+   "year": 2554
+  }
+ }, 
+ {
+  "pk": 5, 
+  "model": "application.gpexamdate", 
+  "fields": {
+   "month_year": "\u0e18.\u0e04. 2554", 
+   "number": 1, 
+   "rank": 5, 
+   "year": 2555
+  }
+ }
 ]
-

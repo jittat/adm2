@@ -1,0 +1,21 @@
+{% extends "review/base.html" %}
+
+{% block regis-body %}
+  <b>รายงานสถิติการเลือก</b>
+  <table class="applicants">
+    <tr>
+      <th>สาขา</th>
+      {% for r in ranks %}
+        <th>อันดับที่ {{ r }}</th>
+      {% endfor %}
+    </tr>
+    {% for major, stat in major_stat_data %}
+      <tr class="{% cycle 'odd' 'even' %}">
+        <td>{{ major }}</td>
+        {% for n in stat %}
+          <td style="text-align: right">{{ n }}</td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  </table>
+{% endblock %}

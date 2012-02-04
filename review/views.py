@@ -14,7 +14,7 @@ from django import forms
 
 from commons.utils import serve_file
 
-from application.models import Applicant, Education
+from application.models import Applicant, Education, Major, MajorPreference
 from application.models import SubmissionInfo, PersonalInfo
 #from upload.models import AppDocs
 #from manual.models import AdminEditLog
@@ -872,10 +872,14 @@ def export_app_nat_id(request):
     data = ["No,CITIZENID,Name,SurName\n"]
     applicants = Applicant.objects.filter(NIETS_scores=None).all()
 
+    submitted_ids = set([s.applicant_id for s in SubmissionInfo.objects.all()])
+
     counter = 1
     for a in applicants:
-        data.append('"%d","%s","%s","%s"\n' %
-                    (counter, a.national_id, a.first_name, a.last_name))
+        if a.id in submitted_ids:
+            data.append('"%d","%s","%s","%s"\n' %
+                        (counter, a.national_id, a.first_name, a.last_name))
+            counter += 1
 
     response.write(''.join(data))
 
@@ -937,3 +941,31 @@ def create_payment(request, applicant_id):
                          applicant_id=int(applicant_id))
 
     return redirect('review-show-app',applicant_id)
+
+
+@login_required
+def show_major_pref_stat(request):
+    all_submission_infos = SubmissionInfo.objects.all()
+    submitted_ids = set([s.applicant_id for s in all_submission_infos])
+
+    from django.conf import settings
+    max_rank = settings.MAX_MAJOR_RANK
+
+    majors = Major.get_all_majors()
+    major_stat = dict([(int(m.number), {'major': m, 'stat': [0]*max_rank})
+                       for m in majors])
+
+    all_major_prefs = MajorPreference.objects.all()
+    for mp in all_major_prefs:
+        if mp.applicant_id in submitted_ids:
+            r = 0
+            for m in mp.majors:
+                major_stat[m]['stat'][r] += 1
+                r += 1
+
+    major_stat_data = [(major_stat[m]['major'], major_stat[m]['stat']) for
+                       m in sorted(major_stat.keys())]
+    return render_to_response('review/major_pref_stat.html',
+                              { 'ranks': range(1,max_rank+1),
+                                'major_stat_data': major_stat_data })
+

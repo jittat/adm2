@@ -32,6 +32,9 @@ urlpatterns = patterns(
 
     url(r'^search/$', 'search', name='review-search'),
 
+    url(r'^stat/major_pref/$', 'show_major_pref_stat',
+        name='review-stat-major-pref'),
+
     url(r'^show/(\d+)/$', 'review_document', name='review-show'),
     url(r'^show/(\d+)/manual/$', 'review_document', 
         { 'return_to_manual': True }, name='review-show-after-manual'),

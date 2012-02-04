@@ -64,9 +64,13 @@ def update_major_single_choice(request):
                               form_data)
     
 
-@within_submission_deadline
-@submitted_applicant_required
-def update_majors(request):
+def update_majors_as_major_lists(request):
+    """
+    WARNINGS: 
+    Unused in the current version.
+    This is for the case when the number of choices is small.
+    """
+
     if settings.MAX_MAJOR_RANK == 1:
         return update_major_single_choice(request)
 
@@ -100,6 +104,49 @@ def update_majors(request):
     # add step info
     form_data['step_name'] = 'แก้ไขอันดับสาขาวิชา'
     form_data['can_log_out'] = True
+    return render_to_response('application/update/majors.html',
+                              form_data)
+
+@within_submission_deadline
+@submitted_applicant_required
+def update_majors(request):
+    max_major_rank = settings.MAX_MAJOR_RANK
+    if max_major_rank == 1:
+        return update_major_single_choice(request)
+
+    from form_views import prepare_major_selections
+
+    applicant = request.applicant
+    form_data = { 'majors': Major.get_all_majors() }
+
+    if request.method == 'POST': 
+
+        if 'cancel' not in request.POST:
+            result, pref_list, errors = handle_major_form(request, 
+                                                          max_major_rank)
+
+            if result:
+                request.session['notice'] = 'การแก้ไขอันดับสาขาวิชาเรียบร้อย'
+                return HttpResponseRedirect(reverse('status-index'))
+
+            selections = prepare_major_selections(pref_list, max_major_rank)
+            form_data['errors'] = errors
+        else:
+            request.session['notice'] = 'อันดับสาขาวิชาไม่ถูกแก้ไข'
+            return HttpResponseRedirect(reverse('status-index'))
+    else:
+        if applicant.has_major_preference():
+            pref_list = applicant.preference.get_major_list()
+        else:
+            pref_list = [None] * max_major_rank
+
+        selections = prepare_major_selections(pref_list, max_major_rank)
+
+    # add step info
+    form_data['step_name'] = 'แก้ไขอันดับสาขาวิชา'
+    form_data['can_log_out'] = True
+    form_data['selections'] = selections
+    form_data['max_major_rank'] = max_major_rank
     return render_to_response('application/update/majors.html',
                               form_data)
 

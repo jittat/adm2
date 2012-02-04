@@ -617,3 +617,64 @@ u"""เรียนคุณ %(first_name)s %(last_name)s
         message = message.replace('\n','<br/>\n')
     adm_send_mail(applicant.get_email(), subject, message, force)
 
+
+def send_payment_acceptance_by_email(applicant, force=False):
+    """
+    sends payment acceptance
+    """
+    subject = 'แจ้งการรับชำระค่าสมัคร คณะวิศวกรรมศาสตร์ ม.เกษตรศาสตร์ บางเขน'
+
+    greeting = u"จดหมายอิเล็กทรอนิกส์ฉบับนี้ แจ้งยืนยันว่าคณะวิศวกรรมศาสตร์ได้รับข้อมูลการชำระเงินค่าสมัครจากธนาคารเรียบร้อยแล้ว"
+
+    message = (
+u"""เรียนคุณ %(firstname)s %(lastname)s
+
+%(greeting)s
+
+คุณสมัครโครงการรับตรง โดยใช้หมายเลขประจำตัวประชาชนคือ %(national_id)s
+สมัครได้สมัครโดยใช้อีเมล์ %(email)s
+
+คุณสามารถเข้าสู่ระบบรับสมัครเพื่อตรวจสอบสถานะใบสมัครได้โดยใช้รหัสประจำตัวประชาชนของคุณ
+
+ขอบคุณ
+โครงการรับตรง คณะวิศวกรรมศาสตร์"""
+% { 'greeting': greeting,
+    'firstname': applicant.first_name, 
+    'lastname': applicant.last_name,
+    'email': applicant.get_email(), 
+    'national_id': applicant.national_id,
+    }
+)
+    if AUTO_ADD_BR:
+        message = message.replace('\n','<br/>\n')
+    adm_send_mail(applicant.get_email(), subject, message, force)
+
+
+def send_score_import_success_by_email(applicant, force=False):
+    """
+    sends payment acceptance
+    """
+    subject = 'แจ้งการนำเข้าข้อมูลคะแนน คณะวิศวกรรมศาสตร์ ม.เกษตรศาสตร์ บางเขน'
+
+    message = (
+u"""เรียนคุณ %(firstname)s %(lastname)s
+
+จดหมายอิเล็กทรอนิกส์ฉบับนี้ แจ้งยืนยันว่าคณะวิศวกรรมศาสตร์
+ได้นำเข้าข้อมูลการสอบของผู้สมัครจากทาง สทศ. เรียบร้อยแล้ว
+
+ผู้สมัครสามารถเข้าระบบเพื่อตรวจสอบความถูกต้อง 
+และผลการคำนวณคะแนนได้ที่เว็บรับตรง
+
+ขอบคุณ
+โครงการรับตรง คณะวิศวกรรมศาสตร์"""
+% { 'greeting': greeting,
+    'firstname': applicant.first_name, 
+    'lastname': applicant.last_name,
+    'email': applicant.get_email(), 
+    'national_id': applicant.national_id,
+    }
+)
+    if AUTO_ADD_BR:
+        message = message.replace('\n','<br/>\n')
+    adm_send_mail(applicant.get_email(), subject, message, force)
+
