@@ -18,7 +18,7 @@ class Applicant(models.Model):
                                   verbose_name="ชื่อ")
     last_name = models.CharField(max_length=300,
                                  verbose_name="นามสกุล")
-    email = models.EmailField(unique=True)
+    email = models.EmailField(max_length=200, unique=True)
     national_id = models.CharField(max_length=20,
                                    verbose_name="เลขประจำตัวประชาชน",
                                    unique=True)
