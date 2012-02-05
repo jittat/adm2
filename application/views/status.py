@@ -242,17 +242,22 @@ def index(request):
     template_data.append(round_data)
     template_data.append(admission_data)
     template_data.append(confirmation_data)
-    template_data.append({
-            'exam_scores':
-                prepare_exam_scores(request.applicant)})
+
+    if settings.SHOW_SCORE_IMPORT_STATUS:
+        template_data.append({
+                'exam_scores':
+                    prepare_exam_scores(request.applicant)})
 
     core_data = { 'applicant': applicant,
                   'submission_info': submission_info,
                   'can_log_out': True }
     template_data.append(core_data)
 
-    config_data = { 'shows_score_import_status' 
-                    : settings.SHOW_SCORE_IMPORT_STATUS }
+    config_data = { 'shows_score_import_status' :
+                        settings.SHOW_SCORE_IMPORT_STATUS,
+                    'submission_deadline_passed' :
+                        submission_deadline_passed() }
+
     template_data.append(config_data)
 
     template_items = []

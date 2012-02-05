@@ -12,10 +12,6 @@
 
   <div class="right-box">
     {% include "application/status/include/status_menu.html" %}
-    <br/>
-    <br/>
-    <br/>
-    <br/>
   </div>
 
   {% adm_submission_deadline_warning %}
@@ -26,7 +22,9 @@
     </div>
   {% endif %}
 
-  {% include "application/status/include/instructions.html" %}
+  {% if not submission_deadline_passed %}
+    {% include "application/status/include/instructions.html" %}
+  {% endif %}
 
   <!--- *************************** --->
 

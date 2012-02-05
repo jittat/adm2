@@ -12,6 +12,7 @@
 </a>
 {% endcomment %}
 
+{% if not submission_deadline_passed %}
   <a id="id_payin-button" class="in-button" href="{% url apply-ticket %}?{{ ticket_random_seed }}" target="_blank">
     <div class="button-blue">
       พิมพ์ใบชำระเงินค่าสมัครเพื่อชำระเงินที่ธนาคาร
@@ -42,5 +43,5 @@
     </div>
   </a>
   <center><small>สามารถแก้ข้อมูลต่าง ๆ ได้จนถึงวันที่ปิดรับสมัคร</small></center>
-
+{% endif %}
 

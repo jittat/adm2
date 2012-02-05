@@ -1,26 +1,21 @@
 {% if admission_result %}
   {% if admission_result.is_admitted %}
     <b>ผลการคัดเลือกรอบ {{ admission_result.round_number }}:</b>
-    ขอแสดงความยินดีด้วย คุณผ่านการคัดเลือกให้เข้าศึกษาต่อแบบรับตรง<br/>
+    ขอแสดงความยินดีด้วย คุณผ่านการคัดเลือกให้เข้าศึกษาต่อแบบโควตา<br/>
     <b>สาขาที่ได้รับการคัดเลือก:</b>
     {{ admission_result.admitted_major.number }}
     {{ admission_result.admitted_major.name }}
-    <br/>
+    <br/><br/>
 
-    {% if not admission_major_pref %}
-      {% include "application/status/include/new_admission_major_pref.html" %}
-    {% else %}
-      {% include "application/status/include/edit_admission_major_pref.html" %}
-    {% endif %}
-
-    {% include "application/status/include/confirmation_warning.html" %}
-
-  {% else %}
-    {% if admission_result.is_waitlist %}
-      คุณมีชื่ออยู่ในรายชื่อสำรอง ดูข้อมูลเพิ่มเติมได้ที่<a href="{% url result-set-index "waitlist" %}">หน้าประกาศผลการรับสมัคร</a><br/>
-    {% else %}
-      {% include "application/status/include/not_admitted.html" %}
-    {% endif %}
+    <b>สิ่งที่ผู้สมัครจะต้องดำเนินการต่อไป:</b>
+    <ul>
+      <li>
+        คุณจะต้องเข้าระบบยืนยันสิทธิ์ออนไลน์เพื่อยืนยันสิทธิ์ในวันที่ 18 - 19 ก.พ. 2555 เพื่อป้อนข้อมูลสำหรับการเคลียริงเฮาส์และรับรหัสผ่าน สำหรับการยืนยันสิทธิ์ผ่านทางโครงการเคลียริงเฮาส์ของ สอท ระหว่างวันที่ 11 - 17 มีนาคม 2555 &nbsp; <b>คณะวิศวกรรมศาสตร์จะถือว่าคุณสละสิทธิ์ถ้าไม่มายืนยันสิทธิ์ตามเวลาที่กำหนด</b>
+      </li>
+      <li>
+        ในกรณีที่คุณสมัครโครงการรับตรงและคุณได้รับคัดเลือกเข้าศึกษาต่อในโครงการรับตรงด้วย คุณจะต้องเลือกเข้าศึกษาต่อเฉพาะทางใดทางหนึ่งเท่านั้น &nbsp; ถ้าคุณได้รับคัดเลือกผ่านโครงการรับตรงในรอบที่สอง คุณอาจจะต้องเข้าระบบเพื่อยืนยันสิทธิ์อีกครั้งหนึ่งในวันที่ 25 - 26 ก.พ. 2555
+      </li>
+    </ul>
   {% endif %}
 {% else %}
   {% include "application/status/include/not_admitted.html" %}
