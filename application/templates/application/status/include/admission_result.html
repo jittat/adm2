@@ -16,6 +16,15 @@
         ในกรณีที่คุณสมัครโครงการรับตรงและคุณได้รับคัดเลือกเข้าศึกษาต่อในโครงการรับตรงด้วย คุณจะต้องเลือกเข้าศึกษาต่อเฉพาะทางใดทางหนึ่งเท่านั้น &nbsp; ถ้าคุณได้รับคัดเลือกผ่านโครงการรับตรงในรอบที่สอง คุณอาจจะต้องเข้าระบบเพื่อยืนยันสิทธิ์อีกครั้งหนึ่งในวันที่ 25 - 26 ก.พ. 2555
       </li>
     </ul>
+  {% else %}
+    {% if admission_result.is_waitlist %}
+      คุณมีชื่ออยู่ในรายชื่อสำรองของสาขา     
+      {{ admission_result.admitted_major.number }}
+      {{ admission_result.admitted_major.name }}<br/>
+      สำหรับการดำเนินการต่อไปให้ติดตามได้จากประกาศอย่างเป็นทางการของคณะวิศวกรรมศาสตร์
+    {% else %}
+      {% include "application/status/include/not_admitted.html" %}
+    {% endif %}
   {% endif %}
 {% else %}
   {% include "application/status/include/not_admitted.html" %}
