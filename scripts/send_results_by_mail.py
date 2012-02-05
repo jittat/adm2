@@ -3,32 +3,33 @@ from django_bootstrap import bootstrap
 bootstrap(__file__)
 
 import time
+import sys
 
-from application.models import Applicant, PersonalInfo
-from commons.email import send_final_admission_status_by_mail
+from application.models import Applicant, SubmissionInfo
+from commons.email import adm_send_mail
 
 def main():
     print 'Sending mails...'
 
-    while True:
-        try:
-            nat_id = raw_input().strip()
-        except:
-            break
+    only_paid = '--paid' in sys.argv
 
-        personal_infos = (PersonalInfo.objects
-                         .filter(national_id=nat_id)
-                         .select_related(depth=1))
+    for s in SubmissionInfo.objects.select_related(depth=1).all():
+        if only_paid and (not s.paid):
+            continue
 
-        emails = {}
-        for pinfo in personal_infos:
-            if pinfo.applicant.email not in emails:
-                emails[pinfo.applicant.email] = pinfo.applicant
+        applicant = s.applicant
 
-        for email, app in emails.iteritems():
-            print email, app.full_name()
-            send_final_admission_status_by_mail(app)
-            time.sleep(5)
+        if settings.ADM_RESULT_MAIL_BUILD_BODY==None:
+            print applicant.national_id, ' (no body function specified)'
+            continue
+
+        subject = settings.ADM_RESULT_MAIL_SUBJECT
+        body = settings.ADM_RESULT_MAIL_BUILD_BODY(s.applicant)
+
+        adm_send_mail(applicant.get_email(),
+                      subject,
+                      body,
+                      priority='low')
 
 if __name__ == '__main__':
     main()

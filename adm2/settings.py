@@ -240,6 +240,12 @@ INDEX_PAGE = 'start-page'
 UPLOADED_DOC_PATH = os.path.join(PROJECT_DIR,'data/upload')
 MAX_UPLOADED_DOC_FILE_SIZE = 2000000
 
+# ------------------
+# result mails
+
+ADM_RESULT_MAIL_SUBJECT = ''
+ADM_RESULT_MAIL_BUILD_BODY = None
+
 DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False
 }
