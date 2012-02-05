@@ -16,7 +16,7 @@ except:
     from django.core.mail import send_mail
     
 
-def adm_send_mail(to_email, subject, message, force=False):
+def adm_send_mail(to_email, subject, message, force=False, priority='medium'):
 
     if settings.EMAIL_SENDER=='':
         sender = admin_email()
@@ -36,7 +36,8 @@ def adm_send_mail(to_email, subject, message, force=False):
                   message,
                   sender,
                   [ to_email ],
-                  fail_silently=True)
+                  fail_silently=True,
+                  priority=priority)
     else:
         print 'Does not send email'
         print 'Message:'
