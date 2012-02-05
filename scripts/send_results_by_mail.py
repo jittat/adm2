@@ -7,11 +7,15 @@ import sys
 
 from application.models import Applicant, SubmissionInfo
 from commons.email import adm_send_mail
+import commons
 
 def main():
     print 'Sending mails...'
 
     only_paid = '--paid' in sys.argv
+    if settings.ADM_RESULT_MAIL_BUILD_BODY != None:
+        body_function = getattr(commons.email, 
+                                settings.ADM_RESULT_MAIL_BUILD_BODY)
 
     for s in SubmissionInfo.objects.select_related(depth=1).all():
         if only_paid and (not s.paid):
@@ -24,7 +28,7 @@ def main():
             continue
 
         subject = settings.ADM_RESULT_MAIL_SUBJECT
-        body = settings.ADM_RESULT_MAIL_BUILD_BODY(s.applicant)
+        body = body_function(applicant)
 
         adm_send_mail(applicant.get_email(),
                       subject,
