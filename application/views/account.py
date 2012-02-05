@@ -6,6 +6,7 @@ from django.conf import settings
 from django import forms
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.cache import cache_page
 
 from django.db import IntegrityError
 
@@ -24,6 +25,7 @@ from commons.decorators import within_submission_deadline
 
 ALLOWED_LOGOUT_REDIRECTION = ['http://admission.eng.ku.ac.th']
 
+@cache_page(60)
 def login(request):
     announcements = Announcement.get_all_enabled_annoucements()
     if not settings.LOGIN_ENABLED:
