@@ -29,8 +29,11 @@ def read_results():
         app = {'order': order,
                'national_id': items[0],
                'major': items[2] }
-        if len(items)>=4:
-            app['wait_number'] = int(items[3])
+        app['is_wait'] = False
+        if len(items)>=5:
+            app['is_wait'] = (items[3]=='wait')
+            if app['is_wait']:
+                app['wait_number'] = int(items[4])
         applicant_data.append(app)
         order += 1
     return applicant_data
@@ -59,7 +62,7 @@ def import_results(round_number, applicant_data):
         major_number = standardize_major_number(a['major'])
         major = major_dict[major_number]
             
-        if a['major']=='wait':
+        if a['is_wait']:
             aresult.is_admitted = False
             aresult.is_waitlist = True
             aresult.admitted_major = major
