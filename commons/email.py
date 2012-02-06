@@ -695,7 +695,8 @@ def quota_result_mail_body(applicant):
 -ทีมงานเว็บรับสมัคร""" % { 'first_name': applicant.first_name,
                        'last_name': applicant.last_name }
 
-    return u"""เรียน คุณ %(first_name)s %(last_name)s
+    if not result.is_waitlist:
+        return u"""เรียน คุณ %(first_name)s %(last_name)s
 
 ขอแสดงความยินดีด้วย คุณผ่านการคัดเลือกให้เข้าศึกษาต่อแบบโควตา
 สาขาที่ได้รับการคัดเลือก: %(major)s
@@ -708,5 +709,14 @@ def quota_result_mail_body(applicant):
 -ทีมงานเว็บรับสมัคร""" % { 'first_name': applicant.first_name,
                        'last_name': applicant.last_name,
                        'major': result.admitted_major.name }
+    else:
+        return (u"""เรียน คุณ %(first_name)s %(last_name)s
 
-    
+คุณมีชื่ออยู่ในรายชื่อสำรองอันดับที่ %(waitlist_number)d ของสาขา %(major)s 
+
+คณะวิศวกรรมศาสตร์จะติดต่อผู้สมัครอีกครั้งหนึ่งว่ามีการสละสิทธิ์โดยผู้สมัครตัวจริงหรือไม่ (หลังกำหนดยืนยันสิทธิ์รอบแรกในวันที่ 18 - 19 ก.พ. 2555)   จากนั้นคณะจะเรียกรายชื่อสำรองตามลำดับ ถ้าผู้สมัครได้สิทธิ์เข้าศึกษาต่อ จะต้องมายืนยันสิทธิ์พร้อมกับผู้สมัครรับตรงในรอบที่สองระหว่างวันที่ 25-26 กุมภาพันธ์ 2555"""
+                % { 'first_name': applicant.first_name,
+                    'last_name': applicant.last_name,
+                    'major': result.admitted_major.name,
+                    'waitlist_number': result.waitlist_number })
+                

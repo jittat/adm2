@@ -132,6 +132,7 @@ class AdmissionResult(models.Model):
     round_number = models.IntegerField(default=0)
     is_admitted = models.BooleanField()
     is_waitlist = models.BooleanField()
+    waitlist_number = models.IntegerField(null=True, blank=True)
     
     admitted_major = models.ForeignKey(Major, null=True)
 

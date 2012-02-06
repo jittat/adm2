@@ -29,6 +29,8 @@ def read_results():
         app = {'order': order,
                'national_id': items[0],
                'major': items[2] }
+        if len(items)>=4:
+            app['wait_number'] = int(items[3])
         applicant_data.append(app)
         order += 1
     return applicant_data
@@ -53,14 +55,17 @@ def import_results(round_number, applicant_data):
         aresult = AdmissionResult()
         aresult.applicant = applicant
         aresult.round_number = round_number
+
+        major_number = standardize_major_number(a['major'])
+        major = major_dict[major_number]
+            
         if a['major']=='wait':
             aresult.is_admitted = False
             aresult.is_waitlist = True
-            aresult.admitted_major = None
+            aresult.admitted_major = major
+            if 'wait_number' in a:
+                aresult.waitlist_number = a['wait_number']
         else:
-            major_number = standardize_major_number(a['major'])
-            major = major_dict[major_number]
-            
             aresult.is_admitted = True
             aresult.is_waitlist = False
             aresult.admitted_major = major
