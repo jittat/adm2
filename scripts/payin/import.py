@@ -56,7 +56,7 @@ for ln in lines:
                 
                 updated_count += 1
         else:
-            print "ERROR: NAT ID NOT FOUND", national_id
+            print "ERROR: NAT ID NOT FOUND", national_id, " verification: ", verification
             outf.write(ln)
     else:
         outf.write(ln)
