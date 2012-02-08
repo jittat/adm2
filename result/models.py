@@ -172,18 +172,28 @@ SCORE_STATS = [
     #{ 'gat': ScoreStat(106.78, 55.59, 292.5),
     #  'pat1': ScoreStat(63.56, 25.90, 270),
     #  'pat3': ScoreStat(86.73, 24.64, 237) },
+
+    # mar53
     { 'gat': ScoreStat(130.82, 58.27, 295),
       'pat1': ScoreStat(63.97, 30.86, 294),
       'pat3': ScoreStat(103.19, 42.46, 276) },
+
+    # jul53
     { 'gat': ScoreStat(128.43, 61.32, 300),
       'pat1': ScoreStat(56.26, 25.92, 300),
       'pat3': ScoreStat(83.54, 35.78, 300) },
+
+    # oct53
     { 'gat': ScoreStat(139.38, 67.85, 300),
       'pat1': ScoreStat(48.34, 23.45, 300),
       'pat3': ScoreStat(121.25, 41.56, 300) },
+
+    # mar54
     { 'gat': ScoreStat(171.89, 48.04, 297.5),
       'pat1': ScoreStat(64.22, 18.08, 274),
       'pat3': ScoreStat(101.95, 40.68, 270) },
+
+    # dec54
     { 'gat': ScoreStat(130.59, 68.04, 300),
       'pat1': ScoreStat(39.64, 20.07, 288),
       'pat3': ScoreStat(83.45, 32.44, 267) },
