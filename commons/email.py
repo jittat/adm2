@@ -648,7 +648,7 @@ u"""เรียนคุณ %(firstname)s %(lastname)s
 )
     if AUTO_ADD_BR:
         message = message.replace('\n','<br/>\n')
-    adm_send_mail(applicant.get_email(), subject, message, force)
+    adm_send_mail(applicant.get_email(), subject, message, force, priority='low')
 
 
 def send_score_import_success_by_email(applicant, force=False):
@@ -664,12 +664,11 @@ u"""เรียนคุณ %(firstname)s %(lastname)s
 ได้นำเข้าข้อมูลการสอบของผู้สมัครจากทาง สทศ. เรียบร้อยแล้ว
 
 ผู้สมัครสามารถเข้าระบบเพื่อตรวจสอบความถูกต้อง 
-และผลการคำนวณคะแนนได้ที่เว็บรับตรง
+และผลการคำนวณคะแนนได้ที่เว็บรับสมัครของโครงการรับตรง
 
 ขอบคุณ
 โครงการรับตรง คณะวิศวกรรมศาสตร์"""
-% { 'greeting': greeting,
-    'firstname': applicant.first_name, 
+% { 'firstname': applicant.first_name, 
     'lastname': applicant.last_name,
     'email': applicant.get_email(), 
     'national_id': applicant.national_id,
@@ -677,5 +676,5 @@ u"""เรียนคุณ %(firstname)s %(lastname)s
 )
     if AUTO_ADD_BR:
         message = message.replace('\n','<br/>\n')
-    adm_send_mail(applicant.get_email(), subject, message, force)
+    adm_send_mail(applicant.get_email(), subject, message, force, priority='low')
 

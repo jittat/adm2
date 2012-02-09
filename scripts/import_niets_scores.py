@@ -14,6 +14,7 @@ bootstrap(__file__)
 
 from result.models import NIETSScores
 from application.models import Applicant, PersonalInfo
+from commons.email import send_score_import_success_by_email
 
 REQUEST_PREFIX = 'req'
 RESULT_PREFIX = 'results-'
@@ -121,6 +122,7 @@ def main():
         niets_scores.applicant = app
         niets_scores.is_request_successful = True
         niets_scores.save()
+        send_score_import_success_by_email(app, True)
         counter += 1
 
     print "Successfully imported", counter, "applicants."
