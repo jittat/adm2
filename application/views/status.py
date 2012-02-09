@@ -59,6 +59,19 @@ def prepare_exam_scores(applicant):
     best_scores = dict([(n,max(test_norm_scores[n])) for n in test_names])
     final_score = niets_scores.get_score()
 
+    final_score = niets_scores.get_score()
+
+    score_complete = True
+    for n in test_names:
+        score_available = False
+        for i in range(len(cal_scores)):
+            if cal_scores[i][n]['raw'] != 0:
+                score_available = True
+                break
+        if not score_available:
+            best_scores[n] = 0
+            score_complete = False
+
     return { 'scores': scores, 
              'best_scores': best_scores,
              'final_score': final_score }
