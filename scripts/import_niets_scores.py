@@ -103,20 +103,26 @@ def main():
             continue
 
         app = apps[0]
+
+        try:
+            niets_scores = app.NIETS_scores
+            scores_exists = True
+        except:
+            niets_scores = NIETSScores()
+            scores_exists = False
+
         if not result_exists(results, nat):
             print (u"Error,%s,%s,%s,%s" % 
                    (nat, 
                     app.full_name(), 
                     app.personal_info.phone_number,
                     app.email))
+            niets_scores.applicant = app
+            niets_scores.is_request_successful = False
+            niets_scores.save()
             continue
 
         scores =  combine_rounds(results, nat)
-
-        try:
-            niets_scores = app.NIETS_scores
-        except:
-            niets_scores = NIETSScores()
 
         niets_scores.score_list = ','.join([str(s) for s in scores])
         niets_scores.applicant = app
