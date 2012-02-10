@@ -20,6 +20,7 @@ from application.forms.handlers import handle_personal_info_form
 from application.forms import EducationForm, SingleMajorPreferenceForm
 from application.models import Applicant, MajorPreference, Major, PersonalInfo
 
+from commons.models import Log
 from commons.local import APP_TITLE_FORM_CHOICES
 from commons.email import send_sub_method_change_notice_by_email
 
@@ -121,6 +122,8 @@ def update_majors(request):
             result, pref_list, errors = handle_major_form(request, 
                                                           max_major_rank)
 
+            log = Log.create("Update major pref: %s from %s" % 
+                             (applicant.id,request.META['REMOTE_ADDR']))
             if result:
                 request.session['notice'] = 'การแก้ไขอันดับสาขาวิชาเรียบร้อย'
                 return HttpResponseRedirect(reverse('status-index'))
