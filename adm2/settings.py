@@ -210,6 +210,7 @@ TICKET_SYSTEM_SALT = 'salt'
 # web interface settings
 
 LOGIN_ENABLED = True
+FAKE_LOGIN = False
 NAT_ID_VERIFICATION = True
 
 MAX_PASSWORD_REQUST_PER_DAY = 10
@@ -229,6 +230,8 @@ EMAIL_HOST_PASSWORD = 'xxxxxxxx'
 EMAIL_SENDER = 'KU Eng Admission Team <jtf@ku.ac.th>'
 
 SHOW_SCORE_IMPORT_STATUS = True
+
+SHOW_ONLY_RESULTS = False
 
 # used in redirect_to_index
 INDEX_PAGE = 'start-page'
