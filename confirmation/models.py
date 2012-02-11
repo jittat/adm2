@@ -165,6 +165,19 @@ class AdmissionConfirmation(models.Model):
     class Meta:
         ordering = ['-confirmed_at']
 
+    @staticmethod
+    def create_for(applicant, round_number):
+        AdmissionConfirmation.objects.filter(applicant=applicant,
+                                             round_number=round_number).delete()
+        conf = AdmissionConfirmation(applicant=applicant,
+                                     round_number=round_number)
+        conf.save()
+        
+    @staticmethod
+    def delete_for(applicant, round_number):
+        AdmissionConfirmation.objects.filter(applicant=applicant,
+                                             round_number=round_number).delete()
+
 
 class AdmissionWaiver(models.Model):
     applicant = models.OneToOneField(Applicant,

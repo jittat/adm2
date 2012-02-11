@@ -13,13 +13,12 @@
   {% load adm_steps %}{% step_bar "ยืนยันสิทธิ์โครงการรับตรง" %}
 
   <div class="light-frame">
+    {% include "confirmation/include/confirm_notice_float.html" %}
     <b>ชื่อผู้สมัคร:</b> {{ applicant.full_name }} | <b>หมายเลขประจำตัวประชาชน:</b> {{ applicant.national_id }}<br/>
     <b>สาขาที่ได้รับการคัดเลือกในรอบที่ {{ current_round.number }}</b>: 
     {{ admission_result.admitted_major.number }}
     {{ admission_result.admitted_major.name }}
   </div>
-
-  
 
   {% if waiver %}
 
@@ -31,18 +30,39 @@
   {% else %}
 
     <form method="post" class="light-frame" style="background: #ffe0e0;">
-      ถ้าคุณต้องการ <b>สละสิทธิ์การเข้าศึกษาต่อ</b> จากโครงการรับตรงนี้ กรุณากด <input id="waive_button" type="submit" name="waive" value="ขอสละสิทธิ์การเข้าศึกษาต่อ"/><br/>
+      ถ้าคุณต้องการ <b>สละสิทธิ์การเข้าศึกษาต่อ</b> จากโครงการรับตรง กรุณากด <input id="waive_button" type="submit" name="waive" value="ขอสละสิทธิ์การเข้าศึกษาต่อ"/><br/>
       <small>ถ้าคุณต้องการสละสิทธิ์เฉพาะสาขานี้แต่ยังต้องการให้คณะฯ พิจารณาเลื่อนอันดับให้อีกให้คุณเลือกยืนยันสิทธิ์ด้านล่าง</small>
     </form>
     
     <form method="post" class="light-frame" style="background: #f0fff0;">
-      ถ้าคุณต้องการยืนยันสิทธิ์การเข้าศึกษาต่อ (รวมผู้สมัครที่ต้องการสละสิทธิ์สาขาที่ได้รับคัดเลือกรอบนี้แต่ต้องการให้พิจารณาการเลื่อนอันดับในรอบถัดไปด้วย)<br/>กรุณากรอกข้อมูลเพื่อยืนยันสิทธิ์ดังต่อไปนี้ให้ครบถ้วน
+      {% if not registration %}
+        ถ้าคุณต้องการยืนยันสิทธิ์การเข้าศึกษาต่อ (รวมผู้สมัครที่ต้องการสละสิทธิ์สาขาที่ได้รับคัดเลือกรอบนี้แต่ต้องการให้พิจารณาการเลื่อนอันดับในรอบถัดไปด้วย)<br/>กรุณากรอกข้อมูลเพื่อยืนยันสิทธิ์ดังต่อไปนี้ให้ครบถ้วน
+      {% else %}
+        คุณได้ยืนยันสิทธิ์แล้ว ด้านล่างเป็นข้อมูลสำหรับการยืนยันสิทธิ์ที่คุณได้กรอกไว้  เมื่อแก้ไขเสร็จแล้วให้คุณกดปุ่มแก้ไขข้อมูลด้านล่าง
+      {% endif %}
       <div class="light-frame" style="background: white">
         {% include "confirmation/include/student_registration_form.html" %}
         ผู้สมัครยืนยันว่าได้กรอกข้อมูลข้างต้นตามจริง ถ้ามีการตรวจสอบในภายหลังว่ามีความจงใจกรอกข้อมูลเท็จ คณะวิศวกรรมศาสตร์ขอตัดสิทธิ์ในการเข้าศึกษาต่อจากโครงการรับตรงนี้
       </div>
       <div class="submission-bar">
-        <input type="submit" name="confirm" value="ยืนยันสิทธิ์และเลือกสาขาที่ขอเข้ารับการพิจารณา"/>
+        {% if not is_best_major %}
+          {% if not registration %}
+            <input type="submit" name="confirm" value="ยืนยันสิทธิ์และเลือกสาขาที่ขอเข้ารับการพิจารณา"/>
+          {% else %}
+            <input type="submit" name="confirm" value="เก็บข้อมูลและไปเลือกสาขาที่ขอเข้ารับการพิจารณา"/>
+            <input type="submit" name="cancel" value="ยกเลิกการแก้ไข"/>
+          {% endif %}
+        {% else %}
+          {% if registration %}
+            <input type="submit" name="cancel" value="จัดเก็บการแก้ไข"/>
+            <input type="submit" name="cancel" value="ยกเลิกการแก้ไข"/>
+          {% else %}
+            <input type="submit" name="confirm" value="ยืนยันสิทธิ์ในการเข้าศึกษาต่อ"/>
+          {% endif %}
+          <small>
+            เนื่องจากสาขาที่คุณได้รับคัดเลือกเป็นสาขาในอันดับที่ 1 ที่คุณเลือกแล้ว จึงไม่จำเป็นต้องเลือกสาขาที่จะพิจารณาซ้ำ
+          </small>
+        {% endif %}
       </div>
     </form>
 

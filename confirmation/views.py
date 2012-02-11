@@ -106,7 +106,8 @@ def pref(request):
     if not first_admission:
         return HttpResponseForbidden()
 
-    if not applicant.get_student_registration():
+    registration = applicant.get_student_registration()
+    if not registration:
         return HttpResponseForbidden()
 
     # check for deadline
@@ -188,6 +189,7 @@ def pref(request):
                                 'admission_result': admission_result,
                                 'current_round': current_round,
                                 'is_last_round': is_last_round,
+                                'registration': registration,
                                 'higher_majors': higher_majors,
                                 'majors_with_is_accepted':
                                     zip(higher_majors, is_accepted_list),
@@ -203,6 +205,9 @@ class StudentRegistrationForm(ModelForm):
 
 @submitted_applicant_required
 def student_registration(request):
+
+    return HttpResponseForbidden()
+
     applicant = request.applicant
     admitted = applicant.is_admitted()
 
@@ -228,7 +233,7 @@ def student_registration(request):
 
 
 @submitted_applicant_required
-def main(request):
+def main(request, is_edit_registration=False):
     applicant = request.applicant
     admitted = applicant.is_admitted()
 
@@ -250,12 +255,19 @@ def main(request):
 
     admission_result = applicant.get_latest_admission_result()
 
+    preferred_majors = applicant.preference.get_major_list()
+    higher_majors = get_higher_ranked_majors(preferred_majors, 
+                                             admission_result.admitted_major)
+    is_best_major = (len(higher_majors)==0)
+
     if AdmissionWaiver.is_waived(applicant):
         waiver = applicant.admission_waiver
     else:
         waiver = None
 
     registration = applicant.get_student_registration()
+    if request.method=='GET' and registration and not is_edit_registration and not is_best_major:
+        return redirect('confirmation-pref')
 
     if request.method=='POST' and 'confirm' in request.POST:
         form = StudentRegistrationForm(request.POST,
@@ -265,17 +277,26 @@ def main(request):
             registration.applicant = applicant
             registration.save()
 
+            AdmissionConfirmation.create_for(applicant,
+                                             current_round.number)
+
             Log.create("Confirm applicant %s from %s" % 
                        (applicant.id,request.META['REMOTE_ADDR']))
 
             send_admission_confirmation_by_email(applicant)
 
-            return redirect('confirmation-pref')
+            if not is_best_major:
+                return redirect('confirmation-pref')
+            else:
+                return redirect('status-index')
+
     elif request.method=='POST' and 'waive' in request.POST:
 
         AdmissionWaiver.waive_applicant(applicant)
         if registration:
             registration.delete()
+        AdmissionConfirmation.delete_for(applicant,
+                                         current_round.number)
 
         Log.create("Waive applicant %s from %s" % 
                    (applicant.id,request.META['REMOTE_ADDR']))
@@ -295,6 +316,10 @@ def main(request):
         send_admission_unwaive_by_email(applicant)
 
         return redirect('confirmation-app-index')
+
+    elif request.method=='POST' and 'cancel' in request.POST:
+        return redirect('status-index')
+
     else:
         form = StudentRegistrationForm(instance=registration)
 
@@ -303,6 +328,7 @@ def main(request):
                                 'admission_result': admission_result,
                                 'current_round': current_round,
                                 'is_last_round': is_last_round,
+                                'is_best_major': is_best_major,
                                 'registration': registration,
                                 'waiver': waiver,
                                 'form': form })

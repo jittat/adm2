@@ -13,10 +13,22 @@
   {% load adm_steps %}{% step_bar "เลือกสาขาที่ต้องการได้รับการพิจารณาคัดเลือก และยืนยันสิทธิ์" %}
 
   <div class="light-frame">
+    {% include "confirmation/include/confirm_notice_float.html" %}
     <b>ชื่อผู้สมัคร:</b> {{ applicant.full_name }} | <b>หมายเลขประจำตัวประชาชน:</b> {{ applicant.national_id }}<br/>
     <b>สาขาที่ได้รับการคัดเลือกในรอบที่ {{ current_round.number }}</b>: 
     {{ admission_result.admitted_major.number }}
     {{ admission_result.admitted_major.name }}
+  </div>
+
+  <div class="light-frame">
+    <b>คุณได้ยืนยันสิทธิ์ในการเข้าศึกษาต่อแล้ว</b> คุณสามารถ<a href="{% url confirmation-app-edit %}">กลับไปแก้ข้อมูลสำหรับการยืนยันสิทธิ์หรือเปลี่ยนใจขอสละสิทธิ์การเข้าศึกษาต่อ</a><br/>
+    {% if not admission_pref %}
+      {% if higher_majors %}
+        <small>ถ้าคุณไม่เลือกตัวเลือกในหน้านี้ โครงการจะถือว่าคุณประสงค์จะเข้าศึกษาต่อในสาขาปัจจุบันและขอเข้าพิจารณาทุกสาขาที่มีอันดับสูงขึ้นโดยอัตโนมัติ (ตัวเลือกที่ 2 ในรายการด้านล่าง)</small>
+      {% else %}
+        <small>เนื่องจากคุณได้ยืนยันสิทธิ์แล้ว ถ้าคุณไม่เลือกตัวเลือกในหน้านี้ โครงการจะถือว่าคุณประสงค์จะเข้าศึกษาต่อในสาขา{{ admission_result.admitted_major.name }}โดยอัตโนมัติ</small>
+      {% endif %}
+    {% endif %}
   </div>
 
   <form class="light-frame" action="" method="post">
@@ -52,17 +64,19 @@
 	  <input id="id_pref_type_move_up_strict" type="radio" name="pref_type" value="move_up_strict" {% if pref_type.is_move_up_strict %}checked="checked"{% endif %}/>
 	  </td>
 	  <td>
-	    ขอยืนยันสิทธิ์ในการเข้าศึกษาต่อในสาขา{{ admission_result.admitted_major.name }} เพื่อเข้ารับการพิจารณาเลื่อนสาขาไปอยู่ในอันดับที่ดีขึ้น แต่ถ้า<b>ไม่ได้รับการพิจารณา</b>ให้เลื่อนอันดับสาขาไปในอันดับที่ต้องการ  ขอ<b>สละสิทธิ์</b>การเข้าศึกษาต่อที่คณะวิศวกรรมศาสตร์จากโครงการรับตรงนี้ (คณะจะไม่คืนเงินค่ายืนยันสิทธิ์ให้)
+	    ขอยืนยันสิทธิ์ในการเข้าศึกษาต่อในสาขา{{ admission_result.admitted_major.name }} เพื่อเข้ารับการพิจารณาเลื่อนสาขาไปอยู่ในอันดับที่ดีขึ้น แต่ถ้า<b>ไม่ได้รับการพิจารณา</b>ให้เลื่อนอันดับสาขาไปในอันดับที่ต้องการ  ขอ<b>สละสิทธิ์</b>การเข้าศึกษาต่อที่คณะวิศวกรรมศาสตร์จากโครงการรับตรงนี้
 	</td></tr>
 
 	{% endif %}
 
+        {% comment %}
 	<tr><td>
 	    <input id="id_pref_type_withdrawn" type="radio" name="pref_type" value="withdrawn" {% if pref_type.is_withdrawn %}checked="checked"{% endif %}/>
 	  </td>
 	  <td>
 	    <b>สละสิทธิ์</b>การเข้าศึกษาต่อที่คณะวิศวกรรมศาสตร์จากโครงการรับตรงนี้
 	</td></tr>
+        {% endcomment %}
       </table>
     </p>
     <div id="id_major_pref_form" style="background: #e0ffe0; padding: 5px; border: 1px solid green; margin-bottom: 5px;{% if pref_type.is_move_up_strict or pref_type.is_move_up_inclusive %}{% else %}display:none{% endif %}" >

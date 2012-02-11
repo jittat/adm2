@@ -5,6 +5,10 @@ urlpatterns = patterns(
     'confirmation.views',
 
     url(r'^$', 'main', name='confirmation-app-index'),
+    url(r'^edit/$', 'main', 
+        { 'is_edit_registration': True },
+        name='confirmation-app-edit'),
+
     url(r'^pref/$', 'pref', name='confirmation-pref'),
     url(r'^pref-nomove/$', 'request_nomove', 
         {'is_nomove': True },
@@ -13,7 +17,7 @@ urlpatterns = patterns(
         {'is_nomove': False },
         name='confirmation-nomove-cancel'),
 
-    url(r'^registration/$', 'student_registration', name='confirmation-student-registration'),
+    #url(r'^registration/$', 'student_registration', name='confirmation-student-registration'),
 )
 
 

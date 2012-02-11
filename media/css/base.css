@@ -419,3 +419,12 @@ table#condition-table span.super-highlight {
   margin-bottom: 2px;
   padding-top: 2px;
   border-bottom: 1px solid gray; }
+
+.confirm-notice {
+  float: right;
+  font-size: 120%;
+  font-weight: bold; }
+  .confirm-notice span.confirmed {
+    color: green; }
+  .confirm-notice span.unconfirmed {
+    color: red; }
