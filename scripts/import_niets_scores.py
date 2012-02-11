@@ -70,8 +70,10 @@ def result_exists(results,nat):
 
 def convert_data_field(x):
     if x=='-' or x=='':
-        return 0
+        return -1
     else:
+        if float(x)==0:
+            print 'zero'
         return float(x)
 
 def convert_scores(result):
@@ -85,7 +87,7 @@ def combine_rounds(results,nat):
         if nat in results[i]:
             scores += convert_scores(results[i][nat])
         else:
-            scores += [0,0,0]
+            scores += [-1,-1,-1]
     return scores
 
 def main():
@@ -128,7 +130,7 @@ def main():
         niets_scores.applicant = app
         niets_scores.is_request_successful = True
         niets_scores.save()
-        send_score_import_success_by_email(app, True)
+        #send_score_import_success_by_email(app, True)
         counter += 1
 
     print "Successfully imported", counter, "applicants."

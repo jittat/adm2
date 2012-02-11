@@ -653,7 +653,7 @@ u"""เรียนคุณ %(firstname)s %(lastname)s
 
 def send_score_import_success_by_email(applicant, force=False):
     """
-    sends payment acceptance
+    sends score import success status
     """
     subject = 'แจ้งการนำเข้าข้อมูลคะแนน คณะวิศวกรรมศาสตร์ ม.เกษตรศาสตร์ บางเขน'
 
@@ -678,3 +678,76 @@ u"""เรียนคุณ %(firstname)s %(lastname)s
         message = message.replace('\n','<br/>\n')
     adm_send_mail(applicant.get_email(), subject, message, force, priority='low')
 
+
+def send_admission_confirmation_by_email(applicant, force=False):
+    """
+    sends admission confirmation
+    """
+    subject = 'แจ้งการยืนยันสิทธิ์ คณะวิศวกรรมศาสตร์ ม.เกษตรศาสตร์ บางเขน'
+
+    message = (
+u"""เรียนคุณ %(firstname)s %(lastname)s
+
+จดหมายอิเล็กทรอนิกส์ฉบับนี้ แจ้งยืนยันว่าคณะวิศวกรรมศาสตร์
+รับข้อมูลเพื่อการยืนยันสิทธิ์จากผู้สมัครแล้ว
+
+ถ้าผู้สมัครไม่ได้แจ้งยืนยันสิทธิ์ กรุณารีบติดต่อผู้ดูแลทางอีเมล์ %(admin_email)s โดยด่วน
+
+ขอบคุณ
+โครงการรับตรง คณะวิศวกรรมศาสตร์"""
+% { 'firstname': applicant.first_name, 
+    'lastname': applicant.last_name,
+    'admin_email': admin_email() }
+)
+    if AUTO_ADD_BR:
+        message = message.replace('\n','<br/>\n')
+    adm_send_mail(applicant.get_email(), subject, message, force)
+
+
+def send_admission_waive_by_email(applicant, force=False):
+    """
+    sends admission waive
+    """
+    subject = 'แจ้งการสละสิทธิ์ คณะวิศวกรรมศาสตร์ ม.เกษตรศาสตร์ บางเขน'
+
+    message = (
+u"""เรียนคุณ %(firstname)s %(lastname)s
+
+จดหมายอิเล็กทรอนิกส์ฉบับนี้ แจ้งยืนยันว่าคุณได้ขอสละสิทธิ์การเข้าศึกษาต่อผ่านทางโครงการรับตรงแล้ว
+
+ถ้าผู้สมัครไม่ได้แจ้งขอสละสิทธิ์ กรุณารีบติดต่อผู้ดูแลทางอีเมล์ %(admin_email)s โดยด่วน
+
+ขอบคุณที่สนใจโครงการรับตรง
+โครงการรับตรง คณะวิศวกรรมศาสตร์"""
+% { 'firstname': applicant.first_name, 
+    'lastname': applicant.last_name,
+    'admin_email': admin_email() }
+)
+    if AUTO_ADD_BR:
+        message = message.replace('\n','<br/>\n')
+    adm_send_mail(applicant.get_email(), subject, message, force)
+
+
+def send_admission_unwaive_by_email(applicant, force=False):
+    """
+    sends admission unwaive
+    """
+    subject = 'แจ้งการยกเลิกการสละสิทธิ์ คณะวิศวกรรมศาสตร์ ม.เกษตรศาสตร์ บางเขน'
+
+    message = (
+u"""เรียนคุณ %(firstname)s %(lastname)s
+
+จดหมายอิเล็กทรอนิกส์ฉบับนี้ แจ้งยืนยันว่าคุณได้ขอยกเลิกการสละสิทธิ์การเข้าศึกษาต่อผ่านทางโครงการรับตรงแล้ว
+อย่างไรก็ตาม คุณยังไม่ได้กรอกข้อมูลขอยืนยันสิทธิ์ ดังนั้น ถ้าคุณต้องการยืนยันสิทธิ์ คุณต้องเข้าไปกรอกข้อมูลด้วย
+
+ถ้าผู้สมัครไม่ได้แจ้งขอยกเลิกการสละสิทธิ์ กรุณารีบติดต่อผู้ดูแลทางอีเมล์ %(admin_email)s โดยด่วน
+
+ขอบคุณที่สนใจโครงการรับตรง
+โครงการรับตรง คณะวิศวกรรมศาสตร์"""
+% { 'firstname': applicant.first_name, 
+    'lastname': applicant.last_name,
+    'admin_email': admin_email() }
+)
+    if AUTO_ADD_BR:
+        message = message.replace('\n','<br/>\n')
+    adm_send_mail(applicant.get_email(), subject, message, force)

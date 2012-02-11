@@ -7,17 +7,14 @@
     {{ admission_result.admitted_major.name }}
     <br/>
 
-    {% if not admission_major_pref %}
-      {% include "application/status/include/new_admission_major_pref.html" %}
-    {% else %}
-      {% include "application/status/include/edit_admission_major_pref.html" %}
-    {% endif %}
-
-    {% include "application/status/include/confirmation_warning.html" %}
+    {% include "application/status/include/confirmation_info.html" %}
 
   {% else %}
     {% if admission_result.is_waitlist %}
       คุณมีชื่ออยู่ในรายชื่อสำรอง ดูข้อมูลเพิ่มเติมได้ที่<a href="{% url result-set-index "waitlist" %}">หน้าประกาศผลการรับสมัคร</a><br/>
+
+      {% include "application/status/include/confirmation_info.html" %}
+  
     {% else %}
       {% include "application/status/include/not_admitted.html" %}
     {% endif %}

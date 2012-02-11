@@ -1,0 +1,29 @@
+{% extends "commons/base.html" %}
+
+{% load adm_info %}
+
+{% block title %}ข้อมูลเพื่อการลงทะเบียนเป็นนิสิต{% endblock %}
+
+{% block extra-head %}
+<link rel="stylesheet" type="text/css" href="{% load adm_media %}{% static_url %}/css/front.css" />
+<script type="text/javascript" src="{% static_url %}/js/jquery.js"></script>
+{% endblock %}
+
+{% block body %}
+  {% load adm_steps %}{% step_bar "กรอกข้อมูลเพื่อการขึ้นทะเบียนเป็นนิสิตใหม่" %}
+
+  <div class="normal-msg" style="margin-top:2px">
+    <small>
+      กรุณากรอกข้อมูลด้านล่างให้ครบถ้วน 
+      ข้อมูลดังกล่าวจะถูกส่งให้กับหน่วยทะเบียนและประมวลผล มหาวิทยาลัยเกษตรศาสตร์ 
+      เพื่อขึ้นทะเบียนเป็นนิสิตใหม่
+    </small>
+  </div>
+  <form class="light-frame" action="" method="post">
+    {% include "confirmation/include/student_registration_form.html" %}
+    <div class="submission-bar">
+      <input type="submit" name="submit" value="เก็บข้อมูล"/>
+      <input type="submit" name="cancel" value="ยกเลิก"/>
+    </div>
+  </form>
+{% endblock %}

@@ -181,6 +181,29 @@ class AdmissionWaiver(models.Model):
         except:
             return False
 
+    @staticmethod
+    def waive_applicant(applicant):
+        try:
+            w = applicant.admission_waiver
+        except:
+            w = AdmissionWaiver()
+
+        w.applicant = applicant
+        w.is_waiver = True
+        w.save()
+
+        return w
+
+    @staticmethod
+    def unwaive_applicant(applicant):
+        try:
+            w = applicant.admission_waiver
+        except:
+            w = None
+
+        if w:
+            w.delete()
+
 
 TITLE_CHOICES = [
     ('','--'),

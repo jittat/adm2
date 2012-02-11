@@ -375,6 +375,12 @@ table#niets-scores {
   border: 1px solid gray;
   -moz-border-radius: 5px; }
 
+.dark-box {
+  padding: 5px;
+  border: 1px solid gray;
+  -moz-border-radius: 5px;
+  background: #f0f0f0; }
+
 table#condition-table td {
   padding: 0 10px; }
 table#condition-table tr.open {

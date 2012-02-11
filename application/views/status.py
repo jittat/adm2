@@ -146,12 +146,10 @@ def prepare_confirmation_data(applicant, admitted_major):
 def prepare_round_data():
     first_admission = False
     current_round = AdmissionRound.get_recent()
-    is_last_round = False
 
     return {
         'first_admission': first_admission,
         'current_round': current_round,
-        'is_last_round': is_last_round,
         }
 
 def prepare_admission_result_data(applicant, current_round):
@@ -264,8 +262,10 @@ def index(request):
                   'can_log_out': True }
     template_data.append(core_data)
 
-    config_data = { 'shows_score_import_status' 
-                    : settings.SHOW_SCORE_IMPORT_STATUS }
+    config_data = { 'shows_score_import_status':
+                        settings.SHOW_SCORE_IMPORT_STATUS,
+                    'submission_deadline_passed':
+                        submission_deadline_passed() }
     template_data.append(config_data)
 
     template_items = []

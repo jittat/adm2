@@ -99,16 +99,30 @@ class AdmissionRound(models.Model):
     last_date = models.DateField()
     is_available = models.BooleanField(default=False)
 
+    _recent_round = None
+    _cache_timestamp = None
+
     class Meta:
         ordering = ['-number']
 
     @staticmethod
     def get_recent():
-        rounds = AdmissionRound.objects.filter(is_available=True)
-        if len(rounds)!=0:
-            return rounds[0]
-        else:
-            return None
+        from datetime import datetime, timedelta
+
+        now = datetime.now()
+        if ((not AdmissionRound._cache_timestamp) or
+            (AdmissionRound._cache_timestamp + timedelta(minutes=1) < now)):
+            rounds = AdmissionRound.objects.filter(is_available=True)
+
+            if len(rounds)!=0:
+                AdmissionRound._recent_round = rounds[0]
+            else:
+                AdmissionRound._recent_round = None
+
+            AdmissionRound._cache_timestamp = now
+
+        return AdmissionRound._recent_round
+
 
     @staticmethod
     def time_to_recent_round_deadline(now=None):

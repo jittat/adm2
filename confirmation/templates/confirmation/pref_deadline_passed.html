@@ -1,0 +1,22 @@
+{% extends "commons/base.html" %}
+
+{% block title %}หมดเขตการยืนยันสิทธิ์{% endblock %}
+
+{% block body %}
+<div id="step-bar">
+  <ul>
+    <li class="head">หมดเขตการยืนยันสิทธิ์{% if admission_round %}สำหรับการประกาศผลรอบที่ {{ admission_round.number }}{% endif %}
+  </ul>
+</div>
+
+<p>
+  ขณะนี้ระบบยืนยันสิทธิ์และเลือกอันดับการเลื่อนสาขาปิดให้บริการแล้ว
+</p>
+<p>
+  เมื่อคณะได้ประมวลผลการเลื่อนสาขาเรียบร้อยแล้ว คณะจะประกาศผลให้ทราบตามกำหนดต่อไป
+</p>
+
+<p>
+  กลับไปยังเว็บ <a href="http://admission.eng.ku.ac.th/">admission.eng.ku.ac.th</a>
+</p>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends "commons/base.html" %}
+
+{% load adm_info %}
+
+{% block title %}ระบบยืนยันสิทธิ์{% endblock %}
+
+{% block extra-head %}
+<link rel="stylesheet" type="text/css" href="{% load adm_media %}{% static_url %}/css/front.css" />
+<script type="text/javascript" src="{% static_url %}/js/jquery.js"></script>
+{% endblock %}
+
+{% block body %}
+  {% load adm_steps %}{% step_bar "ยืนยันสิทธิ์โครงการรับตรง" %}
+
+  <div class="light-frame">
+    <b>ชื่อผู้สมัคร:</b> {{ applicant.full_name }} | <b>หมายเลขประจำตัวประชาชน:</b> {{ applicant.national_id }}<br/>
+    <b>สาขาที่ได้รับการคัดเลือกในรอบที่ {{ current_round.number }}</b>: 
+    {{ admission_result.admitted_major.number }}
+    {{ admission_result.admitted_major.name }}
+  </div>
+
+  
+
+  {% if waiver %}
+
+    <form method="post" class="light-frame" style="background: #ffe0e0;">
+      <h2>คุณได้สละสิทธิ์โครงการรับตรงแล้ว เมื่อวันที่ {{ waiver.waived_at|date:"j M" }}</h2>
+      ถ้าคุณต้องการ<b>ยกเลิกการสละสิทธิ์</b>เพื่อกลับไปป้อนข้อมูลเพื่อการยืนยันสิทธิ์ใหม่ กรุณากด <input id="unwaive_button" type="submit" name="unwaive" value="ขอยกเลิกการสละสิทธิ์การเข้าศึกษาต่อ"/>
+    </form>
+
+  {% else %}
+
+    <form method="post" class="light-frame" style="background: #ffe0e0;">
+      ถ้าคุณต้องการ <b>สละสิทธิ์การเข้าศึกษาต่อ</b> จากโครงการรับตรงนี้ กรุณากด <input id="waive_button" type="submit" name="waive" value="ขอสละสิทธิ์การเข้าศึกษาต่อ"/><br/>
+      <small>ถ้าคุณต้องการสละสิทธิ์เฉพาะสาขานี้แต่ยังต้องการให้คณะฯ พิจารณาเลื่อนอันดับให้อีกให้คุณเลือกยืนยันสิทธิ์ด้านล่าง</small>
+    </form>
+    
+    <form method="post" class="light-frame" style="background: #f0fff0;">
+      ถ้าคุณต้องการยืนยันสิทธิ์การเข้าศึกษาต่อ (รวมผู้สมัครที่ต้องการสละสิทธิ์สาขาที่ได้รับคัดเลือกรอบนี้แต่ต้องการให้พิจารณาการเลื่อนอันดับในรอบถัดไปด้วย)<br/>กรุณากรอกข้อมูลเพื่อยืนยันสิทธิ์ดังต่อไปนี้ให้ครบถ้วน
+      <div class="light-frame" style="background: white">
+        {% include "confirmation/include/student_registration_form.html" %}
+        ผู้สมัครยืนยันว่าได้กรอกข้อมูลข้างต้นตามจริง ถ้ามีการตรวจสอบในภายหลังว่ามีความจงใจกรอกข้อมูลเท็จ คณะวิศวกรรมศาสตร์ขอตัดสิทธิ์ในการเข้าศึกษาต่อจากโครงการรับตรงนี้
+      </div>
+      <div class="submission-bar">
+        <input type="submit" name="confirm" value="ยืนยันสิทธิ์และเลือกสาขาที่ขอเข้ารับการพิจารณา"/>
+      </div>
+    </form>
+
+  {% endif %}
+
+  <script type="text/javascript">
+    $("#waive_button").click(function() {
+      return confirm("คุณกำลังจะสละสิทธิ์การเข้าศึกษาต่อผ่านทางโครงการรับตรง\nแน่ใจหรือไม่?");
+    });
+    $("#unwaive_button").click(function() {
+      return confirm("คุณกำลังจะยกเลิกการสละสิทธิ์\nแน่ใจหรือไม่?");
+    });
+  </script>
+{% endblock %}

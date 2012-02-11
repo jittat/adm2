@@ -1,0 +1,8 @@
+{% if not admission_major_pref %}
+  {% include "application/status/include/new_admission_major_pref.html" %}
+{% else %}
+  {% include "application/status/include/edit_admission_major_pref.html" %}
+{% endif %}
+
+{% include "application/status/include/confirmation_warning.html" %}
+

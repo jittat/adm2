@@ -10,6 +10,7 @@
 {% block body %}
   {% load adm_steps %}{% step_bar "ตรวจสอบสถานะการสมัคร" %}
 
+  {% if not submission_deadline_passed %}
   <div class="right-box">
     {% include "application/status/include/status_menu.html" %}
     <br/>
@@ -17,6 +18,7 @@
     <br/>
     <br/>
   </div>
+  {% endif %}
 
   {% adm_submission_deadline_warning %}
 
@@ -26,7 +28,9 @@
     </div>
   {% endif %}
 
-  {% include "application/status/include/instructions.html" %}
+  {% if not submission_deadline_passed %}
+    {% include "application/status/include/instructions.html" %}
+  {% endif %}
 
   <!--- *************************** --->
 
@@ -43,7 +47,9 @@
       {% endif %}
       <hr />
     {% else %}
-
+      {% if current_round %}
+        <b>คุณไม่มีสิทธิ์เข้ารับการคัดเลือกเนื่องจากไม่ได้ชำระเงินค่าสมัคร หรือชำระไม่ทันกำหนดเวลา</b>
+      {% endif %}
     {% endif %}
   </p>
 
