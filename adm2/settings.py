@@ -232,6 +232,8 @@ EMAIL_SENDER = 'KU Eng Admission Team <jtf@ku.ac.th>'
 SHOW_SCORE_IMPORT_STATUS = True
 
 SHOW_ONLY_RESULTS = False
+LAST_ROUND_RESULT = False
+CONFIRMATION_START_DATE = datetime(2012,2,18)
 
 # used in redirect_to_index
 INDEX_PAGE = 'start-page'

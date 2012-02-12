@@ -340,6 +340,8 @@ def main(request, is_edit_registration=False):
     elif request.method=='POST' and 'unwaive' in request.POST:
 
         AdmissionWaiver.unwaive_applicant(applicant)
+        AdmissionMajorPreference.objects.filter(applicant=applicant,
+                                                round_number=current_round.number).delete()
 
         Log.create("Unwaive applicant %s from %s" % 
                    (applicant.id,request.META['REMOTE_ADDR']))

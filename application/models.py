@@ -589,12 +589,22 @@ class Major(models.Model):
         return "major_%d" % (self.id,)
 
     __major_list = None
+    __major_dict = None
 
     @staticmethod
     def get_all_majors():
         if Major.__major_list==None:
             Major.__major_list = list(Major.objects.all())
         return Major.__major_list
+
+    @staticmethod
+    def get_major_by_id(id):
+        if Major.__major_dict==None:
+            Major.__major_dict = dict([(m.id,m) for m in Major.get_all_majors()])
+        if id in Major.__major_dict:
+            return Major.__major_dict[id]
+        else:
+            return None
 
 
 class MajorPreference(models.Model):

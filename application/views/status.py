@@ -19,7 +19,7 @@ from commons.email import send_admission_status_by_mail
 from commons.email import send_final_admission_status_by_mail
 from commons.email import send_admission_status_problem_by_mail
 
-from application.models import Applicant, GPExamDate
+from application.models import Applicant, GPExamDate, Major
 from application.views import redirect_to_applicant_first_page
 from application.forms import StatusRequestForm
 
@@ -156,12 +156,12 @@ def prepare_admission_result_data(applicant, current_round):
 
         admission_major_pref = applicant.get_admission_major_preference(current_round.number)
 
-        if not admission_major_pref and not first_admission:
+        if not admission_major_pref:
             all_major_prefs = list(applicant.admission_major_preferences.all())
             if len(all_major_prefs)>0:
                 latest_admission_major_pref = all_major_prefs[0]
 
-                if admission_result:
+                if admission_result and not first_admission:
                     # accepted, copy previous pref
                     admission_major_pref = copy_previous_adm_major_pref(
                         latest_admission_major_pref, 
@@ -179,7 +179,8 @@ def prepare_admission_result_data(applicant, current_round):
 
         if admission_result:
             admitted_major = admission_result.admitted_major
-            student_registration = applicant.get_student_registration()
+
+        student_registration = applicant.get_student_registration()
 
         if not admission_result:
             results = applicant.admission_results.filter(round_number__lte=current_round.number).all()
@@ -211,8 +212,42 @@ def prepare_score_request_status(request):
         'score_requested_at': requested_at
         }
 
+
+def result_index(request):
+    submission_info = request.applicant.submission_info
+    applicant = request.applicant
+    current_round = AdmissionRound.get_recent()
+
+    admission_result = None
+    admitted_major = None
+
+    if current_round:
+        results = list(applicant.admission_results.filter(round_number=current_round.number).all())
+        if len(results)!=0:
+            admission_result = results[0]
+            if admission_result.admitted_major_id != None:
+                admitted_major = Major.get_major_by_id(admission_result.admitted_major_id)
+
+    confirmation_start_date = settings.CONFIRMATION_START_DATE
+
+    last_round = settings.LAST_ROUND_RESULT
+    return render_to_response("application/status/index_result_only.html",
+                              {'applicant': applicant,
+                               'submission_info': submission_info,
+                               'current_round': current_round,
+                               'admission_result': admission_result,
+                               'admitted_major': admitted_major,
+                               'confirmation_start_date':
+                                   confirmation_start_date,
+                               'last_round': last_round,
+                               'can_log_out': True })
+
+
 @submitted_applicant_required
 def index(request):
+    if settings.SHOW_ONLY_RESULTS:
+        return result_index(request)
+
     template_data = []
 
     STATUS_COMPONENT_FUNCTIONS = [
