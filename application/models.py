@@ -28,6 +28,14 @@ class Applicant(models.Model):
     has_logged_in = models.BooleanField(default=False)
     activation_required = models.BooleanField(default=False)
 
+    # additional result
+
+    additional_hashed_password = models.CharField(max_length=100,
+                                                  blank=True,
+                                                  null=True,
+                                                  default=None)
+    has_additional_result = models.BooleanField(default=False)
+
     # application data
 
     is_submitted = models.BooleanField(default=False)
