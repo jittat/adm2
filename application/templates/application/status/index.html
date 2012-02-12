@@ -35,6 +35,11 @@
   <!--- *************************** --->
 
   <p>
+    {% if current_round %}
+      {% with student_registration as registration %}
+        {% include "confirmation/include/confirm_notice_float.html" %}
+      {% endwith %}
+    {% endif %}
     <b>ชื่อผู้สมัคร:</b> {{ applicant.full_name }} &nbsp;&nbsp;
     <b>หมายเลขประจำตัวประชาชน:</b> {{ applicant.national_id }}<br/>
 

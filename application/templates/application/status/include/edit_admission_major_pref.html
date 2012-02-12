@@ -34,8 +34,7 @@
   {% if confirmation_complete %}
     <p>
       <h2>คุณได้ยืนยันสิทธิ์แล้ว</h2>
-      คุณได้ชำระเงินค่ายืนยันสิทธิ์เรียบร้อยแล้ว และเราได้รับข้อมูลจากทางธนาคารเมื่อวันที่ {{ recent_confirmation.confirmed_at|date:"d F" }} 2554<br/>
-      สำหรับผู้ที่ชำระเงินเพื่อยืนยันสิทธิ์แล้ว คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์จะส่งรายชื่อไปยัง สกอ. เพื่อตัดสิทธิ์การสอบระบบกลาง (อ่านรายละเอียดด้านล่าง)
+      คุณได้กรอกข้อมูลเพื่อยืนยันสิทธิ์เรียบร้อยแล้วเมื่อวันที่ {{ recent_confirmation.confirmed_at|date:"d F" }} 2554<br/>
     </p>
   {% else %}
     <p>
@@ -65,11 +64,11 @@
 
 {% if first_admission and is_confirmation_time_left %}
   <p>
-    คุณสามารถเปลี่ยนการเลือกของคุณได้ในรอบนี้ได้ ภายในวันที่ {{ current_round.last_date|date:"d F" }} 2554
+    คุณสามารถเปลี่ยนการเลือกของคุณรวมทั้งขอสละสิทธิ์ได้จนสิ้นสุดวันที่ {{ current_round.last_date|date:"d F" }} 2554
   </p>
 
   <center>
-    <a href="{% url confirmation-pref %}">
+    <a href="{% url confirmation-app-index %}">
       <div class="button-blue medium">เปลี่ยนการเลือก</div>
     </a>
   </center>

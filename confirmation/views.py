@@ -232,6 +232,29 @@ def student_registration(request):
                                 'form': form })
 
 
+def save_best_admission_major_pref(applicant, 
+                                   admission_round, 
+                                   admission_result):
+    AdmissionMajorPreference.objects.filter(applicant=applicant,
+                                            round_number=admission_round.number).delete()
+    pref = AdmissionMajorPreference.new_for_applicant(applicant,
+                                                      admission_result=admission_result)
+    pref.round_number = admission_round.number
+    pref.save()
+
+
+def save_waive_admission_major_pref(applicant, 
+                                    admission_round):
+    AdmissionMajorPreference.objects.filter(applicant=applicant,
+                                            round_number=admission_round.number).delete()
+    preferred_majors = applicant.preference.get_major_list()
+
+    pref = AdmissionMajorPreference(applicant=applicant,
+                                    round_number=admission_round.number)
+    pref.is_accepted_list = [0]*len(preferred_majors)
+    pref.set_ptype_cache()
+
+
 @submitted_applicant_required
 def main(request, is_edit_registration=False):
     applicant = request.applicant
@@ -280,14 +303,20 @@ def main(request, is_edit_registration=False):
             AdmissionConfirmation.create_for(applicant,
                                              current_round.number)
 
-            Log.create("Confirm applicant %s from %s" % 
-                       (applicant.id,request.META['REMOTE_ADDR']))
-
             send_admission_confirmation_by_email(applicant)
 
             if not is_best_major:
+                Log.create("Confirm applicant %s from %s" % 
+                           (applicant.id,request.META['REMOTE_ADDR']))
+
                 return redirect('confirmation-pref')
             else:
+                Log.create("Confirm applicant %s (for best) from %s" % 
+                           (applicant.id,request.META['REMOTE_ADDR']))
+
+                save_best_admission_major_pref(applicant, 
+                                               current_round,
+                                               admission_result)
                 return redirect('status-index')
 
     elif request.method=='POST' and 'waive' in request.POST:
@@ -297,6 +326,8 @@ def main(request, is_edit_registration=False):
             registration.delete()
         AdmissionConfirmation.delete_for(applicant,
                                          current_round.number)
+        save_waive_admission_major_pref(applicant,
+                                        current_round)
 
         Log.create("Waive applicant %s from %s" % 
                    (applicant.id,request.META['REMOTE_ADDR']))

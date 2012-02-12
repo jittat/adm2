@@ -114,22 +114,12 @@ def prepare_ticket_random_seed(request):
 
 
 def prepare_confirmation_data(applicant, admitted_major):
-    confirmations = applicant.admission_confirmations.all()
-    total_amount_confirmed = sum([c.paid_amount for c in confirmations])
-
-    if admitted_major and (total_amount_confirmed >= admitted_major.confirmation_amount):
-        confirmation_complete = True
-        additional_payment = 0
-    else:
-        confirmation_complete = False
-        if admitted_major:
-            additional_payment = admitted_major.confirmation_amount - total_amount_confirmed
-        else:
-            additional_payment = 0
-
+    confirmations = list(applicant.admission_confirmations.all())
     if len(confirmations)!=0:
+        confirmation_complete = True
         recent_confirmation = confirmations[0]
     else:
+        confirmation_complete = False
         recent_confirmation = None
 
     is_confirmation_time_left = (AdmissionRound.time_to_recent_round_deadline() > timedelta(0))
@@ -137,18 +127,13 @@ def prepare_confirmation_data(applicant, admitted_major):
     return {
         'confirmation_complete': confirmation_complete,
         'recent_confirmation': recent_confirmation,
-        'confirmations': confirmations,
-        'total_amount_confirmed': total_amount_confirmed,
-        'additional_payment': additional_payment,
         'is_confirmation_time_left': is_confirmation_time_left,
         }
              
 def prepare_round_data():
-    first_admission = False
     current_round = AdmissionRound.get_recent()
 
     return {
-        'first_admission': first_admission,
         'current_round': current_round,
         }
 
@@ -160,6 +145,7 @@ def prepare_admission_result_data(applicant, current_round):
     latest_admission_result = None
     is_adm_major_pref_copied_from_prev_round = False
     student_registration = None
+    first_admission = False
 
     accepting_majors = None
 
@@ -170,7 +156,7 @@ def prepare_admission_result_data(applicant, current_round):
 
         admission_major_pref = applicant.get_admission_major_preference(current_round.number)
 
-        if not admission_major_pref:
+        if not admission_major_pref and not first_admission:
             all_major_prefs = list(applicant.admission_major_preferences.all())
             if len(all_major_prefs)>0:
                 latest_admission_major_pref = all_major_prefs[0]
@@ -201,6 +187,7 @@ def prepare_admission_result_data(applicant, current_round):
                 latest_admission_result = results[len(results)-1]
     return {
         'admission_result': admission_result,
+        'first_admission': first_admission,
         'latest_admission_result':
             latest_admission_result,
         'admission_major_pref': admission_major_pref,
