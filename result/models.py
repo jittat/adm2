@@ -318,3 +318,12 @@ class NIETSScores(models.Model):
         pat3, p3s = self.get_best_normalized_score('pat3')
         return [gs, p1s, p3s]
 
+
+class AdditionalResult(models.Model):
+    applicant = models.OneToOneField(Applicant,
+                                     related_name='additional_result')
+    name = models.CharField(max_length=200)
+
+
+    def __unicode__(self):
+        return self.name
