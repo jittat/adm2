@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.http import HttpResponseRedirect, HttpResponseForbidden
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django import forms
@@ -87,6 +87,9 @@ def redirect_to_applicant_first_page(applicant):
     TODO: doc_menu for applicant that start submitting docs, but not
     complete.
     """
+    if applicant.has_additional_result and not applicant.is_submitted:
+        return redirect('confirmation-quota-index')
+
     if not applicant.is_submitted:
         return redirect_to_first_form()
     else:

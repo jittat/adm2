@@ -56,7 +56,9 @@ def login(request):
                         'application/registration/activation-required.html',
                         { 'email': email })
                 elif (applicant.check_password(passwd) or
-                      (settings.DEBUG and settings.FAKE_LOGIN)):
+                      (settings.DEBUG and settings.FAKE_LOGIN) or
+                      (settings.USE_ADDITIONAL_PASSWORD and
+                       applicant.check_additional_password(passwd))):
                     # authenticated
 
                     if not applicant.has_logged_in:

@@ -1,0 +1,62 @@
+{% extends "commons/base.html" %}
+
+{% load adm_info %}
+
+{% block title %}ยืนยันสิทธิ์การเข้าศึกษาต่อสำหรับโครงการโควตา{% endblock %}
+
+{% block extra-head %}
+<link rel="stylesheet" type="text/css" href="{% load adm_media %}{% static_url %}/css/front.css" />
+<script type="text/javascript" src="{% static_url %}/js/jquery.js"></script>
+{% endblock %}
+
+{% block body %}
+  {% load adm_steps %}{% step_bar "กรอกข้อมูลเพื่อยืนยันสิทธิ์" %}
+  <div class="light-frame">
+    {% include "confirmation/include/confirm_notice_float.html" %}
+    <b>ชื่อผู้สมัคร:</b> {{ applicant.full_name }} | <b>หมายเลขประจำตัวประชาชน:</b> {{ applicant.national_id }}<br/>
+    <b>คุณผ่านการคัดเลือกเข้าศึกษาต่อในสาขา: {{ additional_result.name }}</b>
+  </div>
+
+  {% if can_edit %}
+    <div class="normal-msg" style="margin-top:2px">
+      {% if not registration %}
+        คุณยังไม่ได้ยืนยันสิทธิ์ กรุณากรอกข้อมูลด้านล่างให้ครบถ้วนเพื่อยืนยันสิทธิ์เข้าศึกษาต่อในสาขาที่ผ่านการคัดเลือก
+      {% else %}
+        <form method="post">
+          <b>คุณได้ยืนยันสิทธิ์แล้ว</b> อย่างไรก็ตามคุณสามารถขอสละสิทธิ์ได้โดยกดปุ่มนี้ <input id="waive-button" type="submit" name="waive" value="ขอสละสิทธิ์การเข้าศึกษาต่อ"/>
+        </form>
+        <small>
+          คุณจะได้รับรหัสผ่านสำหรับเข้าระบบเคลียริงเฮาส์หลังจากวันที่ 27 ก.พ. 2555 เพื่อนำไปใช้ยืนยันสิทธิ์เข้าศึกษาต่อผ่านระบบเคลียริงเฮาส์ระหว่างวันที่ 11 มี.ค. 2555 ถึง 17 มี.ค. 2555 &nbsp;
+          <b>คุณจะต้องเข้าไปยืนยันสิทธิ์ผ่านระบบเคลียริงเฮาส์ไม่เช่นนั้นจะถือว่าคุณสละสิทธิ์จากโครงการนี้</b>
+        </small>
+      {% endif %}
+    </div>
+    <form class="light-frame" action="" method="post">
+      {% if registration %}
+        <small>คุณสามารถแก้ไขข้อมูลได้ จากนั้นให้กดปุ่มด้านล่างเพื่อจัดเก็บ</small>
+      {% endif %}
+      {% include "confirmation/include/student_registration_form.html" %}
+      <div class="submission-bar">
+        <input type="submit" name="submit" value="เก็บข้อมูล"/>
+        <input type="submit" name="cancel" value="ยกเลิก"/>
+      </div>
+    </form>
+  {% else %}
+    <div class="normal-msg" style="margin-top:2px">
+      {% if not registration %}
+        <b>หมดเวลาการยืนยันสิทธิ์แล้ว</b> คุณได้สละสิทธิ์การเข้าศึกษาต่อในสาขาดังกล่าว
+      {% else %}
+        <b>คุณได้ยืนยันสิทธิ์แล้ว</b> 
+        คุณจะได้รับรหัสผ่านสำหรับเข้าระบบเคลียริงเฮาส์หลังจากวันที่ 27 ก.พ. 2555 เพื่อนำไปใช้ยืนยันสิทธิ์เข้าศึกษาต่อผ่านระบบเคลียริงเฮาส์ระหว่างวันที่ 11 มี.ค. 2555 ถึง 17 มี.ค. 2555 &nbsp; 
+          <b>คุณจะต้องเข้าไปยืนยันสิทธิ์ผ่านระบบเคลียริงเฮาส์ไม่เช่นนั้นจะถือว่าคุณสละสิทธิ์จากโครงการนี้</b>
+      {% endif %}
+    </div>    
+
+  {% endif %}
+
+  <script type="text/javascript">
+    $("#waive-button").click(function(){
+      return confirm("คุณแน่ใจที่จะสละสิทธิ์หรือไม่?");
+    });
+  </script>
+{% endblock %}

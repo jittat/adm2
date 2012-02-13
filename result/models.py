@@ -323,7 +323,7 @@ class AdditionalResult(models.Model):
     applicant = models.OneToOneField(Applicant,
                                      related_name='additional_result')
     name = models.CharField(max_length=200)
-
+    round_number = models.IntegerField()
 
     def __unicode__(self):
         return self.name

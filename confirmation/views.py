@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 
-from commons.decorators import submitted_applicant_required
+from commons.decorators import submitted_applicant_required, applicant_required
 from commons.utils import admission_major_pref_deadline_passed, round2_confirmation_deadline_passed
 from commons.models import Log
 from commons.email import send_admission_confirmation_by_email, send_admission_waive_by_email, send_admission_unwaive_by_email
@@ -364,4 +364,53 @@ def main(request, is_edit_registration=False):
                                 'is_best_major': is_best_major,
                                 'registration': registration,
                                 'waiver': waiver,
-                                'form': form })
+                                'form': form,
+                                'can_log_out': True})
+
+
+@applicant_required
+def quota_confirm(request):
+    """
+    confirmation page for quota-only applicants
+    """
+    applicant = request.applicant
+
+    if applicant.is_submitted or not applicant.has_additional_result:
+        return HttpResponseForbidden()
+
+    current_round = AdmissionRound.get_recent()
+    round_number = current_round.number
+
+    additional_result = applicant.additional_result
+    is_result_for_current_round = (additional_result.round_number == round_number)
+
+    can_edit = (not admission_major_pref_deadline_passed()) and is_result_for_current_round
+
+    registration = applicant.get_student_registration()
+
+    if request.method=='POST' and not can_edit:
+        return HttpResponseForbidden()
+
+    if request.method=='POST' and 'submit' in request.POST:
+        form = StudentRegistrationForm(request.POST,
+                                       instance=registration)
+        if form.is_valid():
+            registration = form.save(commit=False)
+            registration.applicant = applicant
+            registration.save()
+            return redirect('confirmation-quota-index')
+    elif request.method=='POST' and 'waive' in request.POST:
+        if registration:
+            registration.delete()
+        return redirect('confirmation-quota-index')
+    else:
+        form = StudentRegistrationForm(instance=registration)
+
+    return render_to_response('confirmation/quota/student_registration.html',
+                              { 'applicant': applicant,
+                                'can_edit': can_edit,
+                                'form': form,
+                                'additional_result': additional_result,
+                                'registration': registration,
+                                'can_log_out': True })
+

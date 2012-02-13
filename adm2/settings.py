@@ -250,6 +250,11 @@ MAX_UPLOADED_DOC_FILE_SIZE = 2000000
 ADM_RESULT_MAIL_SUBJECT = ''
 ADM_RESULT_MAIL_BUILD_BODY = None
 
+# ------------------
+# additional result confirmation
+
+USE_ADDITIONAL_PASSWORD = False
+
 DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False
 }

@@ -17,6 +17,8 @@ urlpatterns = patterns(
         {'is_nomove': False },
         name='confirmation-nomove-cancel'),
 
+    url(r'^quota/$', 'quota_confirm', name='confirmation-quota-index'),
+
     #url(r'^registration/$', 'student_registration', name='confirmation-student-registration'),
 )
 

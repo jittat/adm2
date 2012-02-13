@@ -270,15 +270,22 @@ class Applicant(models.Model):
         self.set_password(password)
         return password
 
-    def check_password(self, password):
+    def check_password(self, password, hashed_password=''):
         import hashlib
 
-        salt, enc_passwd = self.hashed_password.split('$')
+        if hashed_password=='':
+            hashed_password = self.hashed_password
+
+        salt, enc_passwd = hashed_password.split('$')
 
         try:
             return enc_passwd == (hashlib.sha1(salt + password).hexdigest())
         except UnicodeEncodeError:
             return False
+
+
+    def check_additional_password(self, password):
+        return self.check_password(password, self.additional_hashed_password)
 
 
     def can_request_password(self):
