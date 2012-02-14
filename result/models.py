@@ -173,6 +173,8 @@ class ScoreStat:
         self.max_score = max_score
 
     def cal_score(self, x):
+        if x==-1:
+            return 0
         z = (x - self.mean) / self.sd
         return 0.5 + 0.5 * z / ScoreStat.SUPER_ZMAX
 
@@ -188,9 +190,9 @@ SCORE_STATS = [
     #  'pat3': ScoreStat(86.73, 24.64, 237) },
 
     # mar53
-    { 'gat': ScoreStat(130.82, 58.27, 295),
-      'pat1': ScoreStat(63.97, 30.86, 294),
-      'pat3': ScoreStat(103.19, 42.46, 276) },
+    { 'gat': ScoreStat(130.78, 58.32, 295),
+      'pat1': ScoreStat(64.00, 30.88, 294),
+      'pat3': ScoreStat(103.20, 42.47, 276) },
 
     # jul53
     { 'gat': ScoreStat(128.43, 61.32, 300),
@@ -223,9 +225,9 @@ class NIETSScores(models.Model):
 
     @staticmethod
     def extract_gatpat_scores(score_list):
-        scores = {'gat': [0] * EXAM_COUNT,
-                  'pat1': [0] * EXAM_COUNT,
-                  'pat3': [0] * EXAM_COUNT}
+        scores = {'gat': [-1] * EXAM_COUNT,
+                  'pat1': [-1] * EXAM_COUNT,
+                  'pat3': [-1] * EXAM_COUNT}
 
         i = 0
         for e in range(EXAM_COUNT):
@@ -266,6 +268,8 @@ class NIETSScores(models.Model):
             for exam_name in exams:
                 x = all_scores[e][i]
                 n = SCORE_STATS[e][exam_name].cal_score(x) * 10000
+                if x==-1:
+                    x = None
                 rscores[exam_name] = {
                     'raw': x,
                     'normalized': n,
@@ -279,7 +283,8 @@ class NIETSScores(models.Model):
             scores.append(rscores)
 
         for ex in exams:
-            best_scores[ex][1]['selected'] = True
+            if best_scores[ex][1]:
+                best_scores[ex][1]['selected'] = True
         return scores        
 
     def get_best_normalized_score(self, test_name):
@@ -299,13 +304,6 @@ class NIETSScores(models.Model):
         gat, gs = self.get_best_normalized_score('gat')
         pat1, p1s = self.get_best_normalized_score('pat1')
         pat3, p3s = self.get_best_normalized_score('pat3')
-
-        if gs == 0:
-            gat = 0
-        if p1s == 0:
-            pat1 = 0
-        if p3s == 0:
-            pat3 = 0
 
         score = (gat * 0.25 +
                  pat1 * 0.25 + 

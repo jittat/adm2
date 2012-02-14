@@ -70,7 +70,7 @@ def result_exists(results,nat):
 
 def convert_data_field(x):
     if x=='-' or x=='':
-        return 0
+        return -1
     else:
         if float(x)==0:
             print 'zero'
@@ -87,7 +87,7 @@ def combine_rounds(results,nat):
         if nat in results[i]:
             scores += convert_scores(results[i][nat])
         else:
-            scores += [0,0,0]
+            scores += [-1,-1,-1]
     return scores
 
 def main():
