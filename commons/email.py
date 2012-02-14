@@ -751,3 +751,31 @@ u"""เรียนคุณ %(firstname)s %(lastname)s
     if AUTO_ADD_BR:
         message = message.replace('\n','<br/>\n')
     adm_send_mail(applicant.get_email(), subject, message, force)
+
+
+def send_payment_reminder_by_email(applicant, force=False):
+    """
+    sends payment reminder
+    """
+    subject = 'แจ้งเตือนกำหนดการชำระเงินค่าสมัคร โครงการรับตรง วิศวกรรมศาสตร์ ม.เกษตร'
+
+    message = (
+u"""เรียนคุณ %(firstname)s %(lastname)s
+
+จดหมายนี้แจ้งเตือนผู้สมัครว่ากำหนดการชำระเงินค่าสมัครโครงการรับตรงคือวันที่ 15 ก.พ. 2555
+ผู้สมัครจะต้องชำระเงินภายในวันดังกล่าว จึงจะมีสิทธิ์เข้ารับการคัดเลือกผ่านโครงการนี้
+
+ถ้าผู้สมัครชำระเงินในวันที่ 14 ก.พ. 2555 แล้ว ทางโครงการต้องขออภัยที่ผู้สมัครได้รับอีเมล์นี้ด้วย
+สำหรับสถานะการชำระเงินนั้น ทางโครงการจะได้รับข้อมูลจากธนาคารในวันที่ 15 ช่วงเช้า
+คาดว่าผู้สมัครจะสามารถเข้ามาตรวจสอบได้ภายหลังเวลา 10:00 น.
+
+ถ้ามีข้อสงสัยสามารถสอบถามได้ทางอีเมล์ %(admin_email)s
+
+-โครงการรับตรง คณะวิศวกรรมศาสตร์"""
+% { 'firstname': applicant.first_name, 
+    'lastname': applicant.last_name,
+    'admin_email': admin_email() }
+)
+    if AUTO_ADD_BR:
+        message = message.replace('\n','<br/>\n')
+    adm_send_mail(applicant.get_email(), subject, message, force)
