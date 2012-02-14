@@ -375,7 +375,7 @@ def quota_confirm(request):
     """
     applicant = request.applicant
 
-    if applicant.is_submitted or not applicant.has_additional_result:
+    if not applicant.has_additional_result:
         return HttpResponseForbidden()
 
     current_round = AdmissionRound.get_recent()

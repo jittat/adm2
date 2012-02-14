@@ -87,7 +87,7 @@ def redirect_to_applicant_first_page(applicant):
     TODO: doc_menu for applicant that start submitting docs, but not
     complete.
     """
-    if applicant.has_additional_result and not applicant.is_submitted:
+    if applicant.has_additional_result:
         return redirect('confirmation-quota-index')
 
     if not applicant.is_submitted:
