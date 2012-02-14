@@ -10,13 +10,20 @@ from result.models import NIETSScores
 from application.models import Applicant
 
 def main():
+    uses_nat_id = False
+    if len(sys.argv) > 1 and sys.argv[1]=='--nat':
+        uses_nat_id = True
+
     applicants = Applicant.objects.all()
     c = 0
     for a in applicants:
         if not a.is_submitted:
             continue
 
-        l = [c,a.id,len(a.preference.majors)] + a.preference.majors
+        k = a.id
+        if uses_nat_id:
+            k = a.national_id
+        l = [c,k,len(a.preference.majors)] + a.preference.majors
 
         print ','.join([str(i) for i in l])
 
