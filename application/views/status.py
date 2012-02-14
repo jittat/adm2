@@ -248,6 +248,11 @@ def index(request):
     if settings.SHOW_ONLY_RESULTS:
         return result_index(request)
 
+    if request.applicant.has_additional_result:
+        additional_result = applicant.additional_result
+        if not additional_result.is_waived:
+            return redirect('confirmation-quota-index')
+
     template_data = []
 
     STATUS_COMPONENT_FUNCTIONS = [

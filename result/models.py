@@ -324,6 +324,10 @@ class AdditionalResult(models.Model):
                                      related_name='additional_result')
     name = models.CharField(max_length=200)
     round_number = models.IntegerField()
+    is_waived = models.BooleanField(default=False)
+    waived_at = models.DateTimeField(blank=True,
+                                     null=True,
+                                     default=None)
 
     def __unicode__(self):
         return self.name
