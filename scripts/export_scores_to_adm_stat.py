@@ -10,9 +10,8 @@ from result.models import NIETSScores
 from application.models import Applicant
 
 def main():
-    uses_nat_id = False
-    if len(sys.argv) > 1 and sys.argv[1]=='--nat':
-        uses_nat_id = True
+    uses_nat_id = ('--nat' in sys.argv)
+    all_submitted_applicants = ('--all' in sys.argv)
 
     applicants = Applicant.objects.all()
     c = 0
@@ -21,6 +20,9 @@ def main():
             niets_scores = a.NIETS_scores
         except:
             niets_scores = None
+
+        if not all_submitted_applicants and not a.is_eligible():
+            continue
 
         if niets_scores and niets_scores.is_request_successful:
             k = a.id
