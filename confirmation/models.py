@@ -225,6 +225,9 @@ TITLE_CHOICES = [
     (u'นาง', u'นาง'),
     ]
 
+SCHOOL_TYPE_CHOICES = [(u'ไทย',u'ไทย'),
+                       (u'นานาชาติ',u'นานาชาติ')]
+
 class StudentRegistration(models.Model):
     applicant = models.OneToOneField(Applicant,
                                     related_name='student_registration')
@@ -247,7 +250,6 @@ class StudentRegistration(models.Model):
                                          verbose_name=u'เบอร์โทรศัพท์มือถือ',
                                          blank=True)
     father_title = models.CharField(max_length=10,
-                                    choices=TITLE_CHOICES,
                                     verbose_name="คำนำหน้าชื่อบิดา")
     father_first_name = models.CharField(max_length=200,
                                          verbose_name=u'ชื่อบิดา')
@@ -257,7 +259,6 @@ class StudentRegistration(models.Model):
                                           verbose_name=u'เลขบัตรประชาชนบิดา')
 
     mother_title = models.CharField(max_length=10,
-                                    choices=TITLE_CHOICES,
                                     verbose_name="คำนำหน้าชื่อมารดา")
     mother_first_name = models.CharField(max_length=200,
                                          verbose_name=u'ชื่อมารดา')
@@ -265,6 +266,14 @@ class StudentRegistration(models.Model):
                                         verbose_name=u'นามสกุลมารดา')
     mother_national_id = models.CharField(max_length=20,
                                           verbose_name=u'เลขบัตรประชาชนมารดา')
+
+    address_avenue = models.CharField(max_length=50,
+                                      blank=True,
+                                      verbose_name=u'ซอย (เพิ่มเติมจากข้อมูลที่อยู่ที่เคยให้ไว้)')
+    school_type = models.CharField(max_length=15,
+                                   choices=SCHOOL_TYPE_CHOICES,
+                                   verbose_name=u'ประเภทโรงเรียน')
+    GPA = models.FloatField(verbose_name=u'GPA')
 
     def validate(self, errors=None):
         if errors==None:

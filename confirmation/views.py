@@ -203,6 +203,12 @@ class StudentRegistrationForm(ModelForm):
         model = StudentRegistration
         exclude = ('applicant')
 
+        widgets = {
+            'father_title': forms.TextInput(attrs={'size': 2}),
+            'mother_title': forms.TextInput(attrs={'size': 2}),
+            }
+
+
 @submitted_applicant_required
 def student_registration(request):
 

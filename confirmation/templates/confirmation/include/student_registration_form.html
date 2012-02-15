@@ -12,6 +12,8 @@
       {{ form.religion.errors }}
     </p>
     <p>
+      {{ form.address_avenue.label }}: {{ form.address_avenue }} 
+      {{ form.address_avenue.errors }}<br/>
       {{ form.birth_place.label }} (จังหวัด): {{ form.birth_place }} 
       {{ form.birth_place.errors }}<br/>
       {{ form.home_phone_number.label }}: {{ form.home_phone_number }}
@@ -20,12 +22,21 @@
       {{ form.cell_phone_number.errors }}
     </p>
     <p>
+      <b>ข้อมูลการศึกษา:</b>
+      {{ form.school_type.label }}: {{ form.school_type }}
+      {{ form.school_type.errors }} &nbsp;&nbsp;
+      {{ form.GPA.label }} (เท่าที่ทราบขณะนี้): {{ form.GPA }}
+      {{ form.GPA.errors }} &nbsp;&nbsp;
+      <br/>
+    </p>
+    <p>
       <b>ข้อมูลบิดา:</b>
       คำนำหน้า {{ form.father_title }} 
       ชื่อ: {{ form.father_first_name }} {{ form.father_first_name.errors }}
       นามสกุล: {{ form.father_last_name }} {{ form.father_last_name.errors }}<br/>
       หมายเลขบัตรประจำตัวประชาชนบิดา: {{ form.father_national_id }} 
       {{ form.father_national_id.errors }}
+      <small>ถ้าไม่มีหมายเลขบัตรประชาชนให้ใส่รหัสยืนยันตัวตนอื่น ๆ เช่นหมายเลขพาสปอร์ต</small>
     </p>
     <p>
       <b>ข้อมูลมารดา:</b>
@@ -34,4 +45,5 @@
       นามสกุล: {{ form.mother_last_name }} {{ form.mother_last_name.errors }}<br/>
       หมายเลขบัตรประจำตัวประชาชนมารดา: {{ form.mother_national_id }} 
       {{ form.mother_national_id.errors }}
+      <small>ถ้าไม่มีหมายเลขบัตรประชาชนให้ใส่รหัสยืนยันตัวตนอื่น ๆ เช่นหมายเลขพาสปอร์ต</small>
     </p>
