@@ -779,3 +779,83 @@ u"""เรียนคุณ %(firstname)s %(lastname)s
     if AUTO_ADD_BR:
         message = message.replace('\n','<br/>\n')
     adm_send_mail(applicant.get_email(), subject, message, force)
+
+
+def send_score_confirmation_by_email(applicant, force=False):
+    """
+    sends score confirmation
+    """
+    subject = 'แจ้งยืนยันคะแนน โครงการรับตรง วิศวกรรมศาสตร์ ม.เกษตร'
+
+    try:
+        sc = applicant.NIETS_scores.get_score()
+    except:
+        return
+
+    message = (
+u"""เรียนคุณ %(firstname)s %(lastname)s
+
+จดหมายฉบับนี้แจ้งผู้สมัครว่าทางคณะวิศวกรรมศาสตร์ได้ดึงคะแนนจากสทศ. เรียบร้อยแล้ว
+
+คะแนนที่จะใช้ในการคัดเลือกของผู้สมัครคือ %(score).3f
+
+ผู้สมัครสามารถอ่านวิธีการคำนวณคะแนนได้จากลิงก์
+http://admission.eng.ku.ac.th/2555/admission/direct/criteria
+และทดลองคำนวณคะแนนได้ที่
+http://admission.eng.ku.ac.th/2555/admission/direct/score-cal
+
+ถ้ามีข้อสงสัยสามารถสอบถามได้ทางอีเมล์ %(admin_email)s
+
+-โครงการรับตรง คณะวิศวกรรมศาสตร์"""
+% { 'firstname': applicant.first_name, 
+    'lastname': applicant.last_name,
+    'score': sc,
+    'admin_email': admin_email() }
+)
+    if AUTO_ADD_BR:
+        message = message.replace('\n','<br/>\n')
+    adm_send_mail(applicant.get_email(), subject, message, force,
+                  priority='low')
+
+
+def admission_result_round1_mail_body(applicant):
+    result = applicant.get_latest_admission_result()
+    
+    if not result:
+        return u"""เรียน คุณ %(first_name)s %(last_name)s
+
+คุณไม่ผ่านการคัดเลือกเข้าศึกษาต่อโครงการรับตรง ในรอบที่ 1
+
+อย่างไรก็ตาม ในวันที่ 24 ก.พ. 2555 จะมีการประกาศผู้มีสิทธิ์เข้าศึกษาต่อรอบที่ 2 
+ทางทีมงานจะแจ้งผลทางอีเมล์และผู้สมัครสามารถตรวจสอบผลรอบสองได้จากเว็บ
+http://admission.eng.ku.ac.th/adm/
+ในวันดังกล่าว
+
+ด้วยความเคารพ
+-ทีมงานเว็บรับสมัคร""" % { 'first_name': applicant.first_name,
+                       'last_name': applicant.last_name }
+
+    else:
+        return u"""เรียน คุณ %(first_name)s %(last_name)s
+
+ขอแสดงความยินดีด้วย คุณผ่านการคัดเลือกให้เข้าศึกษาต่อโครงการรับตรง รอบที่ 1
+สาขาที่ได้รับการคัดเลือก: %(major)s
+
+คุณจะต้องเข้าระบบยืนยันสิทธิ์ออนไลน์ที่
+http://admission.eng.ku.ac.th/adm/
+เพื่อยืนยันสิทธิ์ในวันที่ 18 - 21 ก.พ. 2555 โดยป้อนข้อมูลเพิ่มเติมสำหรับการเคลียริงเฮาส์
+และเลือกทางเลือกในการพิจารณาสาขาในการจัดอันดับรอบต่อไป
+
+อ่านรายละเอียดเกี่ยวกับการยืนยันสิทธิ์ได้ที่ http://admission.eng.ku.ac.th/2555/admission/direct/confirmation
+
+เมื่อผู้สมัครได้ยืนยันสิทธิ์กับทางคณะวิศวกรรมศาสตร์แล้ว ในวันที่ 27 ก.พ. 2555 ผู้สมัครจะได้รหัสยืนยันสิทธิ์ผ่านระบบเคลียริงเฮาส์ของสอท.
+ซึ่งผู้สมัครจะต้องเข้าระบบไปยืนยันสิทธิ์อีกครั้งในวันที่ 11 - 17 มีนาคม 2555  จึงจะมีสิทธิ์เข้าศึกษาต่อในโครงการรับตรง
+
+ในวันที่ 28 - 29 ก.พ. 2555 คณะวิศวกรรมศาสตร์จัดกิจกรรมโครงการเลือกแนวทางวางอนาคต Open House ผู้สมัครที่สนใจเยี่ยมชมคณะสามารถเข้าร่วมงานได้
+
+อนึ่ง ในปีการศึกษา 2555 นี้ โครงการรับตรง คณะวิศวกรรมศาสตร์ไม่มีการเก็บเงินค่าประกันสิทธิ์แต่อย่างใด
+
+ด้วยความเคารพ
+-ทีมงานเว็บรับสมัคร""" % { 'first_name': applicant.first_name,
+                       'last_name': applicant.last_name,
+                       'major': result.admitted_major.name }
