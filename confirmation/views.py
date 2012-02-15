@@ -307,12 +307,14 @@ def main(request, is_edit_registration=False):
 
             if not is_best_major:
                 Log.create("Confirm applicant %s from %s" % 
-                           (applicant.id,request.META['REMOTE_ADDR']))
+                           (applicant.id,request.META['REMOTE_ADDR']),
+                           applicant_id=applicant.id)
 
                 return redirect('confirmation-pref')
             else:
                 Log.create("Confirm applicant %s (for best) from %s" % 
-                           (applicant.id,request.META['REMOTE_ADDR']))
+                           (applicant.id,request.META['REMOTE_ADDR']),
+                           applicant_id=applicant.id)
 
                 save_best_admission_major_pref(applicant, 
                                                current_round,
@@ -330,7 +332,8 @@ def main(request, is_edit_registration=False):
                                         current_round)
 
         Log.create("Waive applicant %s from %s" % 
-                   (applicant.id,request.META['REMOTE_ADDR']))
+                   (applicant.id,request.META['REMOTE_ADDR']),
+                   applicant_id=applicant.id)
 
         send_admission_waive_by_email(applicant)
 
@@ -344,7 +347,8 @@ def main(request, is_edit_registration=False):
                                                 round_number=current_round.number).delete()
 
         Log.create("Unwaive applicant %s from %s" % 
-                   (applicant.id,request.META['REMOTE_ADDR']))
+                   (applicant.id,request.META['REMOTE_ADDR']),
+                   applicant_id=applicant.id)
 
         send_admission_unwaive_by_email(applicant)
 
@@ -368,6 +372,33 @@ def main(request, is_edit_registration=False):
                                 'can_log_out': True})
 
 
+def quota_choice(request, applicant, admission_result):
+    current_round = AdmissionRound.get_recent()
+    round_number = current_round.number
+
+    additional_result = applicant.additional_result
+
+    if request.method=='POST':
+        if request.POST['major_select']=='quota':
+            AdmissionWaiver.waive_applicant(applicant)
+            Log.create("Waive applicant %s to quota from %s" % 
+                       (applicant.id, request.META['REMOTE_ADDR']),
+                       applicant_id=applicant.id)
+            return redirect('status-index')           
+
+        if request.POST['major_select']=='direct':
+            additional_result.is_waived = True
+            additional_result.save()
+            Log.create("Waive applicant %s to direct from %s" % 
+                       (applicant.id, request.META['REMOTE_ADDR']),
+                       applicant_id=applicant.id)
+            return redirect('status-index')           
+
+    return render_to_response('confirmation/quota/choices.html',
+                              { 'applicant': applicant,
+                                'admission_result': admission_result,
+                                'additional_result': additional_result,
+                                'can_log_out': True })
 @applicant_required
 def quota_confirm(request):
     """
@@ -380,6 +411,11 @@ def quota_confirm(request):
 
     current_round = AdmissionRound.get_recent()
     round_number = current_round.number
+
+    admission_result = applicant.get_latest_admission_result()
+
+    if admission_result and not AdmissionWaiver.is_waived(applicant):
+        return quota_choice(request, applicant, admission_result)
 
     additional_result = applicant.additional_result
     is_result_for_current_round = (additional_result.round_number == round_number)
@@ -411,6 +447,49 @@ def quota_confirm(request):
                                 'can_edit': can_edit,
                                 'form': form,
                                 'additional_result': additional_result,
+                                'admission_result': admission_result,
                                 'registration': registration,
                                 'can_log_out': True })
 
+@applicant_required
+def quota_reset_choice(request):
+    """
+    reset choice between quota & direct
+    """
+    applicant = request.applicant
+
+    if not applicant.has_additional_result:
+        return HttpResponseForbidden()
+    additional_result = applicant.additional_result
+
+    current_round = AdmissionRound.get_recent()
+    round_number = current_round.number
+
+    admission_result = applicant.get_latest_admission_result()
+
+    if not admission_result: 
+        return HttpResponseForbidden()
+    
+    if request.method!='POST':
+        return HttpResponseForbidden()
+
+    # remove from quota waived
+    AdmissionWaiver.unwaive_applicant(applicant)
+
+    # remove from direct waived
+    additional_result.is_waived = False
+    additional_result.save()
+    AdmissionConfirmation.delete_for(applicant,
+                                     current_round.number)
+    AdmissionMajorPreference.objects.filter(applicant=applicant,
+                                            round_number=current_round.number).delete()
+
+    registration = applicant.get_student_registration()
+    if registration:
+        registration.delete()
+
+    Log.create("Reset quota/direct waiver applicant %s from %s" % 
+               (applicant.id, request.META['REMOTE_ADDR']),
+               applicant_id=applicant.id)
+
+    return redirect('status-index')

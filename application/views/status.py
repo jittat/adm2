@@ -3,7 +3,7 @@ from random import randint
 from datetime import timedelta
 
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
@@ -248,12 +248,15 @@ def index(request):
     if settings.SHOW_ONLY_RESULTS:
         return result_index(request)
 
+    template_data = []
+
+    additional_result = None
     if request.applicant.has_additional_result:
-        additional_result = applicant.additional_result
+        additional_result = request.applicant.additional_result
         if not additional_result.is_waived:
             return redirect('confirmation-quota-index')
 
-    template_data = []
+    template_data.append({'additional_result': additional_result})
 
     STATUS_COMPONENT_FUNCTIONS = [
         prepare_notice,

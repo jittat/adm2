@@ -19,6 +19,10 @@ urlpatterns = patterns(
 
     url(r'^quota/$', 'quota_confirm', name='confirmation-quota-index'),
 
+    url(r'^quota/reset-choice/$', 
+        'quota_reset_choice',
+        name='confirmation-quota-reset'),
+
     #url(r'^registration/$', 'student_registration', name='confirmation-student-registration'),
 )
 

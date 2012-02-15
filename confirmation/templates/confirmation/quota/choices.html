@@ -1,0 +1,46 @@
+{% extends "commons/base.html" %}
+
+{% load adm_info %}
+
+{% block title %}ยืนยันสิทธิ์การเข้าศึกษาต่อสำหรับโครงการโควตา{% endblock %}
+
+{% block extra-head %}
+<link rel="stylesheet" type="text/css" href="{% load adm_media %}{% static_url %}/css/front.css" />
+<script type="text/javascript" src="{% static_url %}/js/jquery.js"></script>
+{% endblock %}
+
+{% block body %}
+  {% load adm_steps %}{% step_bar "เลือกยืนยันสิทธิ์ระหว่างโครงการโควตาและโครงการรับตรง" %}
+  <div class="light-frame">
+    <b>ชื่อผู้สมัคร:</b> {{ applicant.full_name }} | <b>หมายเลขประจำตัวประชาชน:</b> {{ applicant.national_id }}<br/>
+    <b>คุณผ่านการคัดเลือกเข้าศึกษาต่อทั้งจากโครงการโควตา และจากโครงการรับตรง</b> ในสาขาต่อไปนี้: 
+    <ul>
+      <li>โครงการโควตา: {{ additional_result.name }}</li>
+      <li>โครงการรับตรง: {{ admission_result.admitted_major.name }}</li>
+    </ul>
+
+    <form method="post">
+      คุณสามารถเลือกยืนยันสิทธิ์ได้เพียงโครงการเดียว<br/>
+      กรุณาเลือก
+      <select id="major_select_id" name="major_select">
+        <option value="quota">โควตา: {{ additional_result.name }}</option>
+        <option value="direct">รับตรง: {{ admission_result.admitted_major.name }}</option>
+      </select>
+      <br/>
+      และกดยืนยัน
+      <input id="submit_id" type="submit" name="submit" value="ยืนยันสิทธิ์ในโครงการที่เลือกและสละสิทธิ์อีกโครงการหนึ่ง">
+    </form>
+  </div>
+
+<script type="text/javascript">
+  $(function(){
+    $("#submit_id").click(function() {
+      if($("#major_select_id").val()=='direct')
+        var c = 'คุณแน่ใจที่จะยืนยันสิทธิ์โครงการรับตรง\nและสละสิทธิ์โครงการโควตาหรือไม่?';
+      else
+        var c = 'คุณแน่ใจที่จะยืนยันสิทธิ์โครงการโควตา\nและสละสิทธิ์โครงการรับตรงหรือไม่?';
+      return confirm(c);
+    });
+  });
+</script>
+{% endblock %}

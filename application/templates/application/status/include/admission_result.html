@@ -7,6 +7,15 @@
     {{ admission_result.admitted_major.name }}
     <br/>
 
+    {% if additional_result %}
+      <form method="post" action="{% url confirmation-quota-reset %}">
+        <small>
+          นอกจากนี้ คุณผ่านการคัดเลือก {{ additional_result.name }} ด้วย แต่ได้สละสิทธิ์ไปแล้ว
+          <input id="unchoice-button" type="submit" value="ยกเลิกการสละสิทธิ์โครงการโควตา"/>
+        </small>
+      </form>
+    {% endif %}
+
     {% include "application/status/include/confirmation_info.html" %}
 
   {% else %}
@@ -22,3 +31,11 @@
 {% else %}
   {% include "application/status/include/not_admitted.html" %}
 {% endif %}
+
+<script type="text/javascript">
+  $(function() {
+    $("#unchoice-button").click(function(){
+      return confirm("คุณแน่ใจที่จะยกเลิกการสละสิทธิ์โครงการโควตาหรือไม่?\nถ้ายืนยันคุณจะต้องเริ่มกระบวนการยืนยันสิทธิ์ใหม่ทั้งหมด");
+    });
+  });
+</script>

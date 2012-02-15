@@ -14,7 +14,15 @@
   <div class="light-frame">
     {% include "confirmation/include/confirm_notice_float.html" %}
     <b>ชื่อผู้สมัคร:</b> {{ applicant.full_name }} | <b>หมายเลขประจำตัวประชาชน:</b> {{ applicant.national_id }}<br/>
-    <b>คุณผ่านการคัดเลือกเข้าศึกษาต่อในสาขา: {{ additional_result.name }}</b>
+    <b>คุณผ่านการคัดเลือกเข้าศึกษาต่อในสาขา: {{ additional_result.name }}</b><br/>
+    {% if admission_result %}
+      <form method="post" action="{% url confirmation-quota-reset %}">
+        <small>
+          นอกจากนี้ คุณผ่านการคัดเลือกโครงการรับตรงสาขา {{ admission_result.admitted_major.name }} ด้วย แต่ได้สละสิทธิ์ไปแล้ว
+          <input id="unchoice-button" type="submit" value="ยกเลิกการสละสิทธิ์โครงการรับตรง"/>
+        </small>
+      </form>
+    {% endif %}
   </div>
 
   {% if can_edit %}
@@ -55,8 +63,13 @@
   {% endif %}
 
   <script type="text/javascript">
-    $("#waive-button").click(function(){
-      return confirm("คุณแน่ใจที่จะสละสิทธิ์หรือไม่?");
+    $(function() {
+      $("#waive-button").click(function(){
+        return confirm("คุณแน่ใจที่จะสละสิทธิ์หรือไม่?");
+      });
+      $("#unchoice-button").click(function(){
+        return confirm("คุณแน่ใจที่จะยกเลิกการสละสิทธิ์โครงการรับตรงหรือไม่?\nถ้ายืนยันคุณจะต้องเริ่มกระบวนการยืนยันสิทธิ์ใหม่ทั้งหมด");
+      });
     });
   </script>
 {% endblock %}
