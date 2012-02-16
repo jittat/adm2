@@ -820,7 +820,19 @@ http://admission.eng.ku.ac.th/2555/admission/direct/score-cal
 
 def admission_result_round1_mail_body(applicant):
     result = applicant.get_latest_admission_result()
-    
+
+    if not applicant.is_eligible():
+        return u"""เรียน คุณ %(first_name)s %(last_name)s
+
+คุณไม่มีสิทธิ์เข้ารับการคัดเลือก เนื่องจากไม่ได้ชำระค่าสมัครในเวลาที่กำหนด
+
+อย่างไรก็ตาม ถ้าคุณสนใจเข้าศึกษาต่อที่คณะวิศวกรรมศาสตร์ คุณยังสามารถสมัครผ่านทางแอดมิชชันกลางได้
+อ่านรายละเอียดได้ที่ http://admission.eng.ku.ac.th/2555/admission/central
+
+ด้วยความเคารพ
+-ทีมงานเว็บรับสมัคร""" % { 'first_name': applicant.first_name,
+                       'last_name': applicant.last_name }    
+
     if not result:
         return u"""เรียน คุณ %(first_name)s %(last_name)s
 

@@ -1,7 +1,7 @@
 
-result_filename = '../data/test-assignment.csv'
-score_filename = '../data/test-scores.csv'
-pref_filename = '../data/test-pref.csv'
+result_filename = '../data/round1-assignment.csv'
+score_filename = '../data/round1-scores-nat.csv'
+pref_filename = '../data/round1-pref-nat.csv'
 
 def read_scores():
     scores = {}
@@ -62,7 +62,7 @@ def check(maj):
     print maj, count, min_accepted
 
     for n,sc in scores.items():
-        if sc >= min_accepted:
+        if sc >= min_accepted-0.0001:
             validate(n,maj)
 
 

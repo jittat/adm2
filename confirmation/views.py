@@ -16,6 +16,7 @@ from models import AdmissionMajorPreference, AdmissionConfirmation, Round2Applic
 
 from django import forms
 from django.forms import ModelForm
+from django.conf import settings
 
 def get_higher_ranked_majors(majors, current_major):
     result = []
@@ -96,6 +97,9 @@ def request_nomove(request, is_nomove):
 
 @submitted_applicant_required
 def pref(request):
+    if settings.SHOW_ONLY_RESULTS:
+        return HttpResponseForbidden()
+
     applicant = request.applicant
     admitted = applicant.is_admitted()
 
@@ -263,6 +267,9 @@ def save_waive_admission_major_pref(applicant,
 
 @submitted_applicant_required
 def main(request, is_edit_registration=False):
+    if settings.SHOW_ONLY_RESULTS:
+        return HttpResponseForbidden()
+
     applicant = request.applicant
     admitted = applicant.is_admitted()
 
