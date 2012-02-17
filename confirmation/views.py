@@ -220,14 +220,16 @@ class StudentRegistrationForm(ModelForm):
         return True
 
     def clean_home_phone_number(self):
-        if not validate_phone_number(self.cleaned_data['home_phone_number']):
+        p = self.cleaned_data['home_phone_number']
+        if p!='' and not validate_phone_number(p):
             raise forms.ValidationError("หมายเลขโทรศัพท์ไม่ถูกต้อง")
-        return self.cleaned_data['home_phone_number']
+        return p
 
     def clean_cell_phone_number(self):
-        if not validate_phone_number(self.cleaned_data['cell_phone_number']):
+        p = self.cleaned_data['cell_phone_number']
+        if p!='' and not validate_phone_number(p):
             raise forms.ValidationError("หมายเลขโทรศัพท์ไม่ถูกต้อง")
-        return self.cleaned_data['cell_phone_number']
+        return p
 
     def clean(self):
         cleaned_data = self.cleaned_data
@@ -246,6 +248,13 @@ class StudentRegistrationForm(ModelForm):
                                             mother_national_id_remark,
                                             'mother_national_id'):
             del cleaned_data['mother_national_id']
+        
+        hpn = cleaned_data.get('home_phone_number')
+        cpn = cleaned_data.get('cell_phone_number')
+
+        if hpn=='' and cpn=='':
+            self._errors['cell_phone_number'] = self.error_class(['จะต้องระบุเบอร์โทรศัพท์อย่างน้อยหนึ่งเบอร์'])
+            del cleaned_data['cell_phone_number']
         
         return cleaned_data
 

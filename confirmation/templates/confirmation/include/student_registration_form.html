@@ -33,7 +33,7 @@
     </p>
     <p>
       <b>ข้อมูลบิดา:</b>
-      คำนำหน้า {{ form.father_title }} 
+      คำนำหน้า {{ form.father_title }} {{ form.father_title.errors }}
       ชื่อ: {{ form.father_first_name }} {{ form.father_first_name.errors }}
       นามสกุล: {{ form.father_last_name }} {{ form.father_last_name.errors }}<br/>
       หมายเลขบัตรประจำตัวประชาชนบิดา: {{ form.father_national_id }} 
@@ -48,7 +48,7 @@
     </p>
     <p>
       <b>ข้อมูลมารดา:</b>
-      คำนำหน้า {{ form.mother_title }} 
+      คำนำหน้า {{ form.mother_title }} {{ form.mother_title.errors }}
       ชื่อ: {{ form.mother_first_name }} {{ form.mother_first_name.errors }}
       นามสกุล: {{ form.mother_last_name }} {{ form.mother_last_name.errors }}<br/>
       หมายเลขบัตรประจำตัวประชาชนมารดา: {{ form.mother_national_id }} 

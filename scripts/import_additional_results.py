@@ -15,6 +15,8 @@ bootstrap(__file__)
 from application.models import Applicant
 from result.models import AdditionalResult
 
+round_number = 1
+
 def main():
     f = codecs.open(result_filename,encoding='utf8')
     lines = f.readlines()
@@ -38,11 +40,21 @@ def main():
 
 
             a.has_additional_result = True
-            a.additional_hashed_password = password
+            if len(password)>10:
+                a.additional_hashed_password = password
+            else:
+                a.set_password(password)
             a.save()
 
-            additional_result = AdditionalResult(applicant=a,
-                                                 name=major)
+            old_results = AdditionalResult.objects.filter(applicant=a,
+                                                          round_number=round_number).all()
+            if len(old_results)==0:
+                additional_result = AdditionalResult(applicant=a)
+            else:
+                additional_result = old_results[0]
+
+            additional_result.name = major
+            additional_result.round_number = round_number
             additional_result.save()
             c += 1
 

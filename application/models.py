@@ -285,7 +285,10 @@ class Applicant(models.Model):
 
 
     def check_additional_password(self, password):
-        return self.check_password(password, self.additional_hashed_password)
+        if self.additional_hashed_password:
+            return self.check_password(password, self.additional_hashed_password)
+        else:
+            return False
 
 
     def can_request_password(self):
