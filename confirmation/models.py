@@ -256,7 +256,11 @@ class StudentRegistration(models.Model):
     father_last_name = models.CharField(max_length=300,
                                         verbose_name=u'นามสกุลบิดา')
     father_national_id = models.CharField(max_length=20,
-                                          verbose_name=u'เลขบัตรประชาชนบิดา')
+                                          verbose_name=u'เลขบัตรประชาชนบิดา',
+                                          blank=True)
+    father_national_id_remark = models.CharField(max_length=200,
+                                                 verbose_name=u'หมายเหตุบัตรประชาชนบิดา',
+                                                 blank=True)
 
     mother_title = models.CharField(max_length=10,
                                     verbose_name="คำนำหน้าชื่อมารดา")
@@ -265,7 +269,11 @@ class StudentRegistration(models.Model):
     mother_last_name = models.CharField(max_length=300,
                                         verbose_name=u'นามสกุลมารดา')
     mother_national_id = models.CharField(max_length=20,
-                                          verbose_name=u'เลขบัตรประชาชนมารดา')
+                                          verbose_name=u'เลขบัตรประชาชนมารดา',
+                                          blank=True)
+    mother_national_id_remark = models.CharField(max_length=200,
+                                                 verbose_name=u'หมายเหตุบัตรประชาชนมารดา',
+                                                 blank=True)
 
     address_avenue = models.CharField(max_length=50,
                                       blank=True,

@@ -1,3 +1,4 @@
+  <div id="student-registration-fields">
     <p>
       <b>ข้อมูลส่วนตัว:</b>
       {{ form.english_first_name.label }}: {{ form.english_first_name }}
@@ -13,6 +14,7 @@
     </p>
     <p>
       {{ form.address_avenue.label }}: {{ form.address_avenue }} 
+      <span class="hint">(ถ้าไม่มีไม่ต้องระบุ)</span>
       {{ form.address_avenue.errors }}<br/>
       {{ form.birth_place.label }} (จังหวัด): {{ form.birth_place }} 
       {{ form.birth_place.errors }}<br/>
@@ -35,8 +37,14 @@
       ชื่อ: {{ form.father_first_name }} {{ form.father_first_name.errors }}
       นามสกุล: {{ form.father_last_name }} {{ form.father_last_name.errors }}<br/>
       หมายเลขบัตรประจำตัวประชาชนบิดา: {{ form.father_national_id }} 
+      หมายเหตุ: {{ form.father_national_id_remark }}<br/>
       {{ form.father_national_id.errors }}
-      <small>ถ้าไม่มีหมายเลขบัตรประชาชนให้ใส่รหัสยืนยันตัวตนอื่น ๆ เช่นหมายเลขพาสปอร์ต</small>
+      <span class="hint">
+        ถ้าไม่มีหมายเลขบัตรประชาชนให้ใส่รหัสยืนยันตัวตนอื่น ๆ เช่นหมายเลขพาสปอร์ต
+        พร้อมทั้งระบุรายละเอียดในช่องหมายเหตุ
+        ถ้าไม่สามารถหาหมายเลขบัตรประชาชนหรือรหัสอื่น ๆ ได้ สามารถเว้นไว้ได้
+        แต่ต้องอธิบายเหตุผลในช่องหมายเหตุด้วย  ถ้าไม่ใส่รายละเอียดระบบจะไม่ยอมบันทึกข้อมูลให้
+      </span>
     </p>
     <p>
       <b>ข้อมูลมารดา:</b>
@@ -44,6 +52,13 @@
       ชื่อ: {{ form.mother_first_name }} {{ form.mother_first_name.errors }}
       นามสกุล: {{ form.mother_last_name }} {{ form.mother_last_name.errors }}<br/>
       หมายเลขบัตรประจำตัวประชาชนมารดา: {{ form.mother_national_id }} 
+      หมายเหตุ: {{ form.mother_national_id_remark }}<br/>
       {{ form.mother_national_id.errors }}
-      <small>ถ้าไม่มีหมายเลขบัตรประชาชนให้ใส่รหัสยืนยันตัวตนอื่น ๆ เช่นหมายเลขพาสปอร์ต</small>
+      <span class="hint">
+        ถ้าไม่มีหมายเลขบัตรประชาชนให้ใส่รหัสยืนยันตัวตนอื่น ๆ เช่นหมายเลขพาสปอร์ต
+        พร้อมทั้งระบุรายละเอียดในช่องหมายเหตุ
+        ถ้าไม่สามารถหาหมายเลขบัตรประชาชนหรือรหัสอื่น ๆ ได้ สามารถเว้นไว้ได้
+        แต่ต้องอธิบายเหตุผลในช่องหมายเหตุด้วย  ถ้าไม่ใส่รายละเอียดระบบจะไม่ยอมบันทึกข้อมูลให้
+      </span>
     </p>
+  </div>

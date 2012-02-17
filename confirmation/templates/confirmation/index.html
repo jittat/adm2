@@ -18,6 +18,7 @@
     <b>สาขาที่ได้รับการคัดเลือกในรอบที่ {{ current_round.number }}</b>: 
     {{ admission_result.admitted_major.number }}
     {{ admission_result.admitted_major.name }}
+    {% if is_best_major %}(สาขาอันดับที่ 1 ของผู้สมัคร){% endif %}
   </div>
 
   {% if waiver %}

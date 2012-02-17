@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 
 from commons.decorators import submitted_applicant_required, applicant_required
-from commons.utils import admission_major_pref_deadline_passed, round2_confirmation_deadline_passed
+from commons.utils import admission_major_pref_deadline_passed, round2_confirmation_deadline_passed, validate_national_id, validate_phone_number
 from commons.models import Log
 from commons.email import send_admission_confirmation_by_email, send_admission_waive_by_email, send_admission_unwaive_by_email
 from application.models import Applicant, SubmissionInfo, Major, Education, PersonalInfo
@@ -212,6 +212,42 @@ class StudentRegistrationForm(ModelForm):
             'mother_title': forms.TextInput(attrs={'size': 2}),
             }
 
+    def clean_nat_id_and_remark(self, nat_id, remark, field_name):
+        if (nat_id != None) and (remark != None):
+            if not validate_national_id(nat_id) and remark=='':
+                self._errors[field_name] = self.error_class(['หมายเลขประชาชนไม่ถูกต้อง ถ้าใช้รหัสยืนยันอื่นหรือไม่มีรหัสยืนยันใด ๆ ให้เขียนอธิบายในช่องหมายเหตุ'])
+                return False
+        return True
+
+    def clean_home_phone_number(self):
+        if not validate_phone_number(self.cleaned_data['home_phone_number']):
+            raise forms.ValidationError("หมายเลขโทรศัพท์ไม่ถูกต้อง")
+        return self.cleaned_data['home_phone_number']
+
+    def clean_cell_phone_number(self):
+        if not validate_phone_number(self.cleaned_data['cell_phone_number']):
+            raise forms.ValidationError("หมายเลขโทรศัพท์ไม่ถูกต้อง")
+        return self.cleaned_data['cell_phone_number']
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        father_national_id = cleaned_data.get('father_national_id')
+        father_national_id_remark = cleaned_data.get('father_national_id_remark')
+        
+        mother_national_id = cleaned_data.get('mother_national_id')
+        mother_national_id_remark = cleaned_data.get('mother_national_id_remark')
+        
+        if not self.clean_nat_id_and_remark(father_national_id,
+                                            father_national_id_remark,
+                                            'father_national_id'):
+            del cleaned_data['father_national_id']
+        
+        if not self.clean_nat_id_and_remark(mother_national_id,
+                                            mother_national_id_remark,
+                                            'mother_national_id'):
+            del cleaned_data['mother_national_id']
+        
+        return cleaned_data
 
 @submitted_applicant_required
 def student_registration(request):
