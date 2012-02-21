@@ -32,6 +32,8 @@ urlpatterns += patterns(
 
     url(r'^review/$', 'index', name='confirmation-index'),
 
+    url(r'^review/quota/$', 'quota_stat', name='confirmation-quota-stat'),
+
     url(r'^review/majors/(\d+)/$', 
         'list_confirmed_applicants',
         name='confirmation-list-applicants'),

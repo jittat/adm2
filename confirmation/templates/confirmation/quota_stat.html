@@ -1,0 +1,35 @@
+{% extends "commons/regis-base.html" %}
+{% load adm_media %}
+{% block extra-title-bar %}หน่วยทะเบียน | การยืนยันสิทธิ์โควตา {% endblock %}
+
+{% block regis-body %}
+
+{% if notice %}
+  <div class="notice-bar">
+    <span class="notice">{{ notice }}</span>
+  </div>
+{% endif %}
+
+<h3>สถิติการยืนยันสิทธิ์ของผู้ได้รับคัดเลือกโครงการโควตา</h3>
+
+<table class="applicants">
+  <tr>
+    <th>ชื่อ</th>
+    <th>สาขา</th>
+    <th>สถานะ</th>
+    <th>อีเมล์</th>
+  </tr>
+  {% for r in additional_results %}
+    <tr>
+      <td>{{ r.applicant }}</td>
+      <td><small>{{ r.name }}</small></td>
+      <td>
+        {% passed_icon r.is_confirmed %}
+        {{ r.status_text }} 
+      </td>
+      <td><small>{{ r.applicant.email }}</small></td>
+    </tr>
+  {% endfor %}
+</table>
+
+{% endblock %}

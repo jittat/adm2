@@ -9,7 +9,7 @@ from commons.decorators import submitted_applicant_required
 from commons.utils import admission_major_pref_deadline_passed, round2_confirmation_deadline_passed
 from commons.models import Log
 from application.models import Applicant, SubmissionInfo, Major, Education, PersonalInfo
-from result.models import NIETSScores, AdmissionResult, AdmissionRound
+from result.models import NIETSScores, AdmissionResult, AdmissionRound, AdditionalResult
 
 from models import AdmissionMajorPreference, AdmissionConfirmation, Round2ApplicantConfirmation, StudentRegistration
 
@@ -665,5 +665,36 @@ def confirm_round2(request):
                               { 'applicant': applicant,
                                 'form': form,
                                 'has_submitted': has_submitted })
+
+
+@login_required
+def quota_stat(request):
+    adm_round = AdmissionRound.get_recent()
+    
+    additional_results = AdditionalResult.objects.filter(round_number=adm_round.number).all()
+
+    STATUS_DISPLAY = {
+        'unknown': u'ยังไม่ยืนยันสิทธิ์',
+        'waived': u'สละสิทธิ์',
+        'waived-for-direct': u'สละสิทธิ์ไปโครงการรับตรง',
+        'confirmed': u'ยืนยันสิทธิ์แล้ว'
+        }
+
+    for r in additional_results:
+        r.status = 'unknown'
+        if r.is_waived:
+            r.status = 'waived'
+        applicant = r.applicant
+        registration = applicant.get_student_registration()
+        if registration:
+            if r.is_waived:
+                r.status = 'waived-for-direct'
+            else:
+                r.status = 'confirmed'
+        r.status_text = STATUS_DISPLAY[r.status]
+        r.is_confirmed = r.status == 'confirmed'
+
+    return render_to_response('confirmation/quota_stat.html',
+                              {'additional_results': additional_results})
 
 
