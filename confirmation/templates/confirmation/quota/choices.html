@@ -11,6 +11,9 @@
 
 {% block body %}
   {% load adm_steps %}{% step_bar "เลือกยืนยันสิทธิ์ระหว่างโครงการโควตาและโครงการรับตรง" %}
+
+  {% adm_submission_deadline_warning %}
+
   <div class="light-frame">
     <b>ชื่อผู้สมัคร:</b> {{ applicant.full_name }} | <b>หมายเลขประจำตัวประชาชน:</b> {{ applicant.national_id }}<br/>
     <b>คุณผ่านการคัดเลือกเข้าศึกษาต่อทั้งจากโครงการโควตา และจากโครงการรับตรง</b> ในสาขาต่อไปนี้: 
@@ -19,17 +22,21 @@
       <li>โครงการรับตรง: {{ admission_result.admitted_major.name }}</li>
     </ul>
 
-    <form method="post">
-      คุณสามารถเลือกยืนยันสิทธิ์ได้เพียงโครงการเดียว<br/>
-      กรุณาเลือก
-      <select id="major_select_id" name="major_select">
-        <option value="quota">โควตา: {{ additional_result.name }}</option>
-        <option value="direct">รับตรง: {{ admission_result.admitted_major.name }}</option>
-      </select>
-      <br/>
-      และกดยืนยัน
-      <input id="submit_id" type="submit" name="submit" value="ยืนยันสิทธิ์ในโครงการที่เลือกและสละสิทธิ์อีกโครงการหนึ่ง">
-    </form>
+    {% if can_edit %}
+      <form method="post">
+        คุณสามารถเลือกยืนยันสิทธิ์ได้เพียงโครงการเดียว<br/>
+        กรุณาเลือก
+        <select id="major_select_id" name="major_select">
+          <option value="quota">โควตา: {{ additional_result.name }}</option>
+          <option value="direct">รับตรง: {{ admission_result.admitted_major.name }}</option>
+        </select>
+        <br/>
+        และกดยืนยัน
+        <input id="submit_id" type="submit" name="submit" value="ยืนยันสิทธิ์ในโครงการที่เลือกและสละสิทธิ์อีกโครงการหนึ่ง">
+      </form>
+    {% else %}
+      อย่างไรก็ตาม ขณะนี้หมดเวลาการยืนยันสิทธิ์แล้ว
+    {% endif %}
   </div>
 
 <script type="text/javascript">

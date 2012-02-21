@@ -11,6 +11,9 @@
 
 {% block body %}
   {% load adm_steps %}{% step_bar "กรอกข้อมูลเพื่อยืนยันสิทธิ์" %}
+
+  {% adm_submission_deadline_warning %}
+
   <div class="light-frame">
     {% include "confirmation/include/confirm_notice_float.html" %}
     <b>ชื่อผู้สมัคร:</b> {{ applicant.full_name }} | <b>หมายเลขประจำตัวประชาชน:</b> {{ applicant.national_id }}<br/>

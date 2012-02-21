@@ -435,6 +435,12 @@ def quota_choice(request, applicant, admission_result):
     round_number = current_round.number
 
     additional_result = applicant.additional_result
+    is_result_for_current_round = (additional_result.round_number == round_number)
+    can_edit = (not admission_major_pref_deadline_passed()) and is_result_for_current_round
+
+    if request.method=='POST' and not can_edit:
+        return render_to_response('confirmation/pref_deadline_passed.html',
+                                  {'admission_round': current_round})
 
     if request.method=='POST':
         if request.POST['major_select']=='quota':
@@ -456,6 +462,7 @@ def quota_choice(request, applicant, admission_result):
                               { 'applicant': applicant,
                                 'admission_result': admission_result,
                                 'additional_result': additional_result,
+                                'can_edit': can_edit,
                                 'can_log_out': True })
 @applicant_required
 def quota_confirm(request):
@@ -483,7 +490,8 @@ def quota_confirm(request):
     registration = applicant.get_student_registration()
 
     if request.method=='POST' and not can_edit:
-        return HttpResponseForbidden()
+        return render_to_response('confirmation/pref_deadline_passed.html',
+                                  {'admission_round': current_round})
 
     if request.method=='POST' and 'submit' in request.POST:
         form = StudentRegistrationForm(request.POST,

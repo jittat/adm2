@@ -25,7 +25,7 @@ from commons.decorators import within_submission_deadline
 
 ALLOWED_LOGOUT_REDIRECTION = ['http://admission.eng.ku.ac.th']
 
-@cache_page(60)
+@cache_page(15)
 def login(request):
     announcements = Announcement.get_all_enabled_annoucements()
     if not settings.LOGIN_ENABLED:
