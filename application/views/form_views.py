@@ -88,7 +88,9 @@ def redirect_to_applicant_first_page(applicant):
     complete.
     """
     if applicant.has_additional_result:
-        return redirect('confirmation-quota-index')
+        r = applicant.additional_result
+        if not r.is_waived:
+            return redirect('confirmation-quota-index')
 
     if not applicant.is_submitted:
         return redirect_to_first_form()
