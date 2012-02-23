@@ -92,6 +92,13 @@ def request_nomove(request, is_nomove):
 
     admission_pref.is_nomove_request = is_nomove
     admission_pref.save()
+
+    Log.create("request nomove (%s) - from: %s" %
+               (str(is_nomove),
+                request.META['REMOTE_ADDR']),
+               applicant_id=applicant.id,
+               applicantion_id=applicant.submission_info.applicantion_id)
+
     return redirect('status-index')
     
 

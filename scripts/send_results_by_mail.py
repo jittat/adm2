@@ -30,10 +30,11 @@ def main():
         subject = settings.ADM_RESULT_MAIL_SUBJECT
         body = body_function(applicant)
 
-        adm_send_mail(applicant.get_email(),
-                      subject,
-                      body,
-                      priority='low')
+        if body:
+            adm_send_mail(applicant.get_email(),
+                          subject,
+                          body,
+                          priority='low')
 
 if __name__ == '__main__':
     main()
