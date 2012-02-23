@@ -35,7 +35,7 @@
   <!--- *************************** --->
 
   <p>
-    {% if current_round %}
+    {% if current_round and admission_result %}
       {% with student_registration as registration %}
         {% include "confirmation/include/confirm_notice_float.html" %}
       {% endwith %}

@@ -132,8 +132,10 @@ def prepare_confirmation_data(applicant, admitted_major):
              
 def prepare_round_data():
     current_round = AdmissionRound.get_recent()
+    last_round = settings.LAST_ROUND_RESULT
 
     return {
+        'last_round': last_round,
         'current_round': current_round,
         }
 

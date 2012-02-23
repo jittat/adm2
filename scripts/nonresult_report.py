@@ -9,7 +9,7 @@ from result.models import NIETSScores, AdmissionResult
 
 file_name = sys.argv[1]
 
-round_number = 1
+round_number = 2
 
 f = codecs.open(file_name,"w",encoding="utf8")
 admitted = set([r.applicant_id for 

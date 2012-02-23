@@ -2,6 +2,7 @@
 result_filename = '../data/round2/round2-assignment.csv'
 score_filename = '../data/round1/round1-scores-nat.csv'
 pref_filename = '../data/round2/round1-major-pref-w-major-choice.csv'
+confirmation_filename = '../data/round2/round1-result-w-confirmation.csv'
 
 def read_scores():
     scores = {}
@@ -15,13 +16,21 @@ def read_pref():
     for l in open(pref_filename).readlines():
         l = l.strip()
         items = l.strip().split(',')
-        
-        if len(items[3])==0:
-            prefs[items[1]] = []
-        else:
+
+        if items[2]!='0':
             prefs[items[1]] = [int(x) for x in items[3:]]
 
     return prefs
+
+def read_confirmation():
+    confirmation = {}
+    for l in open(confirmation_filename).readlines():
+        l = l.strip()
+        items = l.split(',')
+
+        confirmation[items[0]] = (items[2]=='True')
+    return confirmation
+
 
 def read_result():
     results = {}
@@ -38,10 +47,16 @@ results = {}
 prefs = {}
 scores = {}
 
-def validate(n,maj):
+def validate(n,maj,confirmation):
+    if n in confirmation and (not confirmation[n]):
+        return
     if n not in results:
-        if maj in prefs[n]:
-            print 'BAD1', n
+        if n not in prefs:
+            #print 'waived: ', n
+            pass
+        else:
+            if maj in prefs[n]:
+                print 'BAD1', n
     else:
         r = results[n]
         if r==maj:
@@ -53,7 +68,7 @@ def validate(n,maj):
             if p==r:
                 return
 
-def check(maj):
+def check(maj,confirmation):
     min_accepted = 10000
     count = 0
     for n,m in results.items():
@@ -65,13 +80,14 @@ def check(maj):
     print maj, count, min_accepted
 
     for n,sc in scores.items():
-        if sc >= min_accepted-0.0001:
-            validate(n,maj)
+        if sc > min_accepted:
+            validate(n,maj,confirmation)
 
 
 results = read_result()
 prefs = read_pref()
 scores = read_scores()
+confirmation = read_confirmation()
 
 for m in MAJORS:
-    check(m)
+    check(m,confirmation)
