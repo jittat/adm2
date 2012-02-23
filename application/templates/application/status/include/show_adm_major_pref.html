@@ -3,7 +3,7 @@
 {% if admission_major_pref.get_pref_type.is_move_up_inclusive or admission_major_pref.get_pref_type.is_move_up_strict %}
   โดยสาขาที่คุณขอเข้ารับการพิจารณาคือ:
   {% for m in accepting_majors %}
-    {% if forloop.last %}และ{% endif %}
+    {% if not forloop.first %}และ{% endif %}
     {{ m.name }}{% if not forloop.last %}, {% endif %}
   {% endfor %}
 {% endif %}
