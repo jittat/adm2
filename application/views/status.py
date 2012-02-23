@@ -157,7 +157,12 @@ def prepare_admission_result_data(applicant, current_round):
     if current_round:
         admission_result = applicant.get_latest_admission_result()
 
-        first_admission = (applicant.admission_results.count() == 1)
+        acount = 0
+        for r in applicant.admission_results.all():
+            if r.round_number <= current_round.number:
+                acount += 1
+
+        first_admission = (acount == 1)
 
         admission_major_pref = applicant.get_admission_major_preference(current_round.number)
 
