@@ -687,7 +687,7 @@ def quota_stat(request):
         applicant = r.applicant
         registration = applicant.get_student_registration()
         if registration:
-            if not AdmissionWaiver.is_waived(applicant):
+            if applicant.get_latest_admission_result() and (not AdmissionWaiver.is_waived(applicant)):
                 r.status = 'waived-for-direct'
             else:
                 r.status = 'confirmed'
