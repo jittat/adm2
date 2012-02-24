@@ -11,7 +11,7 @@ from commons.models import Log
 from application.models import Applicant, SubmissionInfo, Major, Education, PersonalInfo
 from result.models import NIETSScores, AdmissionResult, AdmissionRound, AdditionalResult
 
-from models import AdmissionMajorPreference, AdmissionConfirmation, Round2ApplicantConfirmation, StudentRegistration
+from models import AdmissionMajorPreference, AdmissionConfirmation, Round2ApplicantConfirmation, StudentRegistration, AdmissionWaiver
 
 from django import forms
 from django.forms import ModelForm
@@ -687,7 +687,7 @@ def quota_stat(request):
         applicant = r.applicant
         registration = applicant.get_student_registration()
         if registration:
-            if r.is_waived:
+            if not AdmissionWaiver(applicant):
                 r.status = 'waived-for-direct'
             else:
                 r.status = 'confirmed'
