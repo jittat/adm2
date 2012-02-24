@@ -671,7 +671,7 @@ def confirm_round2(request):
 def quota_stat(request):
     adm_round = AdmissionRound.get_recent()
     
-    additional_results = AdditionalResult.objects.filter(round_number=adm_round.number).all()
+    additional_results = AdditionalResult.objects.all()
 
     STATUS_DISPLAY = {
         'unknown': u'ยังไม่ยืนยันสิทธิ์',

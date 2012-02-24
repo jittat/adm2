@@ -16,6 +16,7 @@
   <tr>
     <th>ชื่อ</th>
     <th>สาขา</th>
+    <th>รอบ</th>
     <th>สถานะ</th>
     <th>อีเมล์</th>
   </tr>
@@ -23,6 +24,7 @@
     <tr>
       <td>{{ r.applicant }}</td>
       <td><small>{{ r.name }}</small></td>
+      <td style="text-align:center"><small>{{ r.round_number }}</small></td>
       <td>
         {% passed_icon r.is_confirmed %}
         {{ r.status_text }} 

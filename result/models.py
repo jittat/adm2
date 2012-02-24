@@ -327,5 +327,8 @@ class AdditionalResult(models.Model):
                                      null=True,
                                      default=None)
 
+    class Meta:
+        ordering = ['round_number', 'name']
+
     def __unicode__(self):
         return self.name
