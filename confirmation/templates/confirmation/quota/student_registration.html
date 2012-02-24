@@ -21,8 +21,9 @@
     {% if admission_result %}
       <form method="post" action="{% url confirmation-quota-reset %}">
         <small>
-          นอกจากนี้ คุณผ่านการคัดเลือกโครงการรับตรงสาขา {{ admission_result.admitted_major.name }} ด้วย แต่ได้สละสิทธิ์ไปแล้ว
-          <input id="unchoice-button" type="submit" value="ยกเลิกการสละสิทธิ์โครงการรับตรง"/>
+          นอกจากนี้ คุณผ่านการคัดเลือกโครงการรับตรงสาขา {{ admission_result.admitted_major.name }} ด้วย แต่ได้สละสิทธิ์ไปแล้ว<br/>
+          ถ้าคุณต้องการ<b>ยกเลิกการสละสิทธิ์โครงการรับตรง</b>แล้วกลับไปเริ่มกระบวนการยืนยันสิทธิ์ใหม่ กรุณากด
+          <input id="unchoice-button" type="submit" value="ยกเลิกการสละสิทธิ์โครงการรับตรง"/> 
         </small>
       </form>
     {% endif %}

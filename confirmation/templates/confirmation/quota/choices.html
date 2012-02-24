@@ -25,7 +25,12 @@
     {% if can_edit %}
       <form method="post">
         คุณสามารถเลือกยืนยันสิทธิ์ได้เพียงโครงการเดียว<br/>
-        กรุณาเลือก
+
+        {% if student_registration %}
+          <b>ขณะนี้คุณได้ยืนยันสิทธิ์โครงการรับตรงไว้แล้ว</b> ถ้าคุณต้องการเข้าศึกษาต่อในโครงการโควตา ในสาขา {{ additional_result.name }} คุณจะต้องเลือกสละสิทธิ์โครงการดังกล่าวก่อน &nbsp;&nbsp; แต่ถ้าคุณไม่ดำเนินการใด ๆ เราจะถือว่าคุณขอ<b>สละสิทธิ์</b>การเข้าศึกษาต่อผ่านโครงการโควตา และขอเข้าศึกษาต่อในสาขา{{ admission_result.admitted_major.name }} <b>ผ่านทางโครงการรับตรง</b><br/><br/>
+        {% endif %}
+
+        กรุณาเลือกโครงการที่ต้องการยืนยันสิทธิ์
         <select id="major_select_id" name="major_select">
           <option value="quota">โควตา: {{ additional_result.name }}</option>
           <option value="direct">รับตรง: {{ admission_result.admitted_major.name }}</option>

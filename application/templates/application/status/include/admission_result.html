@@ -10,7 +10,8 @@
     {% if additional_result %}
       <form method="post" action="{% url confirmation-quota-reset %}">
         <small>
-          นอกจากนี้ คุณผ่านการคัดเลือก {{ additional_result.name }} ด้วย แต่ได้สละสิทธิ์ไปแล้ว
+          นอกจากนี้ คุณผ่านการคัดเลือก {{ additional_result.name }} ด้วย แต่ได้สละสิทธิ์ไปแล้ว<br/>
+          ถ้าคุณต้องการ<b>ยกเลิกการสละสิทธิ์โครงการโควตา</b>แล้วกลับไปเริ่มกระบวนการยืนยันสิทธิ์ใหม่ กรุณากด
           <input id="unchoice-button" type="submit" value="ยกเลิกการสละสิทธิ์โครงการโควตา"/>
         </small>
       </form>

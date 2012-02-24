@@ -445,6 +445,8 @@ def quota_choice(request, applicant, admission_result):
     is_result_for_current_round = (additional_result.round_number == round_number)
     can_edit = (not admission_major_pref_deadline_passed()) and is_result_for_current_round
 
+    student_registration = applicant.get_student_registration()
+
     if request.method=='POST' and not can_edit:
         return render_to_response('confirmation/pref_deadline_passed.html',
                                   {'admission_round': current_round})
@@ -469,6 +471,7 @@ def quota_choice(request, applicant, admission_result):
                               { 'applicant': applicant,
                                 'admission_result': admission_result,
                                 'additional_result': additional_result,
+                                'student_registration': student_registration,
                                 'can_edit': can_edit,
                                 'can_log_out': True })
 @applicant_required

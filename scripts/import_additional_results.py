@@ -15,7 +15,7 @@ bootstrap(__file__)
 from application.models import Applicant
 from result.models import AdditionalResult
 
-round_number = 1
+round_number = 2
 
 def main():
     f = codecs.open(result_filename,encoding='utf8')

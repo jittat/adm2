@@ -14,6 +14,7 @@
 
 <table class="applicants">
   <tr>
+    <th></th>
     <th>ชื่อ</th>
     <th>สาขา</th>
     <th>รอบ</th>
@@ -22,6 +23,7 @@
   </tr>
   {% for r in additional_results %}
     <tr>
+      <td>{{ r.applicant.national_id }}</td>
       <td>{{ r.applicant }}</td>
       <td><small>{{ r.name }}</small></td>
       <td style="text-align:center"><small>{{ r.round_number }}</small></td>
