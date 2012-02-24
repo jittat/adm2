@@ -80,7 +80,7 @@ def check(maj,confirmation):
     print maj, count, min_accepted
 
     for n,sc in scores.items():
-        if sc > min_accepted:
+        if sc >= min_accepted - 0.01:
             validate(n,maj,confirmation)
 
 
