@@ -18,7 +18,8 @@
           {% include "application/status/include/show_adm_major_pref.html" %}<br/>
           <form class="light-frame" action="{% url confirmation-nomove-request %}" method="post" style="font-size: 90%;">
             อย่างไรก็ตาม คุณสามารถเลือกที่จะ<b>ขอคงสาขาที่ได้รับการพิจารณาเป็นสาขา {{ admission_result.admitted_major.name }} โดยไม่ต้องการเข้ารับการพิจารณาเลื่อนเป็นอันดับอื่น ๆ อีกได้</b><br/>
-  	    ถ้าแน่ใจ กรุณากด <input id="nomove_submit_id" type="submit" value="ขอให้คงสาขาที่ข้าพเจ้าได้รับคัดเลือกเป็นสาขาที่ข้าพเจ้าได้รับในรอบนี้"/>
+  	    ถ้าแน่ใจ กรุณากด <input id="nomove_submit_id" type="submit" value="ขอให้คงสาขาที่ข้าพเจ้าได้รับคัดเลือกเป็นสาขาที่ข้าพเจ้าได้รับในรอบนี้"/><br/>
+            <b>หมายเหตุ:</b> ถ้าคุณยังต้องการขอรับพิจารณาให้เลื่อนอันดับในรอบต่อไป <b>ไม่ต้องกดปุ่มดังกล่าว</b>  คุณจะได้รับการพิจารณาเลื่อนอันดับตามที่เคยเลือกไว้ในรอบก่อน และไม่เสียสิทธิ์ในการเข้าศึกษาต่อในสาขา {{ admission_result.admitted_major.name }} แต่อย่างใด
 	  </form>
         {% endif %}
       {% else %}
