@@ -543,6 +543,9 @@ def quota_reset_choice(request):
 
     admission_result = applicant.get_latest_admission_result()
 
+    if additional_result.round_number != round_number:
+        return HttpResponseForbidden()
+
     if not admission_result: 
         return HttpResponseForbidden()
     
