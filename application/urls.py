@@ -30,7 +30,7 @@ urlpatterns = patterns(
     url(r'^status/show/$', 'status.show', name='status-show'),
     url(r'^status/show-score/$', 'status.show_score', name='status-show-score'),
     url(r'^status/ticket/$', 'status.show_ticket', name='status-show-ticket'),
-    url(r'^status/request/$', 'status.request_status', name='status-request'),
+    #url(r'^status/request/$', 'status.request_status', name='status-request'),
     url(r'^status/confirm-ticket/$', 'status.confirmation_ticket', name='status-confirm-ticket'),
 
     # update
