@@ -10,7 +10,7 @@ from django_bootstrap import bootstrap
 bootstrap(__file__)
 
 from result.models import AdmissionResult
-from confirmation.models import AdmissionConfirmation
+from confirmation.models import AdmissionConfirmation, AdmissionWaiver
 from application.models import Applicant
 
 from application.views.status import prepare_exam_scores
@@ -37,6 +37,9 @@ def main():
         app = r.applicant
         exam_scores = prepare_exam_scores(app)
         confirmed = (app.admission_confirmations.all().count() > 0)
+
+        if AdmissionWaiver.is_waived(app):
+            confirmed = False
 
         if confirmed and app.get_student_registration()==None:
             print 'BAD!'

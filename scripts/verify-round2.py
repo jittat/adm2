@@ -1,8 +1,9 @@
 
-result_filename = '../data/round2/round2-assignment.csv'
+result_filename = '../data/round-fin/fin-assignment.csv'
 score_filename = '../data/round1/round1-scores-nat.csv'
-pref_filename = '../data/round2/round1-major-pref-w-major-choice.csv'
-confirmation_filename = '../data/round2/round1-result-w-confirmation.csv'
+pref_filename = '../data/round-fin/major-pref-w-mchoice.csv'
+confirmation_filename = '../data/round-fin/round2-results-w-confirmation-updated.csv'
+old_confirmation_filename = '../data/round2/round1-result-w-confirmation.csv'
 
 def read_scores():
     scores = {}
@@ -32,9 +33,19 @@ def read_confirmation():
     return confirmation
 
 
+def read_old_confirmation():
+    confirmation = {}
+    for l in open(old_confirmation_filename).readlines():
+        l = l.strip()
+        items = l.split(',')
+
+        confirmation[items[0]] = (items[2]=='True')
+    return confirmation
+
+
 def read_result():
     results = {}
-    for l in open(result_filename).readlines()[1:]:
+    for l in open(result_filename).readlines():
         l = l.strip()
         items = l.split(',')
 
@@ -47,9 +58,12 @@ results = {}
 prefs = {}
 scores = {}
 
-def validate(n,maj,confirmation):
+def validate(n,maj,confirmation,old_confirmation):
     if n in confirmation and (not confirmation[n]):
         return
+    if n in old_confirmation and (not old_confirmation[n]):
+        return
+
     if n not in results:
         if n not in prefs:
             #print 'waived: ', n
@@ -68,7 +82,7 @@ def validate(n,maj,confirmation):
             if p==r:
                 return
 
-def check(maj,confirmation):
+def check(maj,confirmation,old_confirmation):
     min_accepted = 10000
     count = 0
     for n,m in results.items():
@@ -81,13 +95,14 @@ def check(maj,confirmation):
 
     for n,sc in scores.items():
         if sc >= min_accepted - 0.01:
-            validate(n,maj,confirmation)
+            validate(n,maj,confirmation,old_confirmation)
 
 
 results = read_result()
 prefs = read_pref()
 scores = read_scores()
 confirmation = read_confirmation()
+old_confirmation = read_old_confirmation()
 
 for m in MAJORS:
-    check(m,confirmation)
+    check(m,confirmation,old_confirmation)
