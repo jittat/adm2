@@ -16,6 +16,75 @@ from application.models import Applicant, Major
 
 school_data = {}
 
+SCHOOL_NAME_PATCHES = {
+    u'สาธิตมศวปทุมวัน---กรุงเทพมหานคร':u'สาธิตมหาวิทยาลัยศรีนครินทรวิโรฒ ปทุมวัน',
+    u'สาธิตมหาวิทยาลัยศรีนครินทร์วิโรฒปทุมวัน---กรุงเทพมหานคร':u'สาธิตมหาวิทยาลัยศรีนครินทรวิโรฒ ปทุมวัน',
+    u'สาธิตมศว.ประสานมิตรฝ่ายมัธยม---กรุงเทพมหานคร':u'สาธิตมหาวิทยาลัยศรีนครินทรวิโรฒ ปทุมวัน',
+    u'สาธิตมศวประสานมิตรฝ่ายมัธยม---กรุงเทพมหานคร':u'สาธิตมหาวิทยาลัยศรีนครินทรวิโรฒ ปทุมวัน',
+    u'สาธิตมศวประสานมิตรมัธยม---กรุงเทพมหานคร':u'สาธิตมหาวิทยาลัยศรีนครินทรวิโรฒ ปทุมวัน',
+    u'สาธิตมศวประสานมิตร---กรุงเทพมหานคร':u'สาธิตมหาวิทยาลัยศรีนครินทรวิโรฒ ปทุมวัน',
+    u'สาธิตมศว.ปทุมวัน---กรุงเทพมหานคร':u'สาธิตมหาวิทยาลัยศรีนครินทรวิโรฒ ปทุมวัน',
+    u'สาธิตมศว.ประสานมิตร---กรุงเทพมหานคร':u'สาธิตมหาวิทยาลัยศรีนครินทรวิโรฒ ปทุมวัน',
+    u'สาธิตปทุมวัน---กรุงเทพมหานคร':u'สาธิตมหาวิทยาลัยศรีนครินทรวิโรฒ ปทุมวัน',
+
+    u'สาธิตจุฬาฯ---กรุงเทพมหานคร':u'สาธิตจุฬาลงกรณ์มหาวิทยาลัย (ฝ่ายมัธยม)',
+    u'สาธิตจุฬาลงกรณ์มหาวิทยาลัย---กรุงเทพมหานคร':u'สาธิตจุฬาลงกรณ์มหาวิทยาลัย (ฝ่ายมัธยม)',
+    u'สาธิตจุฬาลงกรณ์มหาวิทยาลัยมัธยม---กรุงเทพมหานคร':u'สาธิตจุฬาลงกรณ์มหาวิทยาลัย (ฝ่ายมัธยม)',
+    u'สาธิตจุฬาฝ่ายมัธยม---กรุงเทพมหานคร':u'สาธิตจุฬาลงกรณ์มหาวิทยาลัย (ฝ่ายมัธยม)',
+    u'สาธิตจุฬาฯฝ่ายมัธยม---กรุงเทพมหานคร':u'สาธิตจุฬาลงกรณ์มหาวิทยาลัย (ฝ่ายมัธยม)',
+    u'สาธิตจุฬา---กรุงเทพมหานคร':u'สาธิตจุฬาลงกรณ์มหาวิทยาลัย (ฝ่ายมัธยม)',
+
+    u'สาธิตเกษตร---กรุงเทพมหานคร':u'สาธิตแห่งมหาวิทยาลัยเกษตรศาสตร์ ศูนย์วิจัยและพัฒนาการศึกษา',
+    u'สาธิตแห่งมหาวิทยาลัยเกษตรศาสตร์---กรุงเทพมหานคร':u'สาธิตแห่งมหาวิทยาลัยเกษตรศาสตร์ ศูนย์วิจัยและพัฒนาการศึกษา',
+
+    u'สาธิตมหาวิทยาลัยขอนแก่นศึกษาศาสตร์---ขอนแก่น':u'สาธิตมหาวิทยาลัยขอนแก่น (ศึกษาศาสตร์) ระดับมัธยม',
+
+    u'สาธิตมหาวิทยาลัยรามคำแหง---กรุงเทพมหานคร':u'สาธิตมหาวิทยาลัยรามคำแหง (ฝ่ายมัธยม)',
+    
+    u'บดินทรเดชาสิงห์สิงหเสนี๒---กรุงเทพมหานคร':u'บดินทรเดชา (สิงห์ สิงหเสนี) 2',
+    u'บดิทรเดชาสิงห์สิงหเสนี๒---กรุงเทพมหานคร':u'บดินทรเดชา (สิงห์ สิงหเสนี) 2',
+    u'บดินทรเดชาสิงห์สิงห์เสนี2---กรุงเทพมหานคร':u'บดินทรเดชา (สิงห์ สิงหเสนี) 2',
+    u'บดินเดชาสิงห์สิงหเสนี2---กรุงเทพมหานคร':u'บดินทรเดชา (สิงห์ สิงหเสนี) 2',
+    u'บดินทรเดชา2---กรุงเทพมหานคร':u'บดินทรเดชา (สิงห์ สิงหเสนี) 2',
+    u'บดินทร2---กรุงเทพมหานคร':u'บดินทรเดชา (สิงห์ สิงหเสนี) 2',
+
+    u'มงฟอร์ตวิทยาลัย---เชียงใหม่':u'มงฟอร์ตวิทยาลัย แผนกมัธยม',
+    u'มงฟอร์ต---เชียงใหม่':u'มงฟอร์ตวิทยาลัย แผนกมัธยม',
+
+    u'ยุพราชวิทยาลัยเชียงใหม่---เชียงใหม่':u'ยุพราชวิทยาลัย',
+
+    u'สตรีวิทยา2---กรุงเทพมหานคร':u'สตรีวิทยา ๒',
+    u'สตรีวิิทยา2---กรุงเทพมหานคร':u'สตรีวิทยา ๒',
+
+    u'กาญจนาภิเษกวิทยาลัยนครปฐม---นครปฐม':u'กาญจนาภิเษกวิทยาลัย นครปฐม (พระตำหนักสวนกุหลาบมัธยม)',
+    u'กาญจนาภิเ๋ษกวิทยาลัยนครปฐม---นครปฐม':u'กาญจนาภิเษกวิทยาลัย นครปฐม (พระตำหนักสวนกุหลาบมัธยม)',
+
+    u'มหาวชิราวุธ---สงขลา':u'มหาวชิราวุธ จังหวัดสงขลา',
+    u'มหาวิชราวุธ---สงขลา':u'มหาวชิราวุธ จังหวัดสงขลา',
+
+    u'จุฬาภรณราชวิทยาลัย---พิษณุโลก':u'จุฬาภรณราชวิทยาลัย พิษณุโลก',
+
+    u'สวนกุหลาบ---กรุงเทพมหานคร':u'สวนกุหลาบวิทยาลัย',
+
+    u'เตรียมอุดมศึษา---กรุงเทพมหานคร':u'เตรียมอุดมศึกษา',
+    u'สารสาสน์วิเทศบาบอน---สมุทรสงคราม':(u'สารสาสน์วิเทศบางบอน',u'กรุงเทพมหานคร'),
+
+    u'ภ.ป.ร.ราชวิทยาลัยฯ---นครปฐม':u'ภ.ป.ร.ราชวิทยาลัย ในพระบรมราชูปถัมภ์',
+
+    u'พรหมานุสรณ์---เพชรบุรี':u'พรหมานุสรณ์จังหวัดเพชรบุรี',
+
+    u'เบญจมราชูทิศ---ราชบุรี':u'เบญจมราชูทิศ ราชบุรี',
+    u'เบญจมราชูทิศ---จันทบุรี':u'เบญจมราชูทิศ จังหวัดจันทบุรี',
+    u'เบญจมราชูทิศจ.จันทุบรี---จันทบุรี':u'เบญจมราชูทิศ จังหวัดจันทบุรี',
+    u'เบญจมราชูทิศจันทบุรี---จันทบุรี':u'เบญจมราชูทิศ จังหวัดจันทบุรี',
+
+    u'ราชวินิตบางแก้ว---สมุทรปราการ':u'ราชวินิตบางแก้ว ในพระบรมราชูปถัมภ์',
+
+    u'สาธิตมหาวิทยาลัยราชภัฎนครปฐม---นครปฐม':u'สาธิตมหาวิทยาลัยราชภัฏนครปฐม',
+
+    u'มัธยมสาธิตมหาวิทยาลัยราชภัฏบ้านสมเด็จเจ้าพระยา---กรุงเทพมหานคร':u'สาธิตมหาวิทยาลัยราชภัฏบ้านสมเด็จเจ้าพระยา',
+}
+
 def normalize_school_name(school_name, school_province):
     if school_name.startswith(u'โรงเรียน'):
         school_name = school_name[8:]
@@ -29,12 +98,24 @@ def read_school_data(data_filename):
         if len(items)==3:
             school_data[normalize_school_name(items[1],items[2])]=items[0]
 
+failed_counter = 0
+
 def find_school_code(school_name, school_province):
+    global failed_counter
     nn = normalize_school_name(school_name, school_province)
+    if nn in SCHOOL_NAME_PATCHES:
+        p = SCHOOL_NAME_PATCHES[nn]
+        if type(p)==tuple:
+            nn = normalize_school_name(p[0],
+                                       p[1])
+        else:
+            nn = normalize_school_name(p,
+                                       school_province)
     if nn in school_data:
         return school_data[nn]
     else:
         print nn
+        failed_counter += 1
         return ""
 
 def build_row(applicant, registration, personal_info, major_number):
@@ -62,15 +143,20 @@ def build_row(applicant, registration, personal_info, major_number):
     else:
         status = u'นานาชาติ'
 
+    vnum = ''
+    if address.village_number!=0 and address.village_number!=None:
+        vnum = address.village_number
+
     return u','.join([u'"%s"' % s for s in
-                      [ applicant.national_id,
+                      [ unicode(applicant.ticket_number()),
+                        applicant.national_id,
                         registration.passport_number,
                         gender,
                         applicant.title,
                         applicant.first_name,
                         applicant.last_name,
                         eng_title,
-                        registration.english_first_name.capitalize(),
+                        registration.english_first_name,
                         registration.english_last_name.capitalize(),
                         personal_info.nationality,
                         personal_info.ethnicity,
@@ -78,8 +164,8 @@ def build_row(applicant, registration, personal_info, major_number):
                         registration.birth_place,
                         birth_date_str,
                         address.number,
-                        address.village_number,
-                        "",
+                        vnum,
+                        registration.address_avenue,
                         address.road,
                         address.district,
                         address.city,
@@ -87,16 +173,25 @@ def build_row(applicant, registration, personal_info, major_number):
                         address.postal_code,
                         registration.home_phone_number,
                         registration.cell_phone_number,
-                        education.school_name,
-                        education.school_province,
+                        applicant.email,
                         find_school_code(education.school_name,
                                          education.school_province),
+                        education.school_name,
+                        education.school_province,
+                        registration.school_type,
+                        u'%1.2f' % (registration.GPA),
+                        u'บางเขน',
+                        '',
                         u'วิศวกรรมศาสตร์',
+                        '',
                         major.name,
                         u'รับตรง คณะวิศวกรรมศาสตร์',
                         status,
-                        u'บางเขน',
-                        u'มก.',
+                        unicode(applicant.submission_info.submitted_at.strftime('%d/%m/2555')),
+                        unicode(applicant.submission_info.submitted_at.strftime('%H/%M/%S')),
+                        u'0002',
+                        u'เกษตรศาสตร์',
+                        '',
                         registration.father_title,
                         registration.father_first_name,
                         registration.father_last_name,
@@ -105,7 +200,8 @@ def build_row(applicant, registration, personal_info, major_number):
                         registration.mother_first_name,
                         registration.mother_last_name,
                         registration.mother_national_id,
-                        ]])
+                        ]
+                      ])
 
 def main():
     read_school_data('../data/school-codes.csv')
@@ -113,11 +209,11 @@ def main():
     fout = codecs.open(sys.argv[2],"w",encoding="utf-8")
     for line in open(filename).readlines():
         items = line.strip().split(",")
-        if len(items)!=2:
+        if len(items)!=3:
             continue
 
         national_id = items[0]
-        major_number = items[1]
+        major_number = int(items[2])
 
         applicant = Applicant.objects.get(national_id=national_id)
         personal_info = applicant.personal_info
@@ -128,6 +224,8 @@ def main():
             registration = None
 
         print >> fout, build_row(applicant, registration, personal_info, major_number)
+
+    print failed_counter
 
 if __name__ == '__main__':
     main()

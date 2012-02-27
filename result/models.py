@@ -332,3 +332,13 @@ class AdditionalResult(models.Model):
 
     def __unicode__(self):
         return self.name
+
+
+class ClearingHouseResult(models.Model):
+    applicant = models.OneToOneField(Applicant, 
+                                     related_name='clearing_house_result')
+
+    admitted_major = models.ForeignKey(Major, null=True)
+    is_additional_result = models.BooleanField(default=False)
+    password = models.CharField(max_length=20)
+

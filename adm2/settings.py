@@ -236,6 +236,8 @@ LAST_ROUND_RESULT = False
 LAST_CALLUP_ROUND_NUMBER = 2
 CONFIRMATION_START_DATE = datetime(2012,2,18)
 
+SHOW_CLEARING_HOUSE_RESULT = False
+
 # used in redirect_to_index
 INDEX_PAGE = 'start-page'
 

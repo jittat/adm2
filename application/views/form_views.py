@@ -87,7 +87,7 @@ def redirect_to_applicant_first_page(applicant):
     TODO: doc_menu for applicant that start submitting docs, but not
     complete.
     """
-    if applicant.has_additional_result:
+    if not settings.SHOW_CLEARING_HOUSE_RESULT and applicant.has_additional_result:
         r = applicant.additional_result
         if not r.is_waived:
             return redirect('confirmation-quota-index')

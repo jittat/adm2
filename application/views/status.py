@@ -253,10 +253,82 @@ def result_index(request):
                                'can_log_out': True })
 
 
+def clearing_index(request):
+    applicant = request.applicant
+
+    PASSWORDING = {
+        'a':u'เอ',
+        'b':u'บี',
+        'c':u'ซี',
+        'd':u'ดี',
+        'e':u'อี',
+        'f':u'เอฟ',
+        'g':u'จี',
+        'h':u'เอช',
+        'i':u'ไอ',
+        'j':u'เจ',
+        'k':u'เค',
+        'l':u'แอล',
+        'm':u'เอ็ม',
+        'n':u'เอ็น',
+        'o':u'โอ',
+        'p':u'พี',
+        'q':u'คิว',
+        'r':u'อาร์',
+        's':u'เอส',
+        't':u'ที',
+        'u':u'ยู',
+        'v':u'วี',
+        'w':u'ดับเบิลยู',
+        'x':u'เอ็กซ์',
+        'y':u'วาย',
+        'z':u'แซด',
+        '0':u'ศูนย์',
+        '1':u'หนึ่ง',
+        '2':u'สอง',
+        '3':u'สาม',
+        '4':u'สี่',
+        '5':u'ห้า',
+        '6':u'หก',
+        '7':u'เจ็ด',
+        '8':u'แปด',
+        '9':u'เก้า',
+        }
+
+    password_read = ''
+    admitted_major = None
+    additional_result = None
+    try:
+        clearing_result = applicant.clearing_house_result
+    except:
+        clearing_result = None
+
+    if clearing_result:
+        if clearing_result.admitted_major:
+            admitted_major = clearing_result.admitted_major
+        else:
+            if clearing_result.is_additional_result:
+                additional_result = applicant.additional_result
+        password_read = ' '.join([PASSWORDING[c] for c in clearing_result.password])
+
+    admitted_previously = (applicant.admission_results.count()!=0)
+
+    return render_to_response("application/status/index_clearing_only.html",
+                              {'applicant': applicant,
+                               'admitted_major': admitted_major,
+                               'clearing_result': clearing_result,
+                               'admitted_previously': admitted_previously,
+                               'additional_result': additional_result,
+                               'password_read': password_read,
+                               'can_log_out': True })
+
 @submitted_applicant_required
 def index(request):
     if settings.SHOW_ONLY_RESULTS:
         return result_index(request)
+
+    if settings.SHOW_CLEARING_HOUSE_RESULT:
+        return clearing_index(request)
 
     template_data = []
 
