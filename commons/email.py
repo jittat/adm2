@@ -957,4 +957,137 @@ http://admission.eng.ku.ac.th/adm/
 -ทีมงานเว็บรับสมัคร""" % { 'first_name': applicant.first_name,
                        'last_name': applicant.last_name,
                        'major': result.admitted_major.name }
+
+def read_password(password):
+    PASSWORDING = {
+        'a':u'เอ',
+        'b':u'บี',
+        'c':u'ซี',
+        'd':u'ดี',
+        'e':u'อี',
+        'f':u'เอฟ',
+        'g':u'จี',
+        'h':u'เอช',
+        'i':u'ไอ',
+        'j':u'เจ',
+        'k':u'เค',
+        'l':u'แอล',
+        'm':u'เอ็ม',
+        'n':u'เอ็น',
+        'o':u'โอ',
+        'p':u'พี',
+        'q':u'คิว',
+        'r':u'อาร์',
+        's':u'เอส',
+        't':u'ที',
+        'u':u'ยู',
+        'v':u'วี',
+        'w':u'ดับเบิลยู',
+        'x':u'เอ็กซ์',
+        'y':u'วาย',
+        'z':u'แซด',
+        '0':u'ศูนย์',
+        '1':u'หนึ่ง',
+        '2':u'สอง',
+        '3':u'สาม',
+        '4':u'สี่',
+        '5':u'ห้า',
+        '6':u'หก',
+        '7':u'เจ็ด',
+        '8':u'แปด',
+        '9':u'เก้า',
+        }
+
+    return ' '.join([PASSWORDING[c] for c in password])
             
+
+def send_clearing_house_info_by_email(applicant, force=False):
+    """
+    sends clearing house info
+    """
+    subject = 'ผลการคัดเลือกรับตรง วิศวกรรมศาสตร์ มก. และรหัสผ่านสำหรับเข้าระบบเคลียริงเฮาส์'
+
+    try:
+        clearing_result = applicant.clearing_house_result
+    except:
+        print 'no result', applicant.national_id
+        return
+
+    if not clearing_result.is_additional_result:
+        message = (
+u"""เรียนคุณ %(firstname)s %(lastname)s
+
+ขอแสดงความยินดีด้วย คุณผ่านการคัดเลือกเข้าศึกษาต่อในคณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์
+ผ่านทางระบบรับตรง
+สาขา %(major)s
+และได้ยืนยันสิทธิ์ครบถ้วน
+
+คณะวิศวกรรมศาสตร์จะส่งชื่อคุณเข้าระบบเคลียริงเฮาส์ 
+โดยรหัสผ่านที่คุณจะใช้เข้าระบบเคลียริงเฮาส์คือ
+
+%(password)s
+
+คำอ่านของรหัสผ่าน (เพื่อความชัดเจน): %(password_read)s
+      
+คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์
+จะส่งรหัสระบุตัวบุคคลเพื่อใช้ในการยืนยันสิทธิ์การเข้าศึกษาผ่านเว็บไซต์
+http://www.cuas.or.th ตั้งแต่ วันที่ 11 -17 มีนาคม 2555
+ผู้ผ่านการคัดเลือกที่ต้องการเข้าศึกษาต่อจะต้องไปยืนยันสิทธิ์การเข้าศึกษาต่อผ่านระบบเคลียริงเฮาส์
+ภายในวันและเวลาดังกล่าว
+
+หากผู้ผ่านการคัดเลือกมีสิทธิ์เข้าศึกษาไม่ดำเนินการใดๆ
+จะถือว่าสละสิทธิ์การเข้าศึกษาในระบบรับตรงของมหาวิทยาลัย/สถาบัน/กลุ่มสถาบัน
+ที่เข้าร่วมในระบบเคลียริ่งเฮาส์ของปีการศึกษา 2555
+
+ถ้ามีข้อสงสัยสามารถสอบถามได้ทางอีเมล์ %(admin_email)s
+
+-โครงการรับตรง คณะวิศวกรรมศาสตร์"""
+% { 'firstname': applicant.first_name, 
+    'lastname': applicant.last_name,
+    'major': clearing_result.admitted_major.name,
+    'password': clearing_result.password,
+    'password_read': read_password(clearing_result.password),
+    'admin_email': admin_email() }
+)
+    else:
+        subject = 'ผลการคัดเลือกโควตา วิศวกรรมศาสตร์ มก. และรหัสผ่านสำหรับเข้าระบบเคลียริงเฮาส์'
+        message = (
+u"""เรียนคุณ %(firstname)s %(lastname)s
+
+ขอแสดงความยินดีด้วย คุณผ่านการคัดเลือกเข้าศึกษาต่อในคณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์
+ผ่านทางระบบโควตา
+สาขา %(major)s
+และได้ยืนยันสิทธิ์ครบถ้วน
+
+คณะวิศวกรรมศาสตร์จะส่งชื่อคุณเข้าระบบเคลียริงเฮาส์ 
+โดยรหัสผ่านที่คุณจะใช้เข้าระบบเคลียริงเฮาส์คือ
+
+%(password)s
+
+คำอ่านของรหัสผ่าน (เพื่อความชัดเจน): %(password_read)s
+      
+คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเกษตรศาสตร์
+จะส่งรหัสระบุตัวบุคคลเพื่อใช้ในการยืนยันสิทธิ์การเข้าศึกษาผ่านเว็บไซต์
+http://www.cuas.or.th ตั้งแต่ วันที่ 11 -17 มีนาคม 2555
+ผู้ผ่านการคัดเลือกที่ต้องการเข้าศึกษาต่อจะต้องไปยืนยันสิทธิ์การเข้าศึกษาต่อผ่านระบบเคลียริงเฮาส์
+ภายในวันและเวลาดังกล่าว
+
+หากผู้ผ่านการคัดเลือกมีสิทธิ์เข้าศึกษาไม่ดำเนินการใดๆ
+จะถือว่าสละสิทธิ์การเข้าศึกษาในระบบรับตรงของมหาวิทยาลัย/สถาบัน/กลุ่มสถาบัน
+ที่เข้าร่วมในระบบเคลียริ่งเฮาส์ของปีการศึกษา 2555
+
+ถ้ามีข้อสงสัยสามารถสอบถามได้ทางอีเมล์ %(admin_email)s
+
+-โครงการรับสมัคร คณะวิศวกรรมศาสตร์"""
+% { 'firstname': applicant.first_name, 
+    'lastname': applicant.last_name,
+    'major': applicant.additional_result.name,
+    'password': clearing_result.password,
+    'password_read': read_password(clearing_result.password),
+    'admin_email': admin_email() }
+)
+
+    if AUTO_ADD_BR:
+        message = message.replace('\n','<br/>\n')
+    adm_send_mail(applicant.get_email(), subject, message, force,
+                  priority='low')
