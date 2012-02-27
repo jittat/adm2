@@ -311,7 +311,8 @@ def clearing_index(request):
                 additional_result = applicant.additional_result
         password_read = ' '.join([PASSWORDING[c] for c in clearing_result.password])
 
-    admitted_previously = (applicant.admission_results.count()!=0)
+    admitted_previously = ((applicant.admission_results.count()!=0) or
+                           applicant.has_additional_result)
 
     return render_to_response("application/status/index_clearing_only.html",
                               {'applicant': applicant,
@@ -322,13 +323,16 @@ def clearing_index(request):
                                'password_read': password_read,
                                'can_log_out': True })
 
-@submitted_applicant_required
+@applicant_required
 def index(request):
-    if settings.SHOW_ONLY_RESULTS:
-        return result_index(request)
-
     if settings.SHOW_CLEARING_HOUSE_RESULT:
         return clearing_index(request)
+
+    if not request.applicant.is_submitted:
+        return HttpResponseForbidden()
+
+    if settings.SHOW_ONLY_RESULTS:
+        return result_index(request)
 
     template_data = []
 

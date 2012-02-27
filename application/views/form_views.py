@@ -92,6 +92,9 @@ def redirect_to_applicant_first_page(applicant):
         if not r.is_waived:
             return redirect('confirmation-quota-index')
 
+    if settings.SHOW_CLEARING_HOUSE_RESULT:
+        return HttpResponseRedirect(reverse('status-index'))
+
     if not applicant.is_submitted:
         return redirect_to_first_form()
     else:
