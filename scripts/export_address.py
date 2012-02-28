@@ -8,7 +8,7 @@ bootstrap(__file__)
 
 from confirmation.models import AdmissionMajorPreference, AdmissionConfirmation
 from application.models import Applicant
-from result.models import AdmissionResult
+from result.models import AdmissionResult, ClearingHouseResult
 
 def prefix_if(st,pref):
     if st.strip()!='':
@@ -47,13 +47,11 @@ def expand_address(address):
 
 def main():
     f = codecs.open(sys.argv[1],"w",encoding="utf8")
-    for c in AdmissionConfirmation.objects.all():
+    for c in ClearingHouseResult.objects.all():
+        if c.is_additional_result:
+            continue
+
         a = c.applicant
-        ps = a.admission_major_preferences.all()
-        if len(ps)>0:
-            pp = ps[0]
-            if (pp.ptype == 3) or (pp.ptype==4):
-                continue
 
         print >>f, "%s,%s,\"%s\"" % (a.national_id, a.full_name(), expand_address(a.address.contact_address))
 
