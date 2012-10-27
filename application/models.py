@@ -246,8 +246,7 @@ class Applicant(models.Model):
         return True
 
     def is_eligible(self):
-        #return self.is_submitted and self.submission_info.is_paid
-        return self.is_submitted
+        return self.is_submitted and self.submission_info.is_paid
 
     ######################
     # methods for authentication
