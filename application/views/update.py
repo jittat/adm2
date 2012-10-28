@@ -61,6 +61,7 @@ def update_major_single_choice(request):
     form_data['can_log_out'] = True
     form_data['form'] = form
     form_data['training_round'] = training_round
+    form_data['majors'] = major_query_set
     return render_to_response('application/update/majors_single.html',
                               form_data)
     
