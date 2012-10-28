@@ -38,26 +38,31 @@
     </div>
   </form>
   <script type="text/javascript">
+    var all_options = [
+      {% for m in majors %}
+        [{{ m.id }},"{{ m }}"]{% if not forloop.last %},{% endif %}
+      {% endfor %}
+    ];
     var update_major_options = function() {
       var ctype_choice = $("#curtype_id").val();
       var curval = $("#id_major").val();
 
-      $("#id_major option").each(function(i,elt) {
-        var $e = $(elt);
-        if(ctype_choice=='10')
-          $e.show();
-        else {
-          if($e.val()=='') {
-            $e.show();
-            return;
-          }
-          if($e.html()[1]==ctype_choice)
-            $e.show();
-          else {
-            $e.hide();
-            if(curval == $e.val())
-              $("#id_major").val("");
-          }
+      $("#id_major option").each(function(i) {
+        var e = $(this);
+        if(e.val()!='') {
+          //alert(e);
+          $(this).remove();
+        }
+      });
+
+      //alert("hello");
+      jQuery.each(all_options, function(i,o) {
+        oi = o[0];
+        ov = o[1];
+        if((ctype_choice=='10') || (ov[1]==ctype_choice)) {
+          $("#id_major").append('<option value="' + oi + '">' + ov + '</option>');
+          if(oi==curval)
+            $("#id_major").val(curval);
         }
       });
     };

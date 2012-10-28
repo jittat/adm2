@@ -179,6 +179,7 @@ def applicant_major_single_choice(request):
     form_data['form_step_info'] = form_step_info
     form_data['form'] = form
     form_data['training_round'] = training_round
+    form_data['majors'] = major_query_set
     return render_to_response('application/majors_single.html',
                               form_data)
 
