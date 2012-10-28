@@ -16,7 +16,7 @@
     {% include "application/payin/box.html" %}
   {% endwith %}
   {% if deadline %}
-    <div style="float:right"><b>ชำระภายในวันที่ {{ deadline|date:"d F" }} 2555</b></div>
+    <div style="float:right"><b>ชำระภายในวันที่ {{ deadline|date:"j F" }} 2555</b></div>
   {% endif %}
   <div id="cut-sept"></div>
   {% with "สำหรับธนาคาร" as rcpt %}
