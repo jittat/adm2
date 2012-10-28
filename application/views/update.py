@@ -60,6 +60,7 @@ def update_major_single_choice(request):
     form_data['step_name'] = 'แก้ไขอันดับสาขาวิชา'
     form_data['can_log_out'] = True
     form_data['form'] = form
+    form_data['training_round'] = training_round
     return render_to_response('application/update/majors_single.html',
                               form_data)
     

@@ -1,10 +1,5 @@
 {% extends "application/formbase.html" %}
 
-{% block extra-head %}
-{{ block.super }}
-<script type="text/javascript" src="{% load adm_media %}{% static_url %}/js/major_selection.js"></script>
-{% endblock %}
-
 {% block title %}แก้ไขอันดับสาขาวิชา{% endblock %}
 
 {% block form-body %}
@@ -19,7 +14,24 @@
 
   <form action="{% url update-majors %}" method="post">
     <b>เลือกอันดับสาขาที่ต้องการ</b> คุณสามารถเลือกสาขาที่ต้องการได้ 1 สาขาจากรายการด้านล่าง
+    {% if training_round == 2 %}
+      รายการสาขาวิชาจะแสดงเฉพาะสาขาจากโควตา สอวน. เพราะคุณได้ระบุว่าคุณผ่านเข้าค่าย 2 ของการอบรมสอวน. ถ้าคุณได้เข้าค่ายอบรมระดับประเทศและมีความประสงค์จะสมัครโควตา สสวท. กรุณากลับไป<a href="{% url update-education %}">แก้ไขข้อมูลการศึกษา</a>
+    {% else %}
+      เนื่องจากคุณผ่านเข้าค่าย 3 (ค่ายอบรมระดับประเทศที่สสวท.) คุณจึงมีสิทธิ์สมัครทั้งโควตาสอวน. และโควตา สสวท.  รายการสาขาวิชาด้านล่างจะแสดงทั้งสาขาจากโควตา สอวน. และโควตา สสวท. กรุณาเลือกโครงการและสาขาที่คุณต้องการสมัคร
+    {% endif %}<br/>
+    <b>ประเภทหลักสูตร</b> หลักสูตรที่เปิดรับมี 3 ประเภท คือหลักสูตรภาคปกติ หลักสูตรภาคพิเศษ และหลักสูตรนานาชาติ
     <table>
+      <tr>
+        <th>หลักสูตร:</th>
+        <td>
+          <select id="curtype_id">
+            <option value="10">แสดงหลักสูตรทุกประเภท</option>
+            <option value="0">แสดงเฉพาะหลักสูตรภาคปกติ</option>
+            <option value="1">แสดงเฉพาะหลักสูตรภาคพิเศษ</option>
+            <option value="2">แสดงเฉพาะหลักสูตรนานาชาติ</option>
+          </select>
+        </td>
+      </tr>
       {{ form }}
     </table>
     <br/>
@@ -29,7 +41,34 @@
     </div>
   </form>
   <script type="text/javascript">
+    var update_major_options = function() {
+      var ctype_choice = $("#curtype_id").val();
+      var curval = $("#id_major").val();
+
+      $("#id_major option").each(function(i,elt) {
+        var $e = $(elt);
+        if(ctype_choice=='10')
+          $e.show();
+        else {
+          if($e.val()=='') {
+            $e.show();
+            return;
+          }
+          if($e.html()[1]==ctype_choice)
+            $e.show();
+          else {
+            $e.hide();
+            if(curval == $e.val())
+              $("#id_major").val("");
+          }
+        }
+      });
+    };
+
     $(document).ready(function() {
+      update_major_options();
+      $("#curtype_id").change(update_major_options);
+
       $("#change-button").click(function() {
         return confirm("คุณแน่ใจที่จะแก้ไขอันดับหรือไม่?\nอันดับที่เลือกใหม่นี้จะเข้าไปแทนอันดับที่เลือกไว้เดิมทันที\nถ้าต้องการยืนยันกด OK ถ้าไม่ต้องการเปลี่ยนกด Cancel");
       });
