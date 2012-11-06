@@ -3,6 +3,9 @@
 {% load adm_media %}
 
 {% block regis-body %}
+
+  [<a id="shows-only-paid-id" href="#">แสดงเฉพาะผู้สมัครที่ชำระเงินแล้ว</a>]<br/>
+
   {% for m in major_lists.values %}
     <b>{{ m.major }}</b> ({{ m.applicants|length }})<br/>
     {% if m.applicants %}
@@ -15,7 +18,7 @@
 	  <th>ชำระเงิน</th>
 	</tr>
 	{% for applicant in m.applicants %}
-	  <tr id="app-{{ applicant.id }}-row" class="{% cycle 'odd' 'even' %}">
+	  <tr id="app-{{ applicant.id }}-row" class="{% cycle 'odd' 'even' %} {% if applicant.submission_info.is_paid %}paid{% else %}not-paid{% endif %}">
 	    <td><a href="{% url review-show-app applicant.id %}">{{ applicant.ticket_number }}</a></td>
 	    <td><a href="{% url review-show-app applicant.id %}">{{ applicant.full_name }}</a></td>
 	    <td>{{ applicant.national_id }}</td>
@@ -37,4 +40,14 @@
     {% endif %}
     <div class="small-vert-sept"></div>
   {% endfor %}
+
+<script type="text/javascript">
+$(function(){
+  $("#shows-only-paid-id").click(function(){
+    $("tr.not-paid").hide();
+    return false;
+  });
+});
+</script>
+
 {% endblock %}
