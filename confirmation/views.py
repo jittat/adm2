@@ -200,7 +200,7 @@ class StudentRegistrationForm(ModelForm):
 @submitted_applicant_required
 def student_registration(request):
     applicant = request.applicant
-    admitted = applicant.is_admitted()
+    admitted = applicant.is_admitted() or applicant.is_waitlist()
 
     if not admitted:
         raise Http404
@@ -208,6 +208,9 @@ def student_registration(request):
     registration = applicant.get_student_registration()
 
     if request.method=='POST':
+        if 'submit' not in request.POST:
+            return redirect('status-index')
+
         form = StudentRegistrationForm(request.POST,
                                        instance=registration)
         if form.is_valid():

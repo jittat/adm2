@@ -2,7 +2,7 @@
 
 {% load adm_info %}
 
-{% block title %}ข้อมูลเพื่อการลงทะเบียนเป็นนิสิต{% endblock %}
+{% block title %}ยืนยันสิทธิ์เข้าศึกษาต่อ{% endblock %}
 
 {% block extra-head %}
 <link rel="stylesheet" type="text/css" href="{% load adm_media %}{% static_url %}/css/front.css" />
@@ -10,13 +10,11 @@
 {% endblock %}
 
 {% block body %}
-  {% load adm_steps %}{% step_bar "กรอกข้อมูลเพื่อการขึ้นทะเบียนเป็นนิสิตใหม่" %}
+  {% load adm_steps %}{% step_bar "กรอกข้อมูลเพื่อยืนยันสิทธิ์" %}
 
   <div class="normal-msg" style="margin-top:2px">
     <small>
-      กรุณากรอกข้อมูลด้านล่างให้ครบถ้วน 
-      ข้อมูลดังกล่าวจะถูกส่งให้กับหน่วยทะเบียนและประมวลผล มหาวิทยาลัยเกษตรศาสตร์ 
-      เพื่อขึ้นทะเบียนเป็นนิสิตใหม่
+      กรุณากรอกข้อมูลด้านล่างให้ครบถ้วนเพื่อยืนยันสิทธิ์การเข้าศึกษาต่อ
     </small>
   </div>
   <form class="light-frame" action="" method="post">

@@ -206,6 +206,10 @@ class Applicant(models.Model):
         admission_result = self.get_latest_admission_result()
         return (admission_result) and (admission_result.is_admitted)
     
+    def is_waitlist(self):
+        admission_result = self.get_latest_admission_result()
+        return (admission_result) and (admission_result.is_waitlist)
+    
     def get_admission_major_preference(self,round_number):
         prefs = self.admission_major_preferences.filter(round_number=round_number)
         if len(prefs)!=0:
