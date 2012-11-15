@@ -14,7 +14,8 @@
       </li>
     </ul>
 
-    <b>สถานะการยืนยันสิทธิ์: </b>{% if student_registration %}<span style="color:green"><b>คุณได้ยืนยันสิทธิ์แล้ว</b></span>{% else %}<span style="color:red"><b>คุณยังไม่ได้ยืนยันสิทธิ์</b></span>{% endif %} &nbsp;&nbsp; <a href="{% url confirmation-student-registration %}">เข้าระบบยืนยันสิทธิ์ที่นี่</a>
+    <b>สถานะการยืนยันสิทธิ์: </b>{% if student_registration %}<span style="color:green"><b>คุณได้ยืนยันสิทธิ์แล้ว</b></span>{% else %}<span style="color:red"><b>คุณยังไม่ได้ยืนยันสิทธิ์</b></span>{% endif %} 
+    {% comment %}&nbsp;&nbsp; <a href="{% url confirmation-student-registration %}">เข้าระบบยืนยันสิทธิ์ที่นี่</a>{% endcomment %}
   {% else %}
     {% if admission_result.is_waitlist %}
       <b>
@@ -31,7 +32,8 @@
         </li>
       </ul>
 
-      <b>สถานะการยืนยันสิทธิ์: </b>{% if student_registration %}<span style="color:green"><b>คุณได้ยืนยันสิทธิ์แล้ว</b></span>{% else %}<span style="color:red"><b>คุณยังไม่ได้ยืนยันสิทธิ์</b></span>{% endif %} &nbsp;&nbsp; <a href="{% url confirmation-student-registration %}">เข้าระบบยืนยันสิทธิ์ที่นี่</a>
+      <b>สถานะการยืนยันสิทธิ์: </b>{% if student_registration %}<span style="color:green"><b>คุณได้ยืนยันสิทธิ์แล้ว</b></span>{% else %}<span style="color:red"><b>คุณยังไม่ได้ยืนยันสิทธิ์</b></span>{% endif %} 
+      {% comment %}&nbsp;&nbsp; <a href="{% url confirmation-student-registration %}">เข้าระบบยืนยันสิทธิ์ที่นี่</a>{% endcomment %}
     {% else %}
       {% include "application/status/include/not_admitted.html" %}
     {% endif %}

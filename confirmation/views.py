@@ -199,6 +199,8 @@ class StudentRegistrationForm(ModelForm):
 
 @submitted_applicant_required
 def student_registration(request):
+    return redirect('status-index')
+
     applicant = request.applicant
     admitted = applicant.is_admitted() or applicant.is_waitlist()
 
