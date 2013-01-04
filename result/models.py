@@ -287,3 +287,10 @@ class NIETSScores(models.Model):
         pat3, p3s = self.get_best_normalized_score('pat3')
         return [gs, p1s, p3s]
 
+class ClearingHouseResult(models.Model):
+    applicant = models.OneToOneField(Applicant, 
+                                     related_name='clearing_house_result')
+
+    admitted_major = models.ForeignKey(Major, null=True)
+    is_additional_result = models.BooleanField(default=False)
+    password = models.CharField(max_length=20)

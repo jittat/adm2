@@ -231,6 +231,8 @@ EMAIL_SENDER = 'KU Eng Admission Team <jtf@ku.ac.th>'
 
 SHOW_SCORE_IMPORT_STATUS = False
 
+SHOW_CLEARING_HOUSE_RESULT = False
+
 # used in redirect_to_index
 INDEX_PAGE = 'start-page'
 
