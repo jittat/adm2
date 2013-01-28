@@ -9,7 +9,6 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    ('Jittat Fakcharoenphol', 'jittat@gmail.com'),
     # ('Your Name', 'your_email@example.com'),
 )
 
@@ -23,7 +22,7 @@ DATABASES = {
 #        'PASSWORD': 'o-adm-for-dev',                  # Not used with sqlite3.
         'NAME': 'admnew',                      # Or path to database file if using sqlite3.
         'USER': 'admnew',                      # Not used with sqlite3.
-        'PASSWORD': 'TbmQFy7j9FBVfN3N',                  # Not used with sqlite3.
+        'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
